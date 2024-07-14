@@ -22,6 +22,14 @@
       <artifactId>APPMIC-E-CommercePlugins-orders</artifactId>
     </dependency>
     <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>APPMIC-E-CommercePlugins-maintenance</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>APPMIC-E-CommercePlugins-reports</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
