@@ -1,10 +1,10 @@
-package APPMIC_E_CommercePlugins_boot;
+package com.codecorecix.ecommerce;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class AppmicECommercePluginsBootApplicationTests {
+class ApplicationTests {
 
 	@Test
 	void contextLoads() {

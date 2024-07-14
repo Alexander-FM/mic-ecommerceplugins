@@ -31,13 +31,13 @@
       <value>
         <package name="java" withSubpackages="true" static="true" />
         <emptyLine />
-        <package name="com.inditex" withSubpackages="true" static="true" />
+        <package name="com.codecorecix" withSubpackages="true" static="true" />
         <emptyLine />
         <package name="" withSubpackages="true" static="true" />
         <emptyLine />
         <package name="java" withSubpackages="true" static="false" />
         <emptyLine />
-        <package name="com.inditex" withSubpackages="true" static="false" />
+        <package name="com.codecorecix" withSubpackages="true" static="false" />
         <emptyLine />
         <package name="" withSubpackages="true" static="false" />
       </value>
