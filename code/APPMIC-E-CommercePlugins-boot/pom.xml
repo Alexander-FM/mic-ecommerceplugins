@@ -7,7 +7,7 @@
     <groupId>com.codecorecix.ecommerce</groupId>
     <artifactId>APPMIC-E-CommercePlugins</artifactId>
     <version>2.10.1-SNAPSHOT</version>
-    <relativePath />
+    <relativePath>../pom.xml</relativePath> <!-- Especifica la ruta relativa al pom.xml del padre -->
   </parent>
 
   <artifactId>APPMIC-E-CommercePlugins-boot</artifactId>
@@ -17,6 +17,10 @@
   <description />
 
   <dependencies>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>APPMIC-E-CommercePlugins-orders</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
@@ -30,12 +34,6 @@
 
   <build>
     <finalName>${project.artifactId}-${project.version}</finalName>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-      </plugin>
-    </plugins>
   </build>
 
 </project>

@@ -6,7 +6,7 @@
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
     <version>3.3.1</version>
-    <relativePath /> <!-- lookup parent from repository -->
+    <relativePath />
   </parent>
 
   <groupId>com.codecorecix.ecommerce</groupId>
@@ -24,23 +24,27 @@
     <module>APPMIC-E-CommercePlugins-alerts</module>
     <module>APPMIC-E-CommercePlugins-boot</module>
     <module>APPMIC-E-CommercePlugins-common</module>
+    <module>APPMIC-E-CommercePlugins-maintenance</module>
     <module>APPMIC-E-CommercePlugins-orders</module>
     <module>APPMIC-E-CommercePlugins-reports</module>
     <module>APPMIC-E-CommercePlugins-returns</module>
     <module>APPMIC-E-CommercePlugins-tracking</module>
   </modules>
+
   <scm>
     <connection>scm:git:https://github.com/Alexander-FM/mic-ecommerceplugins.git</connection>
     <developerConnection>scm:git:https://github.com/Alexander-FM/mic-ecommerceplugins.git</developerConnection>
     <tag>HEAD</tag>
     <url>${github-url}</url>
   </scm>
+
   <properties>
     <java.version>21</java.version>
     <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
     <org.lombok.version>1.18.30</org.lombok.version>
     <github-url>https://github.com/Alexander-FM/mic-ecommerceplugins</github-url>
   </properties>
+
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -56,6 +60,11 @@
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>APPMIC-E-CommercePlugins-common</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>APPMIC-E-CommercePlugins-maintenance</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -90,6 +99,11 @@
         <scope>test</scope>
       </dependency>
       <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-data-jpa</artifactId>
+        <version>3.3.1</version>
+      </dependency>
+      <dependency>
         <groupId>org.projectlombok</groupId>
         <artifactId>lombok</artifactId>
         <version>${org.lombok.version}</version>
@@ -114,7 +128,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.8.1</version>
+          <version>3.13.0</version>
           <configuration>
             <source>21</source>
             <target>21</target>
