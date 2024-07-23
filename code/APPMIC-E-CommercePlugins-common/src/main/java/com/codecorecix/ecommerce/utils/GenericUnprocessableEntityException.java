@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  */
 @ResponseStatus(code = HttpStatus.UNPROCESSABLE_ENTITY)
 public class GenericUnprocessableEntityException extends RuntimeException {
+
   /**
    * Instantiates a new unprocessable entity exception.
    */
@@ -18,13 +19,13 @@ public class GenericUnprocessableEntityException extends RuntimeException {
   /**
    * Instantiates a new unprocessable entity exception.
    *
-   * @param message            the message
-   * @param cause              the cause
-   * @param enableSuppression  the enable suppression
+   * @param message the message
+   * @param cause the cause
+   * @param enableSuppression the enable suppression
    * @param writableStackTrace the writable stack trace
    */
   public GenericUnprocessableEntityException(String message, Throwable cause, boolean enableSuppression,
-                                             boolean writableStackTrace) {
+      boolean writableStackTrace) {
     super(message, cause, enableSuppression, writableStackTrace);
   }
 
@@ -32,7 +33,7 @@ public class GenericUnprocessableEntityException extends RuntimeException {
    * Instantiates a new unprocessable entity exception.
    *
    * @param message the message
-   * @param cause   the cause
+   * @param cause the cause
    */
   public GenericUnprocessableEntityException(String message, Throwable cause) {
     super(message, cause);

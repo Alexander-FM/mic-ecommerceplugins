@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class GenericResponse<T> {
+
   private String type;
 
   private Integer rpta;
