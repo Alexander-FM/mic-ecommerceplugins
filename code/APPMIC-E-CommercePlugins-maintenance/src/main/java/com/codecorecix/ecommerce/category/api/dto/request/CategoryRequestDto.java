@@ -1,5 +1,7 @@
 package com.codecorecix.ecommerce.category.api.dto.request;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -13,6 +15,8 @@ public class CategoryRequestDto {
 
   private Integer id;
 
+  @NotNull(message = "The category should not be null")
+  @Size(min = 5, max = 50, message = "The size must be between 5 and 50 characters")
   private String description;
 
   private Boolean isActive;

@@ -6,10 +6,11 @@ import com.codecorecix.ecommerce.category.api.dto.request.CategoryRequestDto;
 import com.codecorecix.ecommerce.category.api.dto.response.CategoryResponseDto;
 import com.codecorecix.ecommerce.event.entities.Category;
 import com.codecorecix.ecommerce.event.mapper.GenericFieldsMapper;
+
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface CategoriaFieldsMapper extends GenericFieldsMapper<CategoryResponseDto, Category> {
+public interface CategoryFieldsMapper extends GenericFieldsMapper<CategoryResponseDto, Category> {
 
   Category sourceToDestination(final CategoryRequestDto source);
 
