@@ -32,4 +32,9 @@ public class GenericResponseConstants {
 
   public static final String DASH = " - ";
 
+  public static final String COLON = ": ";
+
+  public static final String PERIOD = ".";
+
+  public static final String COMMA = ",";
 }

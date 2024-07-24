@@ -10,7 +10,7 @@ import com.codecorecix.ecommerce.category.utils.CategoryConstants;
 import com.codecorecix.ecommerce.utils.GenericResponse;
 import com.codecorecix.ecommerce.utils.GenericUnprocessableEntityException;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
