@@ -22,8 +22,6 @@
 
   <modules>
     <module>APPMIC-E-CommercePlugins-alerts</module>
-    <module>APPMIC-E-CommercePlugins-boot</module>
-    <module>APPMIC-E-CommercePlugins-common</module>
     <module>APPMIC-E-CommercePlugins-maintenance</module>
     <module>APPMIC-E-CommercePlugins-orders</module>
     <module>APPMIC-E-CommercePlugins-reports</module>
@@ -50,16 +48,6 @@
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>APPMIC-E-CommercePlugins-alerts</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>APPMIC-E-CommercePlugins-boot</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>APPMIC-E-CommercePlugins-common</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
