@@ -1,15 +1,15 @@
-package com.codecorecix.ecommerce.category.service;
+package com.codecorecix.ecommerce.maintenance.category.service;
 
 import java.util.List;
 import java.util.Optional;
 
-import com.codecorecix.ecommerce.category.api.dto.request.CategoryRequestDto;
-import com.codecorecix.ecommerce.category.api.dto.response.CategoryResponseDto;
-import com.codecorecix.ecommerce.category.mapper.CategoryFieldsMapper;
-import com.codecorecix.ecommerce.category.repository.CategoryRepository;
-import com.codecorecix.ecommerce.category.utils.CategoryConstants;
-import com.codecorecix.ecommerce.category.utils.CategoryUtils;
 import com.codecorecix.ecommerce.event.entities.Category;
+import com.codecorecix.ecommerce.maintenance.category.api.dto.request.CategoryRequestDto;
+import com.codecorecix.ecommerce.maintenance.category.api.dto.response.CategoryResponseDto;
+import com.codecorecix.ecommerce.maintenance.category.mapper.CategoryFieldsMapper;
+import com.codecorecix.ecommerce.maintenance.category.repository.CategoryRepository;
+import com.codecorecix.ecommerce.maintenance.category.utils.CategoryConstants;
+import com.codecorecix.ecommerce.maintenance.category.utils.CategoryUtils;
 import com.codecorecix.ecommerce.utils.GenericResponse;
 import com.codecorecix.ecommerce.utils.GenericResponseConstants;
 

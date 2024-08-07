@@ -1,6 +1,6 @@
-package com.codecorecix.ecommerce.category.utils;
+package com.codecorecix.ecommerce.maintenance.category.utils;
 
-import com.codecorecix.ecommerce.category.api.dto.response.CategoryResponseDto;
+import com.codecorecix.ecommerce.maintenance.category.api.dto.response.CategoryResponseDto;
 import com.codecorecix.ecommerce.utils.GenericResponse;
 import com.codecorecix.ecommerce.utils.GenericResponseConstants;
 

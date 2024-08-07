@@ -1,12 +1,11 @@
 package com.codecorecix.ecommerce.event.entities;
 
-import java.io.Serializable;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,16 +17,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "Brands", schema = "maintenance_service")
-public class Brand implements Serializable {
+@Table(name = "ProductDetails", schema = "maintenance_service")
+public class ProductDetail {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
-  @Column(unique = true)
-  private String description;
+  @Column
+  private String nombre;
 
   @Column
-  private Boolean isActive;
+  private String descripcion;
+
+  @ManyToOne
+  private Product product;
 }

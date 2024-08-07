@@ -1,4 +1,4 @@
-package com.codecorecix.ecommerce.category.api.dto.response;
+package com.codecorecix.ecommerce.maintenance.product.api.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,11 +9,9 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryResponseDto {
+public class ProductDetailResponseDto {
 
-  private Integer id;
+  private String nombre;
 
-  private String description;
-
-  private Boolean isActive;
+  private String descripcion;
 }

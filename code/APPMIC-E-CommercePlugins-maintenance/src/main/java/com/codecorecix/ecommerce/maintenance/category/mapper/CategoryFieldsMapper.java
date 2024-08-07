@@ -1,11 +1,11 @@
-package com.codecorecix.ecommerce.category.mapper;
+package com.codecorecix.ecommerce.maintenance.category.mapper;
 
 import java.util.List;
 
-import com.codecorecix.ecommerce.category.api.dto.request.CategoryRequestDto;
-import com.codecorecix.ecommerce.category.api.dto.response.CategoryResponseDto;
 import com.codecorecix.ecommerce.event.entities.Category;
 import com.codecorecix.ecommerce.event.mapper.GenericFieldsMapper;
+import com.codecorecix.ecommerce.maintenance.category.api.dto.request.CategoryRequestDto;
+import com.codecorecix.ecommerce.maintenance.category.api.dto.response.CategoryResponseDto;
 
 import org.mapstruct.Mapper;
 

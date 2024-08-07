@@ -1,9 +1,9 @@
-package com.codecorecix.ecommerce.category.service;
+package com.codecorecix.ecommerce.maintenance.category.service;
 
 import java.util.List;
 
-import com.codecorecix.ecommerce.category.api.dto.request.CategoryRequestDto;
-import com.codecorecix.ecommerce.category.api.dto.response.CategoryResponseDto;
+import com.codecorecix.ecommerce.maintenance.category.api.dto.request.CategoryRequestDto;
+import com.codecorecix.ecommerce.maintenance.category.api.dto.response.CategoryResponseDto;
 import com.codecorecix.ecommerce.utils.GenericResponse;
 
 public interface CategoryService {
