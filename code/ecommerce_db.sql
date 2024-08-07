@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: mysql
--- Tiempo de generación: 07-08-2024 a las 05:51:11
+-- Tiempo de generación: 07-08-2024 a las 07:07:13
 -- Versión del servidor: 9.0.0
 -- Versión de PHP: 8.2.8
 
@@ -50,16 +50,28 @@ INSERT INTO `brands` (`id`, `description`, `is_active`) VALUES
 CREATE TABLE `categories` (
   `id` int NOT NULL,
   `description` varchar(255) DEFAULT NULL,
-  `is_active` bit(1) DEFAULT NULL
+  `is_active` bit(1) DEFAULT NULL,
+  `parent_category` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Volcado de datos para la tabla `categories`
 --
 
-INSERT INTO `categories` (`id`, `description`, `is_active`) VALUES
-(1, 'Tecnología', b'1'),
-(2, 'ElectroHogar', b'1');
+INSERT INTO `categories` (`id`, `description`, `is_active`, `parent_category`) VALUES
+(1, 'Tecnología', b'1', NULL),
+(2, 'ElectroHogar', b'1', NULL),
+(3, 'Audio', b'1', 1),
+(4, 'TV', b'1', 1),
+(5, 'Cámaras y Drones', b'1', 1),
+(6, 'Smart Home y Domótica', b'1', 1),
+(7, 'Refrigeradoras', b'1', 2),
+(8, 'Cocinas', b'1', 2),
+(9, 'Audífonos', b'1', 3),
+(10, 'Equipos de Sonido', b'1', 3),
+(11, 'Parlantes', b'1', 3),
+(12, 'Soundbar y Home Theater', b'1', 3),
+(13, 'Accesorios', b'1', 3);
 
 -- --------------------------------------------------------
 
@@ -85,8 +97,8 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `bar_code`, `description`, `is_active`, `is_recommended`, `name`, `price`, `stock`, `brand_id`, `category_id`) VALUES
-(1, '113654235', 'La última versión de la Serie Charge de JBL Charge 5 incluye topes de silicona y un llamativo logo de JBL, El altavoz combina una estructura resistente y duradera con un diseño elegante y audaz que se destacará en cualquier escenario.\n\nVersión de Bluetooth: 5.1', b'1', b'1', 'Parlante JBL FLIP 6 BT', 999, 100, 1, 1),
-(2, '20122009', 'Lleva el sonido a otro nivel gracias a la ingeniería acústica que integra el parlante de Harman Kardon con una duración aproximada de la batería: 12 Hrs tienes música para rato.', b'1', b'1', 'Harman Kardon Parlante Luna', 599, 100, 2, 1);
+(1, '113654235', 'La última versión de la Serie Charge de JBL Charge 5 incluye topes de silicona y un llamativo logo de JBL, El altavoz combina una estructura resistente y duradera con un diseño elegante y audaz que se destacará en cualquier escenario.\n\nVersión de Bluetooth: 5.1', b'1', b'1', 'Parlante JBL FLIP 6 BT', 999, 100, 1, 3),
+(2, '20122009', 'Lleva el sonido a otro nivel gracias a la ingeniería acústica que integra el parlante de Harman Kardon con una duración aproximada de la batería: 12 Hrs tienes música para rato.', b'1', b'1', 'Harman Kardon Parlante Luna', 599, 100, 2, 3);
 
 -- --------------------------------------------------------
 
@@ -127,31 +139,6 @@ CREATE TABLE `product_images` (
   `imagen_url` varchar(255) DEFAULT NULL,
   `product_id` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `sub_categories`
---
-
-CREATE TABLE `sub_categories` (
-  `id` int NOT NULL,
-  `description` varchar(255) DEFAULT NULL,
-  `is_active` bit(1) DEFAULT NULL,
-  `category_id` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Volcado de datos para la tabla `sub_categories`
---
-
-INSERT INTO `sub_categories` (`id`, `description`, `is_active`, `category_id`) VALUES
-(1, 'Audio', b'1', 1),
-(2, 'TV', b'1', 1),
-(3, 'Cámaras y Drones', b'1', 1),
-(4, 'Smart Home y Domótica', b'1', 1),
-(5, 'Refrigeradoras', b'1', 2),
-(6, 'Cocinas', b'1', 2);
 
 --
 -- Índices para tablas volcadas
@@ -194,14 +181,6 @@ ALTER TABLE `product_images`
   ADD KEY `FKqnq71xsohugpqwf3c9gxmsuy` (`product_id`);
 
 --
--- Indices de la tabla `sub_categories`
---
-ALTER TABLE `sub_categories`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `UKm51bs4tbl548rx1n9l2dahv1h` (`description`),
-  ADD KEY `FKjwy7imy3rf6r99x48ydq45otw` (`category_id`);
-
---
 -- AUTO_INCREMENT de las tablas volcadas
 --
 
@@ -215,7 +194,7 @@ ALTER TABLE `brands`
 -- AUTO_INCREMENT de la tabla `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT de la tabla `products`
@@ -234,12 +213,6 @@ ALTER TABLE `product_details`
 --
 ALTER TABLE `product_images`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `sub_categories`
---
-ALTER TABLE `sub_categories`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Restricciones para tablas volcadas
@@ -263,12 +236,6 @@ ALTER TABLE `product_details`
 --
 ALTER TABLE `product_images`
   ADD CONSTRAINT `FKqnq71xsohugpqwf3c9gxmsuy` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`);
-
---
--- Filtros para la tabla `sub_categories`
---
-ALTER TABLE `sub_categories`
-  ADD CONSTRAINT `FKjwy7imy3rf6r99x48ydq45otw` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

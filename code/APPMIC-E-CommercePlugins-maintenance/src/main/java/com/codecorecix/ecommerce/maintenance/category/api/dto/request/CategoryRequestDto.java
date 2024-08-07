@@ -1,9 +1,5 @@
 package com.codecorecix.ecommerce.maintenance.category.api.dto.request;
 
-import java.util.List;
-
-import com.codecorecix.ecommerce.event.entities.SubCategory;
-
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -24,6 +20,4 @@ public class CategoryRequestDto {
   private String description;
 
   private Boolean isActive;
-
-  private List<SubCategory> subCategories;
 }

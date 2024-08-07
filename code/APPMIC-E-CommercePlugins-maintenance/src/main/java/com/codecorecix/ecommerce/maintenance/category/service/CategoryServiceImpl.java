@@ -31,8 +31,10 @@ public class CategoryServiceImpl implements CategoryService {
 
   @Override
   public GenericResponse<List<CategoryResponseDto>> listCategory() {
+    final List<Category> categories = this.getHierarchicalList(this.repository.findCategoryByParentCategoryIsNull());
     return new GenericResponse<>(GenericResponseConstants.TIPO_RESULT, GenericResponseConstants.RPTA_OK,
-        GenericResponseConstants.OPERACION_CORRECTA, this.mapper.toDto(this.repository.findAll()));
+        GenericResponseConstants.OPERACION_CORRECTA,
+        this.mapper.toDto(categories));
   }
 
   @Override
@@ -82,5 +84,16 @@ public class CategoryServiceImpl implements CategoryService {
     final Optional<Category> category = this.repository.findById(id);
     return category.map(value -> CategoryUtils.buildGenericResponseSuccess(this.mapper.destinationToSource(value)))
         .orElseGet(CategoryUtils::buildGenericResponseError);
+  }
+
+  private List<Category> getHierarchicalList(final List<Category> categories) {
+    for (final Category category : categories) {
+      category.setId(category.getId());
+      category.setDescription(category.getDescription());
+      category.setIsActive(category.getIsActive());
+      category.setSubCategories(this.repository.findCategoryByParentCategory(category.getId()));
+      this.getHierarchicalList(category.getSubCategories());
+    }
+    return categories;
   }
 }

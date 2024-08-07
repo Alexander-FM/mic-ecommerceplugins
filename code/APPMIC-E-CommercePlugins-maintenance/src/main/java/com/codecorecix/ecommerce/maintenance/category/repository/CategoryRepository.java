@@ -12,6 +12,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
 
+  @Query("SELECT C FROM Category C WHERE C.parentCategory = ?1")
+  List<Category> findCategoryByParentCategory(Integer parentCategory);
+
+  List<Category> findCategoryByParentCategoryIsNull();
+
   List<Category> findByIsActiveIsTrue();
 
   @Modifying

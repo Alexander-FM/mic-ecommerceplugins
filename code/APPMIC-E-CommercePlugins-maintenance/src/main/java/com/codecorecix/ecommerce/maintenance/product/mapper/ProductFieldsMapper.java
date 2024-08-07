@@ -15,6 +15,7 @@ public interface ProductFieldsMapper extends GenericFieldsMapper<ProductResponse
 
   Product sourceToDestination(final ProductRequestDto source);
 
+  @Mapping(target = "subCategoryName", source = "destination.category.description")
   @Mapping(target = "categoryName", source = "destination.category.description")
   @Mapping(target = "brandName", source = "destination.brand.description")
   ProductResponseDto destinationToSource(final Product destination);

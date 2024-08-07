@@ -1,5 +1,7 @@
 package com.codecorecix.ecommerce.maintenance.category.api.dto.response;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -16,4 +18,6 @@ public class CategoryResponseDto {
   private String description;
 
   private Boolean isActive;
+
+  private List<CategoryResponseDto> subCategories;
 }
