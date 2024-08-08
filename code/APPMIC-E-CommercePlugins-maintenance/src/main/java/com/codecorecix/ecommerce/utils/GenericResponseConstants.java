@@ -30,6 +30,8 @@ public class GenericResponseConstants {
 
   public static final String OPERACION_ERRONEA = "Ha ocurrido un error al realizar la operación";
 
+  public static final String RESOURCES_NOT_FOUND = "No se encontró el archivo";
+
   public static final String DASH = " - ";
 
   public static final String COLON = ": ";
