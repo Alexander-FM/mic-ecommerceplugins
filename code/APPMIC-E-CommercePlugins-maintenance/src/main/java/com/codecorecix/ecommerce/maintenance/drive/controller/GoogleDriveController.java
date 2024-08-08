@@ -7,7 +7,7 @@ import java.security.GeneralSecurityException;
 import java.util.Objects;
 
 import com.codecorecix.ecommerce.event.entities.ProductImage;
-import com.codecorecix.ecommerce.maintenance.drive.GoogleDriveService;
+import com.codecorecix.ecommerce.maintenance.drive.service.GoogleDriveService;
 import com.codecorecix.ecommerce.maintenance.product.service.ProductService;
 
 import org.springframework.http.HttpStatus;
