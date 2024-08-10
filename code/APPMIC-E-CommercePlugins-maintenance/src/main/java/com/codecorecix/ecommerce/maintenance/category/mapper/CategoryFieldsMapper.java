@@ -8,12 +8,16 @@ import com.codecorecix.ecommerce.maintenance.category.api.dto.request.CategoryRe
 import com.codecorecix.ecommerce.maintenance.category.api.dto.response.CategoryResponseDto;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface CategoryFieldsMapper extends GenericFieldsMapper<CategoryResponseDto, Category> {
 
+  @Mapping(target = "subCategories", ignore = true)
+  @Mapping(target = "parentCategory", ignore = true)
   Category sourceToDestination(final CategoryRequestDto source);
 
+  @Mapping(target = "subCategories", ignore = true)
   CategoryResponseDto destinationToSource(final Category destination);
 
   @Override

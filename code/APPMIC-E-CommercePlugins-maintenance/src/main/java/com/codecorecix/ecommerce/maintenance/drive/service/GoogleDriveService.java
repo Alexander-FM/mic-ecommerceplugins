@@ -16,5 +16,5 @@ public interface GoogleDriveService {
    * @throws GeneralSecurityException the GeneralSecurityException.
    * @throws IOException the IOException.
    */
-  String uploadFile(final File filePath, String mimeType, String folderName) throws GeneralSecurityException, IOException;
+  String uploadFile(final File filePath, final String mimeType, final String folderName) throws GeneralSecurityException, IOException;
 }
