@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class GoogleDriveResponse {
 
-  private int status;
+  private Integer status;
 
   private String message;
 

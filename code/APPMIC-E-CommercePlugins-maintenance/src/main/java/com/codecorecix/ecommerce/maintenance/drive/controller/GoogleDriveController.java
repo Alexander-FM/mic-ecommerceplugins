@@ -1,17 +1,25 @@
 package com.codecorecix.ecommerce.maintenance.drive.controller;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.security.GeneralSecurityException;
 import java.util.Objects;
 
-import com.codecorecix.ecommerce.event.entities.Product;
-import com.codecorecix.ecommerce.event.entities.ProductImage;
 import com.codecorecix.ecommerce.maintenance.drive.service.GoogleDriveResponse;
 import com.codecorecix.ecommerce.maintenance.drive.service.GoogleDriveService;
+import com.codecorecix.ecommerce.maintenance.product.api.dto.request.ProductRequestDto;
+import com.codecorecix.ecommerce.maintenance.product.api.dto.response.ProductResponseDto;
+import com.codecorecix.ecommerce.maintenance.product.image.api.dto.request.ProductImageRequestDto;
+import com.codecorecix.ecommerce.maintenance.product.image.api.dto.response.ProductImageResponseDto;
+import com.codecorecix.ecommerce.maintenance.product.image.service.ProductImageService;
+import com.codecorecix.ecommerce.maintenance.product.mapper.ProductFieldsMapper;
 import com.codecorecix.ecommerce.maintenance.product.service.ProductService;
+import com.codecorecix.ecommerce.utils.GenericException;
+import com.codecorecix.ecommerce.utils.GenericResponse;
+import com.codecorecix.ecommerce.utils.GenericResponseConstants;
+import com.codecorecix.ecommerce.utils.GenericUtils;
 
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,38 +30,45 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("api/googleDrive")
+@RequiredArgsConstructor
 public class GoogleDriveController {
 
   private final GoogleDriveService googleDriveService;
 
+  private final ProductImageService productImageService;
+
   private final ProductService productService;
 
-  public GoogleDriveController(GoogleDriveService googleDriveService, ProductService productService) {
-    this.googleDriveService = googleDriveService;
-    this.productService = productService;
-  }
+  private final ProductFieldsMapper productFieldsMapper;
 
   @PostMapping("/uploadImageProduct")
-  public ResponseEntity<ProductImage> uploadImage(@RequestParam("file") final MultipartFile file,
+  public ResponseEntity<GenericResponse<ProductImageResponseDto>> uploadImage(@RequestParam("file") final MultipartFile file,
       @RequestParam("productId") final Integer productId) {
     try {
-      Path tempDir = Files.createTempDirectory("");
-      Path tempFilePath = tempDir.resolve(Objects.requireNonNull(file.getOriginalFilename()));
+      final Path tempDir = Files.createTempDirectory(StringUtils.EMPTY);
+      final Path tempFilePath = tempDir.resolve(Objects.requireNonNull(file.getOriginalFilename()));
       Files.write(tempFilePath, file.getBytes());
-      final GoogleDriveResponse response = this.googleDriveService.uploadFile(tempFilePath.toFile(), file.getContentType());
+      final GoogleDriveResponse googleDriveResponse = this.googleDriveService.uploadFile(tempFilePath.toFile(), file.getContentType());
       Files.delete(tempFilePath);
       Files.delete(tempDir);
-      /*// Crear y guardar objeto ProductImage
-      ProductImage productImage = new ProductImage();
-      productImage.setImagenUrl(fileUrl);
-      // Asociar la imagen al producto y guardar en la base de datos
-      final GenericResponse<ProductResponseDto> productResponseDto = this.productService.findById(productId);
-      productImage.setProduct(new Product());
-      productImage = productImageService.save(productImage);*/
-      ProductImage productImage = new ProductImage(1, response.getUrl(), new Product());
-      return ResponseEntity.status(HttpStatus.OK).body(productImage);
-    } catch (IOException | GeneralSecurityException e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+
+      final GenericResponse<ProductResponseDto> productResponse = this.productService.findById(productId);
+      if (Objects.nonNull(productResponse.getBody()) && StringUtils.isNotEmpty(googleDriveResponse.getUrl())) {
+        final ProductRequestDto productRequestDto = new ProductRequestDto(productResponse.getBody().getId());
+        final ProductImageRequestDto productImageRequestDto =
+            new ProductImageRequestDto(null, googleDriveResponse.getUrl(), this.productFieldsMapper.sourceToDestination(productRequestDto));
+        final GenericResponse<ProductImageResponseDto> productImageResponseDto =
+            GenericUtils.buildGenericResponseSuccess(this.productImageService.saveImage(productImageRequestDto),
+                GenericResponseConstants.OPERACION_CORRECTA, GenericResponseConstants.RPTA_OK);
+        return ResponseEntity.status(HttpStatus.OK).body(productImageResponseDto);
+      } else {
+        final GenericResponse<ProductImageResponseDto> productImageResponseDto =
+            GenericUtils.buildGenericResponseSuccess(new ProductImageResponseDto(productId, googleDriveResponse.getUrl()),
+                GenericResponseConstants.OPERACION_ERRONEA, GenericResponseConstants.RPTA_WARNING);
+        return ResponseEntity.status(HttpStatus.OK).body(productImageResponseDto);
+      }
+    } catch (final Exception e) {
+      throw new GenericException(GenericResponseConstants.OPERACION_INCORRECTA, e);
     }
   }
 }

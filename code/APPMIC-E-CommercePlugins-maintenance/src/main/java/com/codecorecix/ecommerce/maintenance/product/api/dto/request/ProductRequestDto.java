@@ -43,4 +43,8 @@ public class ProductRequestDto implements Serializable {
   private List<ProductImage> images = new ArrayList<>();
 
   private List<ProductDetail> details = new ArrayList<>();
+
+  public ProductRequestDto(final Integer id) {
+    this.id = id;
+  }
 }

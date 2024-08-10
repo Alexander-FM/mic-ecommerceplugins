@@ -27,9 +27,9 @@ public class ProductUtils {
    *
    * @return GenericResponse of CategoryResponseDto The generic response.
    */
-  public static GenericResponse<ProductResponseDto> buildGenericResponseSuccess(final ProductResponseDto categoryResponseDto) {
+  public static GenericResponse<ProductResponseDto> buildGenericResponseSuccess(final ProductResponseDto productResponseDto) {
     return new GenericResponse<>(GenericResponseConstants.TIPO_DATA, GenericResponseConstants.RPTA_OK,
         StringUtils.joinWith(GenericResponseConstants.DASH, GenericResponseConstants.OPERACION_CORRECTA),
-        categoryResponseDto);
+        productResponseDto);
   }
 }

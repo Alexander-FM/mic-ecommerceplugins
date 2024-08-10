@@ -25,8 +25,6 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class GoogleDriveServiceImpl implements GoogleDriveService {
 
-  private static final String APPLICATION_NAME = "APPMIC-E-CommercePlugins";
-
   private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
 
   private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
