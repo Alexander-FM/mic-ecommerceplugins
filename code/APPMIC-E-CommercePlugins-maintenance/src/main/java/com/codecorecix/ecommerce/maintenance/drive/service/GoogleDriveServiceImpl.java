@@ -30,8 +30,8 @@ public class GoogleDriveServiceImpl implements GoogleDriveService {
   private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
 
   @Override
-  public GoogleDriveResponse uploadFile(final File file, final String mimeType) throws GeneralSecurityException, IOException {
-    GoogleDriveResponse googleDriveResponse = new GoogleDriveResponse();
+  public GoogleDriveResponse uploadFile(final File file, final String mimeType) {
+    final GoogleDriveResponse googleDriveResponse = new GoogleDriveResponse();
     try {
       final String folderId = "1I1t56zZveZub2phFIaNAoztIf3wH3Rxy";
       Drive drive = createDriveService();
@@ -39,14 +39,29 @@ public class GoogleDriveServiceImpl implements GoogleDriveService {
       fileMetaData.setName(file.getName());
       fileMetaData.setParents(Collections.singletonList(folderId));
       FileContent mediaContent = new FileContent(mimeType, file);
-      com.google.api.services.drive.model.File uploadFile = drive.files().create(fileMetaData, mediaContent).setFields("id").execute();
-      final String imageUrl = "https://drive.google.com/file/d/" + uploadFile.getId() + "/view";
-      googleDriveResponse.setUrl(imageUrl);
+      com.google.api.services.drive.model.File uploadFile = drive.files().create(fileMetaData, mediaContent).execute();
+      googleDriveResponse.setUrl(
+          StringUtils.join(GenericResponseConstants.ORIGINAL_URL, uploadFile.getId(), GenericResponseConstants.VIEW));
       googleDriveResponse.setMessage("Image load with successfully");
-    } catch (Exception e) {
+    } catch (final Exception e) {
       log.info("Error: {}", e.getMessage());
       googleDriveResponse.setStatus(500);
       googleDriveResponse.setMessage(e.getMessage());
+    }
+    return googleDriveResponse;
+  }
+
+  @Override
+  public GoogleDriveResponse deleteFile(final String fileId) {
+    final GoogleDriveResponse googleDriveResponse = new GoogleDriveResponse();
+    try {
+      Drive drive = createDriveService();
+      drive.files().delete(fileId).execute();
+      return new GoogleDriveResponse(1, "¡File has been deleted!", fileId);
+    } catch (final Exception e) {
+      log.info("Error deleting file: {}", e.getMessage());
+      googleDriveResponse.setMessage("File hasn't been deleted!");
+      googleDriveResponse.setStatus(0);
     }
     return googleDriveResponse;
   }

@@ -22,6 +22,8 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -66,6 +68,27 @@ public class GoogleDriveController {
             GenericUtils.buildGenericResponseSuccess(new ProductImageResponseDto(productId, googleDriveResponse.getUrl()),
                 GenericResponseConstants.OPERACION_ERRONEA, GenericResponseConstants.RPTA_WARNING);
         return ResponseEntity.status(HttpStatus.OK).body(productImageResponseDto);
+      }
+    } catch (final Exception e) {
+      throw new GenericException(GenericResponseConstants.OPERACION_INCORRECTA, e);
+    }
+  }
+
+  @DeleteMapping("/deleteImage/{fileId}")
+  public ResponseEntity<GenericResponse<ProductImageResponseDto>> deleteImage(@PathVariable(name = "fileId") final String fileId) {
+    try {
+      final GoogleDriveResponse googleDriveResponse = this.googleDriveService.deleteFile(fileId);
+      final ProductImageResponseDto productImageResponseDto = this.productImageService.findByUrlName(fileId);
+      if (StringUtils.isNotEmpty(productImageResponseDto.getImageUrl())) {
+        final ProductImageResponseDto productImageResponseDtoDeleted =
+            this.productImageService.deleteImage(productImageResponseDto.getId());
+        return ResponseEntity.status(HttpStatus.OK).body(
+            GenericUtils.buildGenericResponseSuccess(productImageResponseDtoDeleted, GenericResponseConstants.OPERACION_CORRECTA,
+                GenericResponseConstants.RPTA_WARNING));
+      } else {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+            GenericUtils.buildGenericResponseSuccess(new ProductImageResponseDto(), GenericResponseConstants.OPERACION_INCORRECTA,
+                GenericResponseConstants.RPTA_WARNING));
       }
     } catch (final Exception e) {
       throw new GenericException(GenericResponseConstants.OPERACION_INCORRECTA, e);

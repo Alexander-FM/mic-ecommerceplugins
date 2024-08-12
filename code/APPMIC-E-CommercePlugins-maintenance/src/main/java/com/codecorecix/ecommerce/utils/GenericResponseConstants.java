@@ -32,6 +32,10 @@ public class GenericResponseConstants {
 
   public static final String RESOURCES_NOT_FOUND = "No se encontró el archivo";
 
+  public static final String ORIGINAL_URL = "https://drive.google.com/file/d/";
+
+  public static final String VIEW = "/view";
+
   public static final String DASH = " - ";
 
   public static final String COLON = ": ";
