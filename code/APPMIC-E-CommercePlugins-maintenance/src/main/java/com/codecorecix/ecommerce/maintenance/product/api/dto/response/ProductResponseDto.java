@@ -31,8 +31,6 @@ public class ProductResponseDto implements Serializable {
 
   private String categoryName;
 
-  private String subCategoryName;
-
   private String brandName;
 
   private Boolean isRecommended;

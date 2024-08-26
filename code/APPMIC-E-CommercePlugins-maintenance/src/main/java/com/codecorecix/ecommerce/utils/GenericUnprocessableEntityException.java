@@ -11,26 +11,6 @@ public class GenericUnprocessableEntityException extends RuntimeException {
 
   /**
    * Instantiates a new unprocessable entity exception.
-   */
-  public GenericUnprocessableEntityException() {
-    super();
-  }
-
-  /**
-   * Instantiates a new unprocessable entity exception.
-   *
-   * @param message the message
-   * @param cause the cause
-   * @param enableSuppression the enable suppression
-   * @param writableStackTrace the writable stack trace
-   */
-  public GenericUnprocessableEntityException(String message, Throwable cause, boolean enableSuppression,
-      boolean writableStackTrace) {
-    super(message, cause, enableSuppression, writableStackTrace);
-  }
-
-  /**
-   * Instantiates a new unprocessable entity exception.
    *
    * @param message the message
    * @param cause the cause

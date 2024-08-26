@@ -6,9 +6,11 @@ import java.util.List;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -35,7 +37,7 @@ public class Product implements Serializable {
   @Column
   private String name;
 
-  @Column(length = 500)
+  @Column(length = 1500)
   private String description;
 
   @Column
@@ -45,9 +47,11 @@ public class Product implements Serializable {
   private Integer stock;
 
   @ManyToOne
+  @JoinColumn(foreignKey = @ForeignKey(name = "FK_Products_Categories"))
   private Category category;
 
   @ManyToOne
+  @JoinColumn(foreignKey = @ForeignKey(name = "FK_Products_Brands"))
   private Brand brand;
 
   @Column

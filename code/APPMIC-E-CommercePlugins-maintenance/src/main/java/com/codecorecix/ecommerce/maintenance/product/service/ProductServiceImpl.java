@@ -31,21 +31,21 @@ public class ProductServiceImpl implements ProductService {
 
   @Override
   public GenericResponse<List<ProductResponseDto>> listProduct() {
-    return new GenericResponse<>(GenericResponseConstants.TIPO_RESULT, GenericResponseConstants.RPTA_OK,
-        GenericResponseConstants.OPERACION_CORRECTA, this.mapper.toDto(this.repository.findAll()));
+    return new GenericResponse<>(GenericResponseConstants.RPTA_OK, GenericResponseConstants.CORRECT_OPERATION,
+        this.mapper.toDto(this.repository.findAll()));
   }
 
   @Override
   public GenericResponse<List<ProductResponseDto>> listActiveProducts() {
-    return new GenericResponse<>(GenericResponseConstants.TIPO_RESULT, GenericResponseConstants.RPTA_OK,
-        GenericResponseConstants.OPERACION_CORRECTA, this.mapper.toDto(this.repository.findByIsActiveIsTrue()));
+    return new GenericResponse<>(GenericResponseConstants.RPTA_OK, GenericResponseConstants.CORRECT_OPERATION,
+        this.mapper.toDto(this.repository.findByIsActiveIsTrue()));
   }
 
   @Override
   public GenericResponse<ProductResponseDto> saveProduct(final ProductRequestDto productRequestDto) {
     final Product product = (this.repository.save(this.mapper.sourceToDestination(productRequestDto)));
-    return new GenericResponse<>(GenericResponseConstants.TIPO_DATA, GenericResponseConstants.RPTA_OK,
-        GenericResponseConstants.OPERACION_CORRECTA, this.mapper.destinationToSource(product));
+    return new GenericResponse<>(GenericResponseConstants.RPTA_OK, GenericResponseConstants.CORRECT_OPERATION,
+        this.mapper.destinationToSource(product));
   }
 
   @Override
@@ -53,11 +53,10 @@ public class ProductServiceImpl implements ProductService {
     final Optional<Product> product = this.repository.findById(id);
     if (product.isPresent()) {
       this.repository.deleteById(id);
-      return new GenericResponse<>(GenericResponseConstants.TIPO_DATA, GenericResponseConstants.RPTA_OK,
-          GenericResponseConstants.OPERACION_CORRECTA, null);
+      return new GenericResponse<>(GenericResponseConstants.RPTA_OK, GenericResponseConstants.CORRECT_OPERATION, null);
     } else {
-      return new GenericResponse<>(GenericResponseConstants.TIPO_DATA, GenericResponseConstants.RPTA_ERROR,
-          StringUtils.joinWith(GenericResponseConstants.DASH, GenericResponseConstants.OPERACION_INCORRECTA, ProductConstants.NO_EXIST),
+      return new GenericResponse<>(GenericResponseConstants.RPTA_ERROR,
+          StringUtils.joinWith(GenericResponseConstants.DASH, GenericResponseConstants.INCORRECT_OPERATION, ProductConstants.NO_EXIST),
           null);
     }
   }
@@ -68,11 +67,10 @@ public class ProductServiceImpl implements ProductService {
     final Optional<Product> product = this.repository.findById(id);
     if (product.isPresent()) {
       this.repository.desactivateOrActivateProduct(isActive, id);
-      return new GenericResponse<>(GenericResponseConstants.TIPO_DATA, GenericResponseConstants.RPTA_OK,
-          GenericResponseConstants.OPERACION_CORRECTA, null);
+      return new GenericResponse<>(GenericResponseConstants.RPTA_OK, GenericResponseConstants.CORRECT_OPERATION, null);
     } else {
-      return new GenericResponse<>(GenericResponseConstants.TIPO_DATA, GenericResponseConstants.RPTA_ERROR,
-          StringUtils.joinWith(GenericResponseConstants.DASH, GenericResponseConstants.OPERACION_INCORRECTA, ProductConstants.NO_EXIST),
+      return new GenericResponse<>(GenericResponseConstants.RPTA_ERROR,
+          StringUtils.joinWith(GenericResponseConstants.DASH, GenericResponseConstants.INCORRECT_OPERATION, ProductConstants.NO_EXIST),
           null);
     }
   }

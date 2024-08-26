@@ -20,4 +20,6 @@ public class CategoryRequestDto {
   private String description;
 
   private Boolean isActive;
+
+  private Integer parentCategory;
 }

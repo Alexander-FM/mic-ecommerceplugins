@@ -14,40 +14,38 @@ import com.codecorecix.ecommerce.utils.GenericResponse;
 import com.codecorecix.ecommerce.utils.GenericResponseConstants;
 
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
 
   private final CategoryRepository repository;
 
   private final CategoryFieldsMapper mapper;
 
-  public CategoryServiceImpl(CategoryRepository repository, CategoryFieldsMapper mapper) {
-    this.repository = repository;
-    this.mapper = mapper;
-  }
-
   @Override
   public GenericResponse<List<CategoryResponseDto>> listCategory() {
-    final List<Category> categories = this.getHierarchicalList(this.repository.findCategoryByParentCategoryIsNull());
-    return new GenericResponse<>(GenericResponseConstants.TIPO_RESULT, GenericResponseConstants.RPTA_OK,
-        GenericResponseConstants.OPERACION_CORRECTA,
+    final List<Category> categories = this.getHierarchicalList(this.repository.findCategoryByParentCategoryIsNull(), true);
+    return new GenericResponse<>(GenericResponseConstants.RPTA_OK, GenericResponseConstants.CORRECT_OPERATION,
         this.mapper.toDto(categories));
   }
 
   @Override
   public GenericResponse<List<CategoryResponseDto>> listActiveCategories() {
-    return new GenericResponse<>(GenericResponseConstants.TIPO_RESULT, GenericResponseConstants.RPTA_OK,
-        GenericResponseConstants.OPERACION_CORRECTA, this.mapper.toDto(this.repository.findByIsActiveIsTrue()));
+    final List<Category> categories =
+        this.getHierarchicalList(this.repository.findCategoryByParentCategoryIsNullAndIsActiveIsTrue(), false);
+    return new GenericResponse<>(GenericResponseConstants.RPTA_OK, GenericResponseConstants.CORRECT_OPERATION,
+        this.mapper.toDto(categories));
   }
 
   @Override
   public GenericResponse<CategoryResponseDto> saveCategory(final CategoryRequestDto categoryRequestDto) {
     final Category category = (this.repository.save(this.mapper.sourceToDestination(categoryRequestDto)));
-    return new GenericResponse<>(GenericResponseConstants.TIPO_DATA, GenericResponseConstants.RPTA_OK,
-        GenericResponseConstants.OPERACION_CORRECTA, this.mapper.destinationToSource(category));
+    return new GenericResponse<>(GenericResponseConstants.RPTA_OK, GenericResponseConstants.CORRECT_OPERATION,
+        this.mapper.destinationToSource(category));
   }
 
   @Override
@@ -55,11 +53,10 @@ public class CategoryServiceImpl implements CategoryService {
     final Optional<Category> category = this.repository.findById(id);
     if (category.isPresent()) {
       this.repository.deleteById(id);
-      return new GenericResponse<>(GenericResponseConstants.TIPO_DATA, GenericResponseConstants.RPTA_OK,
-          GenericResponseConstants.OPERACION_CORRECTA, null);
+      return new GenericResponse<>(GenericResponseConstants.RPTA_OK, GenericResponseConstants.CORRECT_OPERATION, null);
     } else {
-      return new GenericResponse<>(GenericResponseConstants.TIPO_DATA, GenericResponseConstants.RPTA_ERROR,
-          StringUtils.joinWith(GenericResponseConstants.DASH, GenericResponseConstants.OPERACION_INCORRECTA, CategoryConstants.NO_EXIST),
+      return new GenericResponse<>(GenericResponseConstants.RPTA_ERROR,
+          StringUtils.joinWith(GenericResponseConstants.DASH, GenericResponseConstants.INCORRECT_OPERATION, CategoryConstants.NO_EXIST),
           null);
     }
   }
@@ -70,11 +67,10 @@ public class CategoryServiceImpl implements CategoryService {
     final Optional<Category> categoryOptional = this.repository.findById(id);
     if (categoryOptional.isPresent()) {
       this.repository.desactivateOrActivateCategory(isActive, id);
-      return new GenericResponse<>(GenericResponseConstants.TIPO_DATA, GenericResponseConstants.RPTA_OK,
-          GenericResponseConstants.OPERACION_CORRECTA, null);
+      return new GenericResponse<>(GenericResponseConstants.RPTA_OK, GenericResponseConstants.CORRECT_OPERATION, null);
     } else {
-      return new GenericResponse<>(GenericResponseConstants.TIPO_DATA, GenericResponseConstants.RPTA_ERROR,
-          StringUtils.joinWith(GenericResponseConstants.DASH, GenericResponseConstants.OPERACION_INCORRECTA, CategoryConstants.NO_EXIST),
+      return new GenericResponse<>(GenericResponseConstants.RPTA_ERROR,
+          StringUtils.joinWith(GenericResponseConstants.DASH, GenericResponseConstants.INCORRECT_OPERATION, CategoryConstants.NO_EXIST),
           null);
     }
   }
@@ -86,13 +82,14 @@ public class CategoryServiceImpl implements CategoryService {
         .orElseGet(CategoryUtils::buildGenericResponseError);
   }
 
-  private List<Category> getHierarchicalList(final List<Category> categories) {
+  private List<Category> getHierarchicalList(final List<Category> categories, final boolean isActive) {
     for (final Category category : categories) {
       category.setId(category.getId());
       category.setDescription(category.getDescription());
       category.setIsActive(category.getIsActive());
-      category.setSubCategories(this.repository.findCategoryByParentCategory(category.getId()));
-      this.getHierarchicalList(category.getSubCategories());
+      category.setSubCategories(isActive ? this.repository.findCategoryByParentCategory(category.getId())
+          : this.repository.findCategoryByParentCategoryAndIsActiveIsTrue(category.getId()));
+      this.getHierarchicalList(category.getSubCategories(), isActive);
     }
     return categories;
   }

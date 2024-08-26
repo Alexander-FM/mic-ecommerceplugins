@@ -12,16 +12,5 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest
-    container_name: phpmyadmin
-    environment:
-      PMA_HOST: mysql
-    ports:
-      - "8080:80"
-    depends_on:
-      - mysql
-    stdin_open: true
-    tty: true
 volumes:
   mysql_data:

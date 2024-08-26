@@ -44,7 +44,7 @@ public class CategoryController {
   }
 
   @GetMapping("/getById/{id}")
-  public ResponseEntity<GenericResponse<CategoryResponseDto>> getCategoriaById(@PathVariable(value = "id") final Integer id) {
+  public ResponseEntity<GenericResponse<CategoryResponseDto>> getCategoryById(@PathVariable(value = "id") final Integer id) {
     final GenericResponse<CategoryResponseDto> response = this.service.findById(id);
     if (Objects.nonNull(response.getBody())) {
       return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -87,7 +87,7 @@ public class CategoryController {
   }
 
   @DeleteMapping("/deleteCategory/{id}")
-  public ResponseEntity<GenericResponse<CategoryResponseDto>> deleteCategoriaById(@PathVariable(value = "id") final Integer id) {
+  public ResponseEntity<GenericResponse<CategoryResponseDto>> deleteCategoryById(@PathVariable(value = "id") final Integer id) {
     final GenericResponse<CategoryResponseDto> response = this.service.findById(id);
     if (ObjectUtils.isNotEmpty(response.getBody())) {
       return ResponseEntity.status(HttpStatus.OK).body(this.service.deleteCategory(id));

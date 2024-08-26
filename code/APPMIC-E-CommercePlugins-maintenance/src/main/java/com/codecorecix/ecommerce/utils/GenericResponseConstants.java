@@ -6,17 +6,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class GenericResponseConstants {
 
-  public static final String TIPO_EXCEPTION = "exception";
+  public static final String TYPE_EXCEPTION = "exception";
 
-  public static final String TIPO_SQL_EXCEPTION = "sql-exception";
+  public static final String TYPE_SQL_EXCEPTION = "sql-exception";
 
-  public static final String TIPO_VALID_EXCEPTION = " valid-exception";
-
-  public static final String TIPO_RESULT = "result";
-
-  public static final String TIPO_DATA = "data";
-
-  public static final String TIPO_AUTH = "auth";
+  public static final String TYPE_VALID_EXCEPTION = " valid-exception";
 
   public static final int RPTA_OK = 1;
 
@@ -24,11 +18,11 @@ public class GenericResponseConstants {
 
   public static final int RPTA_ERROR = -1;
 
-  public static final String OPERACION_CORRECTA = "Operación finalizada correctamente";
+  public static final String CORRECT_OPERATION = "Operación finalizada correctamente";
 
-  public static final String OPERACION_INCORRECTA = "No se ha podido culminar la operación";
+  public static final String INCORRECT_OPERATION = "No se ha podido culminar la operación";
 
-  public static final String OPERACION_ERRONEA = "Ha ocurrido un error al realizar la operación";
+  public static final String WRONG_OPERATION = "Ha ocurrido un error al realizar la operación";
 
   public static final String RESOURCES_NOT_FOUND = "No se encontró el archivo";
 

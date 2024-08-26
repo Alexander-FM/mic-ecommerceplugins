@@ -2,6 +2,8 @@ package com.codecorecix.ecommerce.maintenance.drive.service;
 
 import java.io.File;
 
+import com.codecorecix.ecommerce.maintenance.drive.api.dto.response.GoogleDriveResponse;
+
 public interface GoogleDriveService {
 
   /**

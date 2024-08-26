@@ -14,8 +14,7 @@ public class GenericUtils {
    * @return GenericResponse The generic response of any type.
    */
   public static <T> GenericResponse<T> buildGenericResponseSuccess(final T object, final String message, final Integer rpta) {
-    return new GenericResponse<>(GenericResponseConstants.TIPO_DATA, rpta, StringUtils.joinWith(GenericResponseConstants.DASH, message),
-        object
+    return new GenericResponse<>(rpta, StringUtils.joinWith(GenericResponseConstants.DASH, message), object
     );
   }
 }

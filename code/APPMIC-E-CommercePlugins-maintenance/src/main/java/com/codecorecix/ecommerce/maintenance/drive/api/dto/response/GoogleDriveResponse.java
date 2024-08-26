@@ -1,4 +1,4 @@
-package com.codecorecix.ecommerce.maintenance.drive.service;
+package com.codecorecix.ecommerce.maintenance.drive.api.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,8 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GoogleDriveResponse {
-
-  private Integer status;
 
   private String message;
 

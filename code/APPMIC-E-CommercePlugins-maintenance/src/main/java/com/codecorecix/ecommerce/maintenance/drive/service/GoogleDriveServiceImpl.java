@@ -8,10 +8,15 @@ import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.Objects;
 
+import com.codecorecix.ecommerce.maintenance.drive.api.dto.response.GoogleDriveResponse;
+import com.codecorecix.ecommerce.maintenance.drive.utils.GoogleDriveConstants;
+import com.codecorecix.ecommerce.utils.GenericErrorMessage;
+import com.codecorecix.ecommerce.utils.GenericException;
 import com.codecorecix.ecommerce.utils.GenericResponseConstants;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.FileContent;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
@@ -33,19 +38,17 @@ public class GoogleDriveServiceImpl implements GoogleDriveService {
   public GoogleDriveResponse uploadFile(final File file, final String mimeType) {
     final GoogleDriveResponse googleDriveResponse = new GoogleDriveResponse();
     try {
-      final String folderId = "1I1t56zZveZub2phFIaNAoztIf3wH3Rxy";
       Drive drive = createDriveService();
       com.google.api.services.drive.model.File fileMetaData = new com.google.api.services.drive.model.File();
       fileMetaData.setName(file.getName());
-      fileMetaData.setParents(Collections.singletonList(folderId));
+      fileMetaData.setParents(Collections.singletonList(GoogleDriveConstants.FOLDER_ID));
       FileContent mediaContent = new FileContent(mimeType, file);
       com.google.api.services.drive.model.File uploadFile = drive.files().create(fileMetaData, mediaContent).execute();
       googleDriveResponse.setUrl(
           StringUtils.join(GenericResponseConstants.ORIGINAL_URL, uploadFile.getId(), GenericResponseConstants.VIEW));
-      googleDriveResponse.setMessage("Image load with successfully");
+      googleDriveResponse.setMessage(GoogleDriveConstants.SUCCESSFUL_LOAD);
     } catch (final Exception e) {
       log.info("Error: {}", e.getMessage());
-      googleDriveResponse.setStatus(500);
       googleDriveResponse.setMessage(e.getMessage());
     }
     return googleDriveResponse;
@@ -53,17 +56,17 @@ public class GoogleDriveServiceImpl implements GoogleDriveService {
 
   @Override
   public GoogleDriveResponse deleteFile(final String fileId) {
-    final GoogleDriveResponse googleDriveResponse = new GoogleDriveResponse();
     try {
       Drive drive = createDriveService();
+      drive.files().get(fileId).execute();
       drive.files().delete(fileId).execute();
-      return new GoogleDriveResponse(1, "¡File has been deleted!", fileId);
-    } catch (final Exception e) {
-      log.info("Error deleting file: {}", e.getMessage());
-      googleDriveResponse.setMessage("File hasn't been deleted!");
-      googleDriveResponse.setStatus(0);
+      return new GoogleDriveResponse(GoogleDriveConstants.SUCCESSFUL_REMOVAL, fileId);
+    } catch (final GoogleJsonResponseException e) {
+      log.info("Error deleting: {}", e.getDetails().getMessage());
+      throw new GenericException(GenericErrorMessage.ERROR_DELETE_IMAGE);
+    } catch (Exception e) {
+      throw new GenericException(GenericErrorMessage.ERROR_DELETE_IMAGE);
     }
-    return googleDriveResponse;
   }
 
   private Drive createDriveService() throws IOException, GeneralSecurityException {
