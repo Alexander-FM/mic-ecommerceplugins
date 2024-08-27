@@ -21,6 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -63,9 +64,20 @@ public class GoogleDriveController {
     try {
       this.googleDriveService.deleteFile(fileId);
       return ResponseEntity.status(HttpStatus.OK).body(
-          GenericUtils.buildGenericResponseSuccess(new GoogleDriveResponse(GoogleDriveConstants.SUCCESSFUL_REMOVAL, null),
+          GenericUtils.buildGenericResponseSuccess(new GoogleDriveResponse(GoogleDriveConstants.SUCCESSFUL_REMOVAL, null, null),
               GenericResponseConstants.CORRECT_OPERATION,
               GenericResponseConstants.RPTA_OK));
+    } catch (final Exception e) {
+      throw new GenericException(GenericErrorMessage.ERROR_DELETE_IMAGE);
+    }
+  }
+
+  @GetMapping("/getImage/{fileId}")
+  public ResponseEntity<GenericResponse<GoogleDriveResponse>> getImageByFileId(@PathVariable(name = "fileId") final String fileId) {
+    try {
+      final GoogleDriveResponse response = this.googleDriveService.findFileByFileId(fileId);
+      return ResponseEntity.status(HttpStatus.OK).body(
+          GenericUtils.buildGenericResponseSuccess(response, GenericResponseConstants.CORRECT_OPERATION, GenericResponseConstants.RPTA_OK));
     } catch (final Exception e) {
       throw new GenericException(GenericErrorMessage.ERROR_DELETE_IMAGE);
     }
