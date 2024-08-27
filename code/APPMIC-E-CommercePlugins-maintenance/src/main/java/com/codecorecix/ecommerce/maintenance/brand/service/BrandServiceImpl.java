@@ -13,6 +13,7 @@ import com.codecorecix.ecommerce.maintenance.brand.utils.BrandUtils;
 import com.codecorecix.ecommerce.utils.GenericResponse;
 import com.codecorecix.ecommerce.utils.GenericResponseConstants;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -58,6 +59,7 @@ public class BrandServiceImpl implements BrandService {
   }
 
   @Override
+  @Transactional
   public GenericResponse<BrandResponseDto> desactivateOrActivateBrand(final Boolean isActive, final Integer id) {
     final Optional<Brand> brandOptional = this.repository.findById(id);
     if (brandOptional.isPresent()) {

@@ -16,7 +16,7 @@ public class CategoryRequestDto {
   private Integer id;
 
   @NotNull(message = "The category should not be null")
-  @Size(min = 5, max = 50, message = "The size must be between 5 and 50 characters")
+  @Size(min = 2, max = 50, message = "The size must be between 2 and 50 characters")
   private String description;
 
   private Boolean isActive;
