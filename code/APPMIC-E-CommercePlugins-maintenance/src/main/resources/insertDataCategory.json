@@ -1,0 +1,47 @@
+[
+  {
+    "description": "Tecnología",
+    "isActive": true,
+    "parentCategory": null
+  },
+  {
+    "description": "Audio",
+    "isActive": true,
+    "parentCategory": 1
+  },
+  {
+    "description": "Parlantes Bluetooth",
+    "isActive": true,
+    "parentCategory": 2
+  },
+  {
+    "description": "Equipos de Sonido",
+    "isActive": true,
+    "parentCategory": 2
+  },
+  {
+    "description": "Audífonos",
+    "isActive": true,
+    "parentCategory": 2
+  },
+  {
+    "description": "Electrohogar",
+    "isActive": true,
+    "parentCategory": null
+  },
+  {
+    "description": "Refrigeradoras",
+    "isActive": true,
+    "parentCategory": 6
+  },
+  {
+    "description": "Congeladoras",
+    "isActive": true,
+    "parentCategory": 7
+  },
+  {
+    "description": "Frigobares",
+    "isActive": true,
+    "parentCategory": 7
+  }
+]

@@ -1,5 +1,7 @@
 package com.codecorecix.ecommerce.maintenance.product.detail.dto.response;
 
+import java.io.Serializable;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductDetailResponseDto {
+public class ProductDetailResponseDto implements Serializable {
 
   private Integer id;
 
