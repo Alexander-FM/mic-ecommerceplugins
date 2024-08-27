@@ -6,10 +6,10 @@ import java.util.Objects;
 
 import com.codecorecix.ecommerce.maintenance.drive.api.dto.response.GoogleDriveResponse;
 import com.codecorecix.ecommerce.maintenance.drive.service.GoogleDriveService;
-import com.codecorecix.ecommerce.maintenance.product.info.api.dto.response.ProductResponseDto;
 import com.codecorecix.ecommerce.maintenance.product.image.api.dto.request.ProductImageRequestDto;
 import com.codecorecix.ecommerce.maintenance.product.image.api.dto.response.ProductImageResponseDto;
 import com.codecorecix.ecommerce.maintenance.product.image.service.ProductImageService;
+import com.codecorecix.ecommerce.maintenance.product.info.api.dto.response.ProductResponseDto;
 import com.codecorecix.ecommerce.maintenance.product.info.mapper.ProductFieldsMapper;
 import com.codecorecix.ecommerce.maintenance.product.info.service.ProductService;
 import com.codecorecix.ecommerce.utils.GenericErrorMessage;
@@ -57,7 +57,8 @@ public class ProductImageController {
         final GoogleDriveResponse googleDriveResponse = this.googleDriveService.uploadFile(tempFilePath.toFile(), file.getContentType());
         Files.delete(tempFilePath);
         Files.delete(tempDir);
-        final ProductImageRequestDto productImageRequestDto = this.buildProductImage(file, productId, googleDriveResponse.getUrl());
+        final ProductImageRequestDto productImageRequestDto = this.buildProductImage(file, productId,
+            StringUtils.join(GenericResponseConstants.ORIGINAL_URL, googleDriveResponse.getUrl(), GenericResponseConstants.VIEW));
         final GenericResponse<ProductImageResponseDto> productImageResponseDto =
             GenericUtils.buildGenericResponseSuccess(this.productImageService.saveImage(productImageRequestDto),
                 GenericResponseConstants.CORRECT_OPERATION, GenericResponseConstants.RPTA_OK);
