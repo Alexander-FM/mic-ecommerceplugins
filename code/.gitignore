@@ -18,7 +18,7 @@ target/
 *.iws
 *.iml
 *.ipr
-APPMIC-E-CommercePlugins-maintenance/src/main/resources/pinpom.json
+APPMIC-E-CommercePlugins-maintenance/src/main/resources/credentials.json
 
 ### NetBeans ###
 /nbproject/private/
