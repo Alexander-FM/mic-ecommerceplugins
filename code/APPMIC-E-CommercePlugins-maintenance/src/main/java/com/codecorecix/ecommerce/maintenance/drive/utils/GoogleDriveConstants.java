@@ -13,5 +13,4 @@ public class GoogleDriveConstants {
   public static final String SUCCESSFUL_REMOVAL = "Image successfully deleted";
 
   public static final String IMAGE_FOUND = "The image has been successfully found in the Google Drive cloud";
-
 }
