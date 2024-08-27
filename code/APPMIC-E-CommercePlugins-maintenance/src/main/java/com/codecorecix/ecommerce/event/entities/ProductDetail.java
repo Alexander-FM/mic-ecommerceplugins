@@ -34,6 +34,10 @@ public class ProductDetail implements Serializable {
   @Column
   private String descripcion;
 
+  /**
+   * <p>Para la relación @ManyToOne y @OneToOne, el tipo de carga por defecto es EAGER (ansiosa). Esto significa que la entidad relacionada se cargará
+   * automáticamente junto con la entidad principal.</p>
+   */
   @ManyToOne
   @JoinColumn(foreignKey = @ForeignKey(name = "FK_ProductsDetails_Products"))
   private Product product;
