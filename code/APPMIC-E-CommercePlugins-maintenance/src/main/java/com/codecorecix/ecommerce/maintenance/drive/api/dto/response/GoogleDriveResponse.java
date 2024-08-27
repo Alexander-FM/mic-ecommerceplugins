@@ -12,4 +12,6 @@ public class GoogleDriveResponse {
   private String message;
 
   private String url;
+
+  private String customUrl;
 }

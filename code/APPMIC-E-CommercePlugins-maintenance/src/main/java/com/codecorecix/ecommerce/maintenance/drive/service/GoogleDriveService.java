@@ -21,4 +21,11 @@ public interface GoogleDriveService {
    * @param fileId the file path.
    */
   void deleteFile(final String fileId);
+
+  /**
+   * Method for find a file to Google Drive.
+   *
+   * @param fileId the file path.
+   */
+  GoogleDriveResponse findFileByFileId(final String fileId);
 }

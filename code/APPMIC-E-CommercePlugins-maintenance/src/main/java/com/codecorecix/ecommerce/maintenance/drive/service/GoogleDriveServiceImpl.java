@@ -44,8 +44,9 @@ public class GoogleDriveServiceImpl implements GoogleDriveService {
       fileMetaData.setParents(Collections.singletonList(GoogleDriveConstants.FOLDER_ID));
       FileContent mediaContent = new FileContent(mimeType, file);
       com.google.api.services.drive.model.File uploadFile = drive.files().create(fileMetaData, mediaContent).execute();
-      googleDriveResponse.setUrl(
+      googleDriveResponse.setCustomUrl(
           StringUtils.join(GenericResponseConstants.ORIGINAL_URL, uploadFile.getId(), GenericResponseConstants.VIEW));
+      googleDriveResponse.setUrl(uploadFile.getId());
       googleDriveResponse.setMessage(GoogleDriveConstants.SUCCESSFUL_LOAD);
     } catch (final Exception e) {
       log.info("Error: {}", e.getMessage());
@@ -59,12 +60,25 @@ public class GoogleDriveServiceImpl implements GoogleDriveService {
     try {
       Drive drive = createDriveService();
       drive.files().get(fileId).execute();
+      this.findFileByFileId(fileId);
       drive.files().delete(fileId).execute();
     } catch (final GoogleJsonResponseException e) {
       log.info("Error deleting: {}", e.getDetails().getMessage());
       throw new GenericException(GenericErrorMessage.ERROR_DELETE_IMAGE);
     } catch (Exception e) {
       throw new GenericException(GenericErrorMessage.ERROR_DELETE_IMAGE);
+    }
+  }
+
+  @Override
+  public GoogleDriveResponse findFileByFileId(final String fileId) {
+    try {
+      Drive drive = createDriveService();
+      com.google.api.services.drive.model.File file = drive.files().get(fileId).execute();
+      return new GoogleDriveResponse(GoogleDriveConstants.IMAGE_FOUND, file.getId(),
+          StringUtils.join(GenericResponseConstants.ORIGINAL_URL, file.getId(), GenericResponseConstants.VIEW));
+    } catch (Exception e) {
+      throw new GenericException(GenericErrorMessage.NOT_FOUND_IMAGE);
     }
   }
 
