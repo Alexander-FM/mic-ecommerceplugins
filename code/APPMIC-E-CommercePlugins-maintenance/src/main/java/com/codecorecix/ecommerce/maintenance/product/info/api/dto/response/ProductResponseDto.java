@@ -4,7 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.codecorecix.ecommerce.event.entities.ProductImage;
+import com.codecorecix.ecommerce.maintenance.product.detail.dto.response.ProductDetailResponseDto;
+import com.codecorecix.ecommerce.maintenance.product.image.api.dto.response.ProductImageResponseDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -35,7 +36,7 @@ public class ProductResponseDto implements Serializable {
 
   private Boolean isRecommended;
 
-  private List<ProductImage> images = new ArrayList<>();
+  private List<ProductImageResponseDto> images = new ArrayList<>();
 
   private List<ProductDetailResponseDto> details = new ArrayList<>();
 }
