@@ -1,12 +1,9 @@
-package com.codecorecix.ecommerce.maintenance.product.api.dto.request;
+package com.codecorecix.ecommerce.maintenance.product.info.api.dto.response;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.codecorecix.ecommerce.event.entities.Brand;
-import com.codecorecix.ecommerce.event.entities.Category;
-import com.codecorecix.ecommerce.event.entities.ProductDetail;
 import com.codecorecix.ecommerce.event.entities.ProductImage;
 
 import lombok.AllArgsConstructor;
@@ -18,7 +15,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductRequestDto implements Serializable {
+public class ProductResponseDto implements Serializable {
 
   private Integer id;
 
@@ -32,19 +29,13 @@ public class ProductRequestDto implements Serializable {
 
   private Integer stock;
 
-  private Category category;
+  private String categoryName;
 
-  private Brand brand;
-
-  private Boolean isActive;
+  private String brandName;
 
   private Boolean isRecommended;
 
   private List<ProductImage> images = new ArrayList<>();
 
-  private List<ProductDetail> details = new ArrayList<>();
-
-  public ProductRequestDto(final Integer id) {
-    this.id = id;
-  }
+  private List<ProductDetailResponseDto> details = new ArrayList<>();
 }

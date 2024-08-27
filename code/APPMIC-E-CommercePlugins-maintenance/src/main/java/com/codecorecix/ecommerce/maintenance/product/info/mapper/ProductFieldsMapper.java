@@ -1,10 +1,10 @@
-package com.codecorecix.ecommerce.maintenance.product.mapper;
+package com.codecorecix.ecommerce.maintenance.product.info.mapper;
 
 import java.util.List;
 
 import com.codecorecix.ecommerce.event.entities.Product;
-import com.codecorecix.ecommerce.maintenance.product.api.dto.request.ProductRequestDto;
-import com.codecorecix.ecommerce.maintenance.product.api.dto.response.ProductResponseDto;
+import com.codecorecix.ecommerce.maintenance.product.info.api.dto.request.ProductRequestDto;
+import com.codecorecix.ecommerce.maintenance.product.info.api.dto.response.ProductResponseDto;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

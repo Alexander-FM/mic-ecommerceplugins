@@ -55,12 +55,11 @@ public class GoogleDriveServiceImpl implements GoogleDriveService {
   }
 
   @Override
-  public GoogleDriveResponse deleteFile(final String fileId) {
+  public void deleteFile(final String fileId) {
     try {
       Drive drive = createDriveService();
       drive.files().get(fileId).execute();
       drive.files().delete(fileId).execute();
-      return new GoogleDriveResponse(GoogleDriveConstants.SUCCESSFUL_REMOVAL, fileId);
     } catch (final GoogleJsonResponseException e) {
       log.info("Error deleting: {}", e.getDetails().getMessage());
       throw new GenericException(GenericErrorMessage.ERROR_DELETE_IMAGE);

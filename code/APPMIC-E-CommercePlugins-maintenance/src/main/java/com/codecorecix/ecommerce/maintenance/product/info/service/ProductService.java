@@ -1,9 +1,9 @@
-package com.codecorecix.ecommerce.maintenance.product.service;
+package com.codecorecix.ecommerce.maintenance.product.info.service;
 
 import java.util.List;
 
-import com.codecorecix.ecommerce.maintenance.product.api.dto.request.ProductRequestDto;
-import com.codecorecix.ecommerce.maintenance.product.api.dto.response.ProductResponseDto;
+import com.codecorecix.ecommerce.maintenance.product.info.api.dto.request.ProductRequestDto;
+import com.codecorecix.ecommerce.maintenance.product.info.api.dto.response.ProductResponseDto;
 import com.codecorecix.ecommerce.utils.GenericResponse;
 
 public interface ProductService {

@@ -1,4 +1,4 @@
-package com.codecorecix.ecommerce.maintenance.product.repository;
+package com.codecorecix.ecommerce.maintenance.product.info.repository;
 
 import java.util.List;
 

@@ -19,7 +19,6 @@ public interface GoogleDriveService {
    * Method for delete a file to Google Drive.
    *
    * @param fileId the file path.
-   * @return GoogleDriveResponse the response.
    */
-  GoogleDriveResponse deleteFile(final String fileId);
+  void deleteFile(final String fileId);
 }

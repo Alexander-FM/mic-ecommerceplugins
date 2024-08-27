@@ -1,15 +1,15 @@
-package com.codecorecix.ecommerce.maintenance.product.service;
+package com.codecorecix.ecommerce.maintenance.product.info.service;
 
 import java.util.List;
 import java.util.Optional;
 
 import com.codecorecix.ecommerce.event.entities.Product;
-import com.codecorecix.ecommerce.maintenance.product.api.dto.request.ProductRequestDto;
-import com.codecorecix.ecommerce.maintenance.product.api.dto.response.ProductResponseDto;
-import com.codecorecix.ecommerce.maintenance.product.mapper.ProductFieldsMapper;
-import com.codecorecix.ecommerce.maintenance.product.repository.ProductRepository;
-import com.codecorecix.ecommerce.maintenance.product.utils.ProductConstants;
-import com.codecorecix.ecommerce.maintenance.product.utils.ProductUtils;
+import com.codecorecix.ecommerce.maintenance.product.info.api.dto.request.ProductRequestDto;
+import com.codecorecix.ecommerce.maintenance.product.info.api.dto.response.ProductResponseDto;
+import com.codecorecix.ecommerce.maintenance.product.info.mapper.ProductFieldsMapper;
+import com.codecorecix.ecommerce.maintenance.product.info.repository.ProductRepository;
+import com.codecorecix.ecommerce.maintenance.product.info.utils.ProductConstants;
+import com.codecorecix.ecommerce.maintenance.product.info.utils.ProductUtils;
 import com.codecorecix.ecommerce.utils.GenericResponse;
 import com.codecorecix.ecommerce.utils.GenericResponseConstants;
 

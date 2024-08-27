@@ -9,6 +9,8 @@ import com.codecorecix.ecommerce.maintenance.product.image.api.dto.request.Produ
 import com.codecorecix.ecommerce.maintenance.product.image.api.dto.response.ProductImageResponseDto;
 import com.codecorecix.ecommerce.maintenance.product.image.mapper.ProductImageFieldsMapper;
 import com.codecorecix.ecommerce.maintenance.product.image.repository.ProductImageRepository;
+import com.codecorecix.ecommerce.utils.GenericErrorMessage;
+import com.codecorecix.ecommerce.utils.GenericException;
 import com.codecorecix.ecommerce.utils.GenericResponseConstants;
 
 import lombok.RequiredArgsConstructor;
@@ -31,13 +33,12 @@ public class ProductImageServiceImpl implements ProductImageService {
   }
 
   @Override
-  public ProductImageResponseDto deleteImage(final Integer id) {
+  public void deleteImage(final Integer id) {
     final Optional<ProductImage> productImage = this.repository.findById(id);
     if (productImage.isPresent()) {
       this.repository.deleteById(id);
-      return ProductImageResponseDto.builder().build();
     } else {
-      return ProductImageResponseDto.builder().id(id).build();
+      throw new GenericException(GenericErrorMessage.DATABASE_DELETE_ERROR);
     }
   }
 

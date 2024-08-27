@@ -1,4 +1,4 @@
-package com.codecorecix.ecommerce.maintenance.product.api.dto.response;
+package com.codecorecix.ecommerce.maintenance.product.info.api.dto.response;
 
 import java.io.Serializable;
 

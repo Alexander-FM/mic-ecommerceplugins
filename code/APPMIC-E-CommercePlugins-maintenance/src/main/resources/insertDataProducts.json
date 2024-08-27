@@ -1,0 +1,17 @@
+{
+  "barCode": "20019764",
+  "name": "Parlante JBL FLIP 6 BT",
+  "description": "Siente la nueva experiencia de audio inmersivo de JBL Profesional con sus parlantes portatiles, llevalos a cualquier lado, su increíle peso hace sentir que no lleves nada.",
+  "price": 429.30,
+  "stock": 100,
+  "category": {
+    "id": 3
+  },
+  "brand": {
+    "id": 1
+  },
+  "isActive": true,
+  "isRecommend": true,
+  "images": null,
+  "details": null
+}

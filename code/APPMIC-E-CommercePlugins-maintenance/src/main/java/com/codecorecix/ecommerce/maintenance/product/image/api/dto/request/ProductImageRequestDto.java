@@ -1,10 +1,9 @@
 package com.codecorecix.ecommerce.maintenance.product.image.api.dto.request;
 
-import com.codecorecix.ecommerce.event.entities.Product;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @AllArgsConstructor
@@ -15,5 +14,7 @@ public class ProductImageRequestDto {
 
   private String imageUrl;
 
-  private Product product;
+  private Integer productId;
+
+  private MultipartFile file;
 }

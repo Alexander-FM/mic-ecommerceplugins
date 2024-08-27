@@ -19,9 +19,8 @@ public interface ProductImageService {
    * Deletes a product image by its ID.
    *
    * @param id the identifier of the image to be deleted.
-   * @return a {@code ProductImageResponseDto} containing the information of the deleted image.
    */
-  ProductImageResponseDto deleteImage(final Integer id);
+  void deleteImage(final Integer id);
 
   /**
    * Finds a product image by its ID.

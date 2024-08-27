@@ -1,12 +1,12 @@
-package com.codecorecix.ecommerce.maintenance.product.controller;
+package com.codecorecix.ecommerce.maintenance.product.info.controller;
 
 import java.util.List;
 import java.util.Objects;
 
-import com.codecorecix.ecommerce.maintenance.product.api.dto.request.ProductRequestDto;
-import com.codecorecix.ecommerce.maintenance.product.api.dto.response.ProductResponseDto;
-import com.codecorecix.ecommerce.maintenance.product.service.ProductService;
-import com.codecorecix.ecommerce.maintenance.product.utils.ProductConstants;
+import com.codecorecix.ecommerce.maintenance.product.info.api.dto.request.ProductRequestDto;
+import com.codecorecix.ecommerce.maintenance.product.info.api.dto.response.ProductResponseDto;
+import com.codecorecix.ecommerce.maintenance.product.info.service.ProductService;
+import com.codecorecix.ecommerce.maintenance.product.info.utils.ProductConstants;
 import com.codecorecix.ecommerce.utils.GenericResponse;
 import com.codecorecix.ecommerce.utils.GenericUnprocessableEntityException;
 

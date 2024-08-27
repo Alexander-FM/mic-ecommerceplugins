@@ -7,10 +7,12 @@ import com.codecorecix.ecommerce.maintenance.product.image.api.dto.request.Produ
 import com.codecorecix.ecommerce.maintenance.product.image.api.dto.response.ProductImageResponseDto;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface ProductImageFieldsMapper {
 
+  @Mapping(target = "product.id", source = "productId")
   ProductImage sourceToDestination(final ProductImageRequestDto source);
 
   ProductImageResponseDto destinationToSource(final ProductImage destination);

@@ -1,4 +1,4 @@
-package com.codecorecix.ecommerce.maintenance.product.utils;
+package com.codecorecix.ecommerce.maintenance.product.info.utils;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
