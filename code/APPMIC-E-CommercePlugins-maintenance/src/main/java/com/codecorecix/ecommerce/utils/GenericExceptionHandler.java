@@ -1,5 +1,12 @@
 package com.codecorecix.ecommerce.utils;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.JDBCException;
 import org.springframework.http.HttpStatus;
@@ -55,5 +62,16 @@ public class GenericExceptionHandler {
     });
     return new GenericResponse<>(GenericResponseConstants.RPTA_ERROR,
         StringUtils.defaultIfEmpty(errorMessageBuilder.toString(), defaultMessage), null);
+  }
+
+  @ExceptionHandler(ConstraintViolationException.class)
+  @ResponseStatus(code = HttpStatus.BAD_REQUEST)
+  public GenericResponse<Object> constraintValidations(final ConstraintViolationException ex) {
+    final Set<ConstraintViolation<?>> violations = ex.getConstraintViolations();
+    final List<String> errorMessages = violations.stream()
+        .map(ConstraintViolation::getMessage)
+        .toList();
+    final Map<String, List<String>> listHashMap = Collections.singletonMap("violations", errorMessages);
+    return new GenericResponse<>(GenericResponseConstants.RPTA_ERROR, GenericResponseConstants.WRONG_OPERATION, listHashMap);
   }
 }

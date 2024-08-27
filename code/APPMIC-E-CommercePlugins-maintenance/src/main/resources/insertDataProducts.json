@@ -18,32 +18,44 @@
       {
         "nombre": "Conexión WiFi",
         "descripcion": "No",
-        "productId": 1
+        "product": {
+          "id": 1
+        }
       },
       {
         "nombre": "Modelo",
         "descripcion": "JBLFLIP6BLKAM",
-        "productId": 1
+        "product": {
+          "id": 1
+        }
       },
       {
         "nombre": "País de origen",
         "descripcion": "China",
-        "productId": 1
+        "product": {
+          "id": 1
+        }
       },
       {
         "nombre": "Potencia",
         "descripcion": "20 W",
-        "productId": 1
+        "product": {
+          "id": 1
+        }
       },
       {
         "nombre": "Entradas RCA",
         "descripcion": "Sin entradas",
-        "productId": 1
+        "product": {
+          "id": 1
+        }
       },
       {
         "nombre": "Entradas USB",
         "descripcion": "Sin entradas",
-        "productId": 1
+        "product": {
+          "id": 1
+        }
       }
     ]
   },
@@ -66,22 +78,30 @@
       {
         "nombre": "Condicion del producto",
         "descripcion": "Nuevo",
-        "productId": 2
+        "product": {
+          "id": 2
+        }
       },
       {
         "nombre": "Modelo",
         "descripcion": "LUNA",
-        "productId": 2
+        "product": {
+          "id": 2
+        }
       },
       {
         "nombre": "País de origen",
         "descripcion": "China",
-        "productId": 2
+        "product": {
+          "id": 2
+        }
       },
       {
         "nombre": "Potencia",
         "descripcion": "40 WATTS RMS",
-        "productId": 2
+        "product": {
+          "id": 2
+        }
       }
     ]
   }

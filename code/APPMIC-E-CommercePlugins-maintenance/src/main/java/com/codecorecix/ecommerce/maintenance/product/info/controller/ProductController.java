@@ -2,6 +2,7 @@ package com.codecorecix.ecommerce.maintenance.product.info.controller;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import com.codecorecix.ecommerce.maintenance.product.info.api.dto.request.ProductRequestDto;
 import com.codecorecix.ecommerce.maintenance.product.info.api.dto.response.ProductResponseDto;
@@ -10,7 +11,11 @@ import com.codecorecix.ecommerce.maintenance.product.info.utils.ProductConstants
 import com.codecorecix.ecommerce.utils.GenericResponse;
 import com.codecorecix.ecommerce.utils.GenericUnprocessableEntityException;
 
-import jakarta.validation.Valid;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,8 +59,8 @@ public class ProductController {
   }
 
   @PostMapping("/saveProduct")
-  public ResponseEntity<GenericResponse<ProductResponseDto>> saveProduct(
-      @Valid @RequestBody final ProductRequestDto productRequestDto) {
+  public ResponseEntity<GenericResponse<ProductResponseDto>> saveProduct(@RequestBody final ProductRequestDto productRequestDto) {
+    this.validRequestDto(productRequestDto);
     if (ObjectUtils.isNotEmpty(productRequestDto.getId())) {
       throw new GenericUnprocessableEntityException(ProductConstants.UNPROCESSABLE_ENTITY_EXCEPTION);
     } else {
@@ -64,8 +69,9 @@ public class ProductController {
   }
 
   @PutMapping("/updateProduct/{id}")
-  public ResponseEntity<GenericResponse<ProductResponseDto>> updateProduct(@Valid @PathVariable(value = "id") final Integer id,
+  public ResponseEntity<GenericResponse<ProductResponseDto>> updateProduct(@PathVariable(value = "id") final Integer id,
       @RequestBody final ProductRequestDto productRequestDto) {
+    this.validRequestDto(productRequestDto);
     final GenericResponse<ProductResponseDto> response = this.service.findById(id);
     if (ObjectUtils.isNotEmpty(response.getBody())) {
       productRequestDto.setId(id);
@@ -93,6 +99,22 @@ public class ProductController {
       return ResponseEntity.status(HttpStatus.OK).body(this.service.deleteProduct(id));
     } else {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+  }
+
+  /**
+   * Méthod for valid the product request dto.
+   *
+   * @param productRequestDto the product request dto.
+   */
+  private void validRequestDto(final ProductRequestDto productRequestDto) {
+    final Validator validator;
+    try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
+      validator = factory.getValidator();
+    }
+    final Set<ConstraintViolation<Object>> violations = validator.validate(productRequestDto);
+    if (!violations.isEmpty()) {
+      throw new ConstraintViolationException(violations);
     }
   }
 
