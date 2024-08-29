@@ -14,45 +14,46 @@ import com.codecorecix.ecommerce.utils.GenericResponse;
 import com.codecorecix.ecommerce.utils.GenericResponseConstants;
 
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
-  private final ProductRepository repository;
+  private final ProductRepository productRepository;
 
   private final ProductFieldsMapper mapper;
-
-  public ProductServiceImpl(ProductRepository repository, ProductFieldsMapper mapper) {
-    this.repository = repository;
-    this.mapper = mapper;
-  }
 
   @Override
   public GenericResponse<List<ProductResponseDto>> listProduct() {
     return new GenericResponse<>(GenericResponseConstants.RPTA_OK, GenericResponseConstants.CORRECT_OPERATION,
-        this.mapper.toDto(this.repository.findAll()));
+        this.mapper.toDto(this.productRepository.findAll()));
   }
 
   @Override
   public GenericResponse<List<ProductResponseDto>> listActiveProducts() {
     return new GenericResponse<>(GenericResponseConstants.RPTA_OK, GenericResponseConstants.CORRECT_OPERATION,
-        this.mapper.toDto(this.repository.findByIsActiveIsTrue()));
+        this.mapper.toDto(this.productRepository.findByIsActiveIsTrue()));
   }
 
   @Override
+  @Transactional
   public GenericResponse<ProductResponseDto> saveProduct(final ProductRequestDto productRequestDto) {
-    final Product product = (this.repository.save(this.mapper.sourceToDestination(productRequestDto)));
+    final Product productInfo = this.mapper.sourceToDestination(productRequestDto);
+    productInfo.getImages().forEach(image -> image.setProduct(productInfo));
+    productInfo.getDetails().forEach(detail -> detail.setProduct(productInfo));
+    final Product product = this.productRepository.save(productInfo);
     return new GenericResponse<>(GenericResponseConstants.RPTA_OK, GenericResponseConstants.CORRECT_OPERATION,
         this.mapper.destinationToSource(product));
   }
 
   @Override
   public GenericResponse<ProductResponseDto> deleteProduct(final Integer id) {
-    final Optional<Product> product = this.repository.findById(id);
+    final Optional<Product> product = this.productRepository.findById(id);
     if (product.isPresent()) {
-      this.repository.deleteById(id);
+      this.productRepository.deleteById(id);
       return new GenericResponse<>(GenericResponseConstants.RPTA_OK, GenericResponseConstants.CORRECT_OPERATION, null);
     } else {
       return new GenericResponse<>(GenericResponseConstants.RPTA_ERROR,
@@ -64,9 +65,9 @@ public class ProductServiceImpl implements ProductService {
   @Override
   @Transactional
   public GenericResponse<ProductResponseDto> desactivateOrActivateProduct(final Boolean isActive, final Integer id) {
-    final Optional<Product> product = this.repository.findById(id);
+    final Optional<Product> product = this.productRepository.findById(id);
     if (product.isPresent()) {
-      this.repository.desactivateOrActivateProduct(isActive, id);
+      this.productRepository.desactivateOrActivateProduct(isActive, id);
       return new GenericResponse<>(GenericResponseConstants.RPTA_OK, GenericResponseConstants.CORRECT_OPERATION, null);
     } else {
       return new GenericResponse<>(GenericResponseConstants.RPTA_ERROR,
@@ -77,7 +78,7 @@ public class ProductServiceImpl implements ProductService {
 
   @Override
   public GenericResponse<ProductResponseDto> findById(final Integer id) {
-    final Optional<Product> product = this.repository.findById(id);
+    final Optional<Product> product = this.productRepository.findById(id);
     return product.map(value -> ProductUtils.buildGenericResponseSuccess(this.mapper.destinationToSource(value)))
         .orElseGet(ProductUtils::buildGenericResponseError);
   }
