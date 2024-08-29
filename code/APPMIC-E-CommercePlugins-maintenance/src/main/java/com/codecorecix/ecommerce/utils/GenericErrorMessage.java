@@ -16,9 +16,6 @@ public enum GenericErrorMessage {
   DATABASE_DELETE_ERROR(108, "An error occurred while deleting to the database."),
   DATABASE_LIST_ERROR(109, "An error occurred while fetching records from the database."),
   DATABASE_UPDATE_ERROR_PRODUCT(110,
-      "An error occurred while updating the product in the database, please verify that the request has a list of images and products "
-          + "details."),
-  DATABASE_UPDATE_ERROR_PRODUCT_ID_UNINFORMED(111,
       "An error occurred while updating the product in the database, please verify that the product.id is entered in the request.");
 
   private final Integer code;

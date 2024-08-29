@@ -28,8 +28,7 @@ public class GenericExceptionHandler {
     final HttpStatus httpStatus = switch (ex.getErrorMessage()) {
       case NOT_FOUND_IMAGE -> HttpStatus.NOT_FOUND;
       case DATABASE_SAVE_ERROR, DATABASE_UPDATE_ERROR, DATABASE_DELETE_ERROR, ERROR_SAVING_IMAGE, ERROR_DELETE_IMAGE, ERROR_UPDATE_IMAGE,
-           DATABASE_LIST_ERROR, DATABASE_UPDATE_ERROR_PRODUCT, DATABASE_UPDATE_ERROR_PRODUCT_ID_UNINFORMED ->
-          HttpStatus.INTERNAL_SERVER_ERROR;
+           DATABASE_LIST_ERROR, DATABASE_UPDATE_ERROR_PRODUCT -> HttpStatus.INTERNAL_SERVER_ERROR;
       case INVALID_REQUEST_BODY -> HttpStatus.BAD_REQUEST;
     };
     return new ResponseEntity<>(new GenericResponse<>(GenericResponseConstants.RPTA_ERROR, GenericResponseConstants.WRONG_OPERATION,
