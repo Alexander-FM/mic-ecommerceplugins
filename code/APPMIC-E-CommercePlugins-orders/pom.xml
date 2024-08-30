@@ -55,8 +55,9 @@
       <artifactId>mysql-connector-java</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.codecorecix.ecommerce</groupId>
-      <artifactId>APPMIC-E-CommercePlugins-maintenance</artifactId>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>APPMIC-E-CommercePlugins-common</artifactId>
+      <version>${project.version}</version>
     </dependency>
   </dependencies>
   <dependencyManagement>

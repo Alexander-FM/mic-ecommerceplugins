@@ -7,7 +7,7 @@ import java.util.concurrent.CompletableFuture;
 import com.codecorecix.ecommerce.event.clients.MaintenanceClientRest;
 import com.codecorecix.ecommerce.event.entities.Order;
 import com.codecorecix.ecommerce.event.entities.OrderDetail;
-import com.codecorecix.ecommerce.maintenance.product.info.api.dto.response.ProductResponseDto;
+import com.codecorecix.ecommerce.event.models.ProductResponseDto;
 import com.codecorecix.ecommerce.order.info.api.dto.request.OrderRequestDto;
 import com.codecorecix.ecommerce.order.info.api.dto.response.OrderResponseDto;
 import com.codecorecix.ecommerce.order.info.mapper.OrderFieldsMapper;
@@ -18,7 +18,6 @@ import com.codecorecix.ecommerce.utils.GenericResponseConstants;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -60,9 +59,9 @@ public class OrderServiceImpl implements OrderService {
     List<CompletableFuture<ProductResponseDto>> productFutures = orderInfo.getOrderDetails().stream()
         .map(orderDetail -> CompletableFuture.supplyAsync(() -> {
           try {
-            ResponseEntity<GenericResponse<ProductResponseDto>> response =
+            GenericResponse<ProductResponseDto> response =
                 maintenanceClientRest.getProductById(orderDetail.getProductId());
-            return Objects.requireNonNull(response.getBody()).getBody();
+            return Objects.requireNonNull(response.getBody());
           } catch (final Exception e) {
             throw new RuntimeException(OrderConstants.NO_EXIST_PRODUCT_IN_BD + orderDetail.getProductId(), e);
           }
