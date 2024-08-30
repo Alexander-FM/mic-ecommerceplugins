@@ -12,6 +12,7 @@ import com.codecorecix.ecommerce.maintenance.product.detail.repository.ProductDe
 import com.codecorecix.ecommerce.utils.GenericErrorMessage;
 import com.codecorecix.ecommerce.utils.GenericException;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
@@ -31,10 +32,11 @@ public class ProductDetailServiceImpl implements ProductDetailService {
   }
 
   @Override
+  @Transactional
   public void deleteDetail(final Integer id) {
     final Optional<ProductDetail> productDetail = this.repository.findById(id);
     if (productDetail.isPresent()) {
-      this.repository.deleteById(id);
+      this.repository.deleteDetail(id);
     } else {
       throw new GenericException(GenericErrorMessage.DATABASE_DELETE_ERROR);
     }

@@ -87,7 +87,7 @@ public class ProductController {
     if (ObjectUtils.isNotEmpty(response.getBody())) {
       productRequestDto.setId(response.getBody().getId());
       this.validRequestDto(productRequestDto);
-      this.deleteImagesAndDetailsOfProduct(response.getBody().getId());
+      this.deleteImagesAndDetailsOfProduct(response.getBody().getImages(), response.getBody().getDetails());
       return ResponseEntity.status(HttpStatus.OK).body(this.service.saveProduct(productRequestDto));
     } else {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
@@ -134,14 +134,14 @@ public class ProductController {
   /**
    * Method for delete details and images of products.
    *
-   * @param id the product id
+   * @param productImageList the image product list.
+   * @param productDetailList the detail product list.
    */
-  private void deleteImagesAndDetailsOfProduct(final Integer id) {
-    List<ProductImageResponseDto> productImageResponseDtoList = this.productImageService.findByUrlProductId(id);
-    List<ProductDetailResponseDto> productDetailResponseDtoList = this.productDetailService.findByProductId(id);
-    if (Objects.nonNull(productImageResponseDtoList) && Objects.nonNull(productDetailResponseDtoList)) {
-      productImageResponseDtoList.forEach(productImageDto -> this.productImageService.deleteImage(productImageDto.getId()));
-      productDetailResponseDtoList.forEach(productDetailDto -> this.productDetailService.deleteDetail(productDetailDto.getId()));
+  private void deleteImagesAndDetailsOfProduct(List<ProductImageResponseDto> productImageList,
+      List<ProductDetailResponseDto> productDetailList) {
+    if (Objects.nonNull(productImageList) && Objects.nonNull(productDetailList)) {
+      productImageList.forEach(productImageDto -> this.productImageService.deleteImage(productImageDto.getId()));
+      productDetailList.forEach(productDetailDto -> this.productDetailService.deleteDetail(productDetailDto.getId()));
     }
   }
 }

@@ -13,6 +13,7 @@ import com.codecorecix.ecommerce.utils.GenericErrorMessage;
 import com.codecorecix.ecommerce.utils.GenericException;
 import com.codecorecix.ecommerce.utils.GenericResponseConstants;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -33,10 +34,11 @@ public class ProductImageServiceImpl implements ProductImageService {
   }
 
   @Override
+  @Transactional
   public void deleteImage(final Integer id) {
     final Optional<ProductImage> productImage = this.repository.findById(id);
     if (productImage.isPresent()) {
-      this.repository.deleteById(id);
+      this.repository.deleteImage(id);
     } else {
       throw new GenericException(GenericErrorMessage.DATABASE_DELETE_ERROR);
     }
