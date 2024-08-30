@@ -41,6 +41,7 @@
     <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
     <org.lombok.version>1.18.30</org.lombok.version>
     <github-url>https://github.com/Alexander-FM/mic-ecommerceplugins</github-url>
+    <spring-cloud.version>2021.0.1</spring-cloud.version>
   </properties>
 
   <dependencyManagement>
@@ -95,6 +96,11 @@
         <groupId>org.springframework</groupId>
         <artifactId>spring-web</artifactId>
         <version>6.1.10</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-openfeign</artifactId>
+        <version>4.1.0</version>
       </dependency>
       <dependency>
         <groupId>org.hibernate.validator</groupId>
