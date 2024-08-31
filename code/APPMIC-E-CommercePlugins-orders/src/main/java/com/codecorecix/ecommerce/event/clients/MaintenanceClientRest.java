@@ -7,7 +7,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(name = "APPMIC-E-CommercePlugins-maintenance", url = "localhost:9090")
+@FeignClient(name = "APPMIC-E-CommercePlugins-maintenance", url = "http://localhost:9090")
 public interface MaintenanceClientRest {
 
   @GetMapping("/api/product/getById/{id}")

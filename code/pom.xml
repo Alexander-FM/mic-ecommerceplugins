@@ -42,7 +42,7 @@
     <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
     <org.lombok.version>1.18.30</org.lombok.version>
     <github-url>https://github.com/Alexander-FM/mic-ecommerceplugins</github-url>
-    <spring-cloud.version>2021.0.1</spring-cloud.version>
+    <spring-cloud.version>2023.0.3</spring-cloud.version>
   </properties>
 
   <dependencyManagement>
