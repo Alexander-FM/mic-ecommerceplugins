@@ -22,6 +22,7 @@
 
   <modules>
     <module>APPMIC-E-CommercePlugins-alerts</module>
+    <module>APPMIC-E-CommercePlugins-common</module>
     <module>APPMIC-E-CommercePlugins-maintenance</module>
     <module>APPMIC-E-CommercePlugins-orders</module>
     <module>APPMIC-E-CommercePlugins-reports</module>
@@ -41,6 +42,7 @@
     <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
     <org.lombok.version>1.18.30</org.lombok.version>
     <github-url>https://github.com/Alexander-FM/mic-ecommerceplugins</github-url>
+    <spring-cloud.version>2023.0.3</spring-cloud.version>
   </properties>
 
   <dependencyManagement>
@@ -48,6 +50,11 @@
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>APPMIC-E-CommercePlugins-alerts</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>APPMIC-E-CommercePlugins-common</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -95,6 +102,11 @@
         <groupId>org.springframework</groupId>
         <artifactId>spring-web</artifactId>
         <version>6.1.10</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-openfeign</artifactId>
+        <version>4.1.0</version>
       </dependency>
       <dependency>
         <groupId>org.hibernate.validator</groupId>

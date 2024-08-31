@@ -56,7 +56,9 @@ public class ProductRequestDto implements Serializable {
   @NotNull(message = "The field is recommended is null, please fill.")
   private Boolean isRecommended;
 
+  @NotEmpty(message = "The images list is empty, please fill")
   private List<ProductImage> images = new ArrayList<>();
 
+  @NotEmpty(message = "The details list is empty, please fill")
   private List<ProductDetail> details = new ArrayList<>();
 }

@@ -1,0 +1,16 @@
+package com.codecorecix.ecommerce.event.clients;
+
+import com.codecorecix.ecommerce.event.models.ProductResponseDto;
+import com.codecorecix.ecommerce.utils.GenericResponse;
+
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+@FeignClient(name = "APPMIC-E-CommercePlugins-maintenance", url = "http://localhost:9090")
+public interface MaintenanceClientRest {
+
+  @GetMapping("/api/product/getById/{id}")
+  GenericResponse<ProductResponseDto> getProductById(@PathVariable(value = "id") final Integer id);
+
+}

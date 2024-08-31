@@ -4,6 +4,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import com.codecorecix.ecommerce.maintenance.product.detail.dto.response.ProductDetailResponseDto;
+import com.codecorecix.ecommerce.maintenance.product.detail.repository.ProductDetailRepository;
+import com.codecorecix.ecommerce.maintenance.product.detail.service.ProductDetailService;
+import com.codecorecix.ecommerce.maintenance.product.image.api.dto.response.ProductImageResponseDto;
+import com.codecorecix.ecommerce.maintenance.product.image.repository.ProductImageRepository;
+import com.codecorecix.ecommerce.maintenance.product.image.service.ProductImageService;
 import com.codecorecix.ecommerce.maintenance.product.info.api.dto.request.ProductRequestDto;
 import com.codecorecix.ecommerce.maintenance.product.info.api.dto.response.ProductResponseDto;
 import com.codecorecix.ecommerce.maintenance.product.info.service.ProductService;
@@ -16,6 +22,7 @@ import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,14 +36,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("api/product")
 public class ProductController {
 
   private final ProductService service;
 
-  public ProductController(ProductService service) {
-    this.service = service;
-  }
+  private final ProductImageRepository productImageRepository;
+
+  private final ProductImageService productImageService;
+
+  private final ProductDetailRepository productDetailRepository;
+
+  private final ProductDetailService productDetailService;
 
   @GetMapping("/listProduct")
   public ResponseEntity<GenericResponse<List<ProductResponseDto>>> listProduct() {
@@ -71,10 +83,11 @@ public class ProductController {
   @PutMapping("/updateProduct/{id}")
   public ResponseEntity<GenericResponse<ProductResponseDto>> updateProduct(@PathVariable(value = "id") final Integer id,
       @RequestBody final ProductRequestDto productRequestDto) {
-    this.validRequestDto(productRequestDto);
     final GenericResponse<ProductResponseDto> response = this.service.findById(id);
     if (ObjectUtils.isNotEmpty(response.getBody())) {
-      productRequestDto.setId(id);
+      productRequestDto.setId(response.getBody().getId());
+      this.validRequestDto(productRequestDto);
+      this.deleteImagesAndDetailsOfProduct(response.getBody().getImages(), response.getBody().getDetails());
       return ResponseEntity.status(HttpStatus.OK).body(this.service.saveProduct(productRequestDto));
     } else {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
@@ -118,4 +131,17 @@ public class ProductController {
     }
   }
 
+  /**
+   * Method for delete details and images of products.
+   *
+   * @param productImageList the image product list.
+   * @param productDetailList the detail product list.
+   */
+  private void deleteImagesAndDetailsOfProduct(List<ProductImageResponseDto> productImageList,
+      List<ProductDetailResponseDto> productDetailList) {
+    if (Objects.nonNull(productImageList) && Objects.nonNull(productDetailList)) {
+      productImageList.forEach(productImageDto -> this.productImageService.deleteImage(productImageDto.getId()));
+      productDetailList.forEach(productDetailDto -> this.productDetailService.deleteDetail(productDetailDto.getId()));
+    }
+  }
 }

@@ -6,6 +6,7 @@ import java.util.Optional;
 import com.codecorecix.ecommerce.event.entities.ProductImage;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -17,4 +18,8 @@ public interface ProductImageRepository extends JpaRepository<ProductImage, Inte
 
   @Query("SELECT PI FROM ProductImage PI WHERE PI.product.id = :productId")
   List<ProductImage> findProductImagesByProductId(final Integer productId);
+
+  @Modifying
+  @Query("DELETE FROM ProductImage PI WHERE PI.id = :imageId")
+  void deleteImage(final Integer imageId);
 }
