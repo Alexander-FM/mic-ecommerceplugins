@@ -1,12 +1,10 @@
 [
   {
     "description": "JBL",
-    "isActive": true,
-    "parentCategory": null
+    "isActive": true
   },
   {
     "description": "HARMAN KARDON",
-    "isActive": true,
-    "parentCategory": 1
+    "isActive": true
   }
 ]
