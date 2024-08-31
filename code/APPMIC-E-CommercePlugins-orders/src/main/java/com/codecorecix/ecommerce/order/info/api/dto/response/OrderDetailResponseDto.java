@@ -9,7 +9,7 @@ public class OrderDetailResponseDto implements Serializable {
 
   private Integer id;
 
-  private OrderResponseDto order;
+  private Integer orderId;
 
   private Integer productId;
 

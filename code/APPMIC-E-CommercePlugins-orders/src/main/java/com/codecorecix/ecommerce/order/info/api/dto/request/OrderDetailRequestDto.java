@@ -9,8 +9,6 @@ public class OrderDetailRequestDto implements Serializable {
 
   private Integer id;
 
-  private OrderRequestDto order;
-
   private Integer productId;
 
   private Integer quantity;
