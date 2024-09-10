@@ -2,6 +2,7 @@ package com.codecorecix.ecommerce.maintenance.product.info.service;
 
 import java.util.List;
 
+import com.codecorecix.ecommerce.event.models.ProductInfo;
 import com.codecorecix.ecommerce.maintenance.product.info.api.dto.request.ProductRequestDto;
 import com.codecorecix.ecommerce.maintenance.product.info.api.dto.response.ProductResponseDto;
 import com.codecorecix.ecommerce.utils.GenericResponse;
@@ -53,4 +54,11 @@ public interface ProductService {
    * @return List of ProductResponseDto.
    */
   GenericResponse<ProductResponseDto> findById(final Integer id);
+
+  /**
+   * Method used to list all products by ids.
+   *
+   * @return List of ProductInfo.
+   */
+  GenericResponse<List<ProductInfo>> findByIds(final List<Integer> ids);
 }

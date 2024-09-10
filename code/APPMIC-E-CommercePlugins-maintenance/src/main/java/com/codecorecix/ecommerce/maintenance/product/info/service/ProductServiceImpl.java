@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.codecorecix.ecommerce.event.entities.Product;
+import com.codecorecix.ecommerce.event.models.ProductInfo;
 import com.codecorecix.ecommerce.maintenance.product.info.api.dto.request.ProductRequestDto;
 import com.codecorecix.ecommerce.maintenance.product.info.api.dto.response.ProductResponseDto;
 import com.codecorecix.ecommerce.maintenance.product.info.mapper.ProductFieldsMapper;
@@ -81,5 +82,11 @@ public class ProductServiceImpl implements ProductService {
     final Optional<Product> product = this.productRepository.findById(id);
     return product.map(value -> ProductUtils.buildGenericResponseSuccess(this.mapper.destinationToSource(value)))
         .orElseGet(ProductUtils::buildGenericResponseError);
+  }
+
+  @Override
+  public GenericResponse<List<ProductInfo>> findByIds(final List<Integer> ids) {
+    return new GenericResponse<>(GenericResponseConstants.RPTA_OK, GenericResponseConstants.CORRECT_OPERATION,
+        this.productRepository.findByProductsByIds(ids));
   }
 }

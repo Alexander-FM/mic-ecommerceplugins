@@ -8,7 +8,7 @@ import com.codecorecix.ecommerce.maintenance.brand.api.dto.response.BrandRespons
 import com.codecorecix.ecommerce.maintenance.brand.service.BrandService;
 import com.codecorecix.ecommerce.maintenance.brand.utils.BrandConstants;
 import com.codecorecix.ecommerce.utils.GenericResponse;
-import com.codecorecix.ecommerce.utils.GenericUnprocessableEntityException;
+import com.codecorecix.ecommerce.exception.GenericUnprocessableEntityException;
 
 import jakarta.validation.Valid;
 import org.apache.commons.lang3.ObjectUtils;

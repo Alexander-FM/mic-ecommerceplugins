@@ -1,4 +1,6 @@
-package com.codecorecix.ecommerce.utils;
+package com.codecorecix.ecommerce.exception;
+
+import com.codecorecix.ecommerce.utils.GenericErrorMessage;
 
 import lombok.Getter;
 

@@ -11,7 +11,7 @@ import java.util.Objects;
 import com.codecorecix.ecommerce.maintenance.drive.api.dto.response.GoogleDriveResponse;
 import com.codecorecix.ecommerce.maintenance.drive.utils.GoogleDriveConstants;
 import com.codecorecix.ecommerce.utils.GenericErrorMessage;
-import com.codecorecix.ecommerce.utils.GenericException;
+import com.codecorecix.ecommerce.exception.GenericException;
 import com.codecorecix.ecommerce.utils.GenericResponseConstants;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;

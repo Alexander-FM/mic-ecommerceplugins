@@ -25,7 +25,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "Products", schema = "maintenance_service")
+@Table(name = "Products")
 public class Product implements Serializable {
 
   @Id

@@ -1,10 +1,13 @@
 package com.codecorecix.ecommerce.order.info.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import com.codecorecix.ecommerce.event.clients.MaintenanceClientRest;
 import com.codecorecix.ecommerce.event.entities.Order;
-import com.codecorecix.ecommerce.event.models.ProductResponseDto;
+import com.codecorecix.ecommerce.event.models.ProductInfo;
+import com.codecorecix.ecommerce.order.info.api.dto.request.OrderDetailRequestDto;
 import com.codecorecix.ecommerce.order.info.api.dto.request.OrderRequestDto;
 import com.codecorecix.ecommerce.order.info.api.dto.response.OrderResponseDto;
 import com.codecorecix.ecommerce.order.info.mapper.OrderFieldsMapper;
@@ -35,10 +38,10 @@ public class OrderServiceImpl implements OrderService {
       final Order orderInfo = this.orderFieldsMapper.sourceToDestination(orderRequestDto);
       orderInfo.getOrderDetails().forEach(detail -> detail.setOrder(orderInfo));
       orderInfo.setOrderDate(LocalDateTime.now());
-      GenericResponse<ProductResponseDto> response =
-          this.maintenanceClientRest.getProductById(orderRequestDto.getOrderDetails().getFirst().getProductId());
+      GenericResponse<List<ProductInfo>> response = this.maintenanceClientRest.checkProducts(
+          orderRequestDto.getOrderDetails().stream().map(OrderDetailRequestDto::getProductId).collect(Collectors.toList()));
       final Order orderBD = this.orderRepository.save(orderInfo);
-      final OrderResponseDto orderResponseDto = this.orderFieldsMapper.destinationToSource(orderBD, response.getBody().getId());
+      final OrderResponseDto orderResponseDto = this.orderFieldsMapper.destinationToSource(orderBD);
       return new GenericResponse<>(GenericResponseConstants.RPTA_OK, GenericResponseConstants.CORRECT_OPERATION, orderResponseDto);
     } catch (Exception e) {
       return new GenericResponse<>(GenericResponseConstants.RPTA_ERROR, GenericResponseConstants.WRONG_OPERATION, null);

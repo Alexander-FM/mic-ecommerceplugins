@@ -5,7 +5,7 @@ import com.codecorecix.ecommerce.order.info.api.dto.response.OrderResponseDto;
 import com.codecorecix.ecommerce.order.info.service.OrderService;
 import com.codecorecix.ecommerce.order.info.utils.OrderConstants;
 import com.codecorecix.ecommerce.utils.GenericResponse;
-import com.codecorecix.ecommerce.utils.GenericUnprocessableEntityException;
+import com.codecorecix.ecommerce.exception.GenericUnprocessableEntityException;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

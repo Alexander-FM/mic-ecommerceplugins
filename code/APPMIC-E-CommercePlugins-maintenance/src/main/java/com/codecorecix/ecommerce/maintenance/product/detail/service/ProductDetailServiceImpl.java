@@ -10,7 +10,7 @@ import com.codecorecix.ecommerce.maintenance.product.detail.dto.response.Product
 import com.codecorecix.ecommerce.maintenance.product.detail.mapper.ProductDetailFieldsMapper;
 import com.codecorecix.ecommerce.maintenance.product.detail.repository.ProductDetailRepository;
 import com.codecorecix.ecommerce.utils.GenericErrorMessage;
-import com.codecorecix.ecommerce.utils.GenericException;
+import com.codecorecix.ecommerce.exception.GenericException;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

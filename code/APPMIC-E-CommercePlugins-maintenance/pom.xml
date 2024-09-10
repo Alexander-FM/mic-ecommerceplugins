@@ -66,6 +66,20 @@
       <version>0.0.20131108.vaadin1</version>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>APPMIC-E-CommercePlugins-common</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.flywaydb</groupId>
+      <artifactId>flyway-core</artifactId>
+      <version>8.4.4</version>
+    </dependency>
+    <dependency>
+      <groupId>org.flywaydb</groupId>
+      <artifactId>flyway-mysql</artifactId>
+      <version>8.4.4</version>
+    </dependency>
   </dependencies>
 
   <build>

@@ -8,7 +8,7 @@ import com.codecorecix.ecommerce.order.status.api.dto.response.OrderStatusRespon
 import com.codecorecix.ecommerce.order.status.service.OrderStatusService;
 import com.codecorecix.ecommerce.order.status.utils.OrderStatusConstants;
 import com.codecorecix.ecommerce.utils.GenericResponse;
-import com.codecorecix.ecommerce.utils.GenericUnprocessableEntityException;
+import com.codecorecix.ecommerce.exception.GenericUnprocessableEntityException;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

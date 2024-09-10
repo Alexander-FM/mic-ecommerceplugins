@@ -6,7 +6,7 @@ import com.codecorecix.ecommerce.maintenance.product.detail.dto.request.ProductD
 import com.codecorecix.ecommerce.maintenance.product.detail.dto.response.ProductDetailResponseDto;
 import com.codecorecix.ecommerce.maintenance.product.detail.service.ProductDetailService;
 import com.codecorecix.ecommerce.utils.GenericErrorMessage;
-import com.codecorecix.ecommerce.utils.GenericException;
+import com.codecorecix.ecommerce.exception.GenericException;
 import com.codecorecix.ecommerce.utils.GenericResponse;
 import com.codecorecix.ecommerce.utils.GenericResponseConstants;
 import com.codecorecix.ecommerce.utils.GenericUtils;

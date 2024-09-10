@@ -1,4 +1,4 @@
-package com.codecorecix.ecommerce.utils;
+package com.codecorecix.ecommerce.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -13,27 +13,8 @@ public class GenericUnprocessableEntityException extends RuntimeException {
    * Instantiates a new unprocessable entity exception.
    *
    * @param message the message
-   * @param cause the cause
-   */
-  public GenericUnprocessableEntityException(String message, Throwable cause) {
-    super(message, cause);
-  }
-
-  /**
-   * Instantiates a new unprocessable entity exception.
-   *
-   * @param message the message
    */
   public GenericUnprocessableEntityException(String message) {
     super(message);
-  }
-
-  /**
-   * Instantiates a new unprocessable entity exception.
-   *
-   * @param cause the cause
-   */
-  public GenericUnprocessableEntityException(Throwable cause) {
-    super(cause);
   }
 }

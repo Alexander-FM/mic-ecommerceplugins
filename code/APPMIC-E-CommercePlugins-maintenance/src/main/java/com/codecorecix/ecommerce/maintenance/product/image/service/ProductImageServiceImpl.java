@@ -10,7 +10,7 @@ import com.codecorecix.ecommerce.maintenance.product.image.api.dto.response.Prod
 import com.codecorecix.ecommerce.maintenance.product.image.mapper.ProductImageFieldsMapper;
 import com.codecorecix.ecommerce.maintenance.product.image.repository.ProductImageRepository;
 import com.codecorecix.ecommerce.utils.GenericErrorMessage;
-import com.codecorecix.ecommerce.utils.GenericException;
+import com.codecorecix.ecommerce.exception.GenericException;
 import com.codecorecix.ecommerce.utils.GenericResponseConstants;
 
 import jakarta.transaction.Transactional;

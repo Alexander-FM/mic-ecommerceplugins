@@ -6,12 +6,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class GenericResponseConstants {
 
-  public static final String TYPE_EXCEPTION = "exception";
-
-  public static final String TYPE_SQL_EXCEPTION = "sql-exception";
-
-  public static final String TYPE_VALID_EXCEPTION = " valid-exception";
-
   public static final int RPTA_OK = 1;
 
   public static final int RPTA_WARNING = 0;
