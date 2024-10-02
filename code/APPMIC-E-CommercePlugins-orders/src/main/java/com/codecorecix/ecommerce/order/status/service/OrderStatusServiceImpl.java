@@ -69,7 +69,7 @@ public class OrderStatusServiceImpl implements OrderStatusService {
   @Override
   public GenericResponse<OrderStatusResponseDto> findById(final Integer id) {
     final Optional<OrderStatus> orderStatus = this.repository.findById(id);
-    return orderStatus.map(value -> OrderStatusUtils.buildGenericResponseSuccess(this.mapper.destinationToSource(value)))
+    return orderStatus.map(value -> OrderStatusUtils.buildGenericResponse(this.mapper.destinationToSource(value)))
         .orElseGet(OrderStatusUtils::buildGenericResponseError);
   }
 }

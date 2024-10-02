@@ -16,7 +16,7 @@ public class CategoryUtils {
    *
    * @return GenericResponse of CategoryResponseDto The generic response.
    */
-  public static GenericResponse<CategoryResponseDto> buildGenericResponseError() {
+  public static GenericResponse<CategoryResponseDto> buildGenericResponseSuccessError() {
     return new GenericResponse<>(GenericResponseConstants.RPTA_ERROR,
         StringUtils.joinWith(GenericResponseConstants.DASH, GenericResponseConstants.INCORRECT_OPERATION, CategoryConstants.NO_EXIST),
         null);
