@@ -13,9 +13,8 @@ import com.codecorecix.ecommerce.maintenance.product.image.service.ProductImageS
 import com.codecorecix.ecommerce.maintenance.product.info.api.dto.request.ProductRequestDto;
 import com.codecorecix.ecommerce.maintenance.product.info.api.dto.response.ProductResponseDto;
 import com.codecorecix.ecommerce.maintenance.product.info.service.ProductService;
-import com.codecorecix.ecommerce.maintenance.product.info.utils.ProductConstants;
 import com.codecorecix.ecommerce.utils.GenericResponse;
-
+import com.codecorecix.ecommerce.utils.GenericResponseConstants;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
@@ -80,7 +79,7 @@ public class ProductController {
   public ResponseEntity<GenericResponse<ProductResponseDto>> saveProduct(@RequestBody final ProductRequestDto productRequestDto) {
     this.validRequestDto(productRequestDto);
     if (ObjectUtils.isNotEmpty(productRequestDto.getId())) {
-      throw new GenericUnprocessableEntityException(ProductConstants.UNPROCESSABLE_ENTITY_EXCEPTION);
+      throw new GenericUnprocessableEntityException(GenericResponseConstants.UNPROCESSABLE_ENTITY_EXCEPTION);
     } else {
       return ResponseEntity.status(HttpStatus.OK).body(this.service.saveProduct(productRequestDto));
     }

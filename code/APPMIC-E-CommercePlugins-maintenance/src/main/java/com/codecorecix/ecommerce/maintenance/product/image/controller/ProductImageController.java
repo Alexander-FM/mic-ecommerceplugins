@@ -4,6 +4,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 
+import com.codecorecix.ecommerce.exception.GenericException;
 import com.codecorecix.ecommerce.maintenance.drive.api.dto.response.GoogleDriveResponse;
 import com.codecorecix.ecommerce.maintenance.drive.service.GoogleDriveService;
 import com.codecorecix.ecommerce.maintenance.product.image.api.dto.request.ProductImageRequestDto;
@@ -13,11 +14,9 @@ import com.codecorecix.ecommerce.maintenance.product.info.api.dto.response.Produ
 import com.codecorecix.ecommerce.maintenance.product.info.mapper.ProductFieldsMapper;
 import com.codecorecix.ecommerce.maintenance.product.info.service.ProductService;
 import com.codecorecix.ecommerce.utils.GenericErrorMessage;
-import com.codecorecix.ecommerce.exception.GenericException;
 import com.codecorecix.ecommerce.utils.GenericResponse;
 import com.codecorecix.ecommerce.utils.GenericResponseConstants;
 import com.codecorecix.ecommerce.utils.GenericUtils;
-
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
@@ -60,15 +59,12 @@ public class ProductImageController {
         final ProductImageRequestDto productImageRequestDto = this.buildProductImage(file, productId,
             StringUtils.join(GenericResponseConstants.ORIGINAL_URL, googleDriveResponse.getUrl(), GenericResponseConstants.VIEW));
         final GenericResponse<ProductImageResponseDto> productImageResponseDto =
-            GenericUtils.buildGenericResponseSuccess(this.productImageService.saveImage(productImageRequestDto),
-                GenericResponseConstants.CORRECT_OPERATION, GenericResponseConstants.RPTA_OK);
+            GenericUtils.buildGenericResponseSuccess(null, this.productImageService.saveImage(productImageRequestDto));
         return ResponseEntity.status(HttpStatus.OK).body(productImageResponseDto);
       } else {
         Files.delete(tempFilePath);
         Files.delete(tempDir);
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(GenericUtils.buildGenericResponseSuccess(null,
-            StringUtils.joinWith(GenericResponseConstants.COLON, GenericResponseConstants.WRONG_OPERATION, MESSAGE),
-            GenericResponseConstants.RPTA_WARNING));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(GenericUtils.buildGenericResponseError(MESSAGE, null));
       }
     } catch (final Exception e) {
       throw new GenericException(GenericErrorMessage.ERROR_SAVING_IMAGE);
@@ -82,13 +78,10 @@ public class ProductImageController {
       if (StringUtils.isNotEmpty(productImageResponseDto.getImageUrl())) {
         this.googleDriveService.deleteFile(fileId);
         this.productImageService.deleteImage(productImageResponseDto.getId());
-        return ResponseEntity.status(HttpStatus.OK).body(
-            GenericUtils.buildGenericResponseSuccess(new ProductImageResponseDto(), GenericResponseConstants.CORRECT_OPERATION,
-                GenericResponseConstants.RPTA_OK));
+        return ResponseEntity.status(HttpStatus.OK).body(GenericUtils.buildGenericResponseSuccess(null, null));
       } else {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-            GenericUtils.buildGenericResponseSuccess(new ProductImageResponseDto(), GenericResponseConstants.INCORRECT_OPERATION,
-                GenericResponseConstants.RPTA_WARNING));
+            GenericUtils.buildGenericResponseSuccess(null, null));
       }
     } catch (final Exception e) {
       throw new GenericException(GenericErrorMessage.ERROR_DELETE_IMAGE);
@@ -106,5 +99,4 @@ public class ProductImageController {
   private ProductImageRequestDto buildProductImage(final MultipartFile file, final Integer productId, final String urlFile) {
     return new ProductImageRequestDto(null, urlFile, productId, file);
   }
-
 }

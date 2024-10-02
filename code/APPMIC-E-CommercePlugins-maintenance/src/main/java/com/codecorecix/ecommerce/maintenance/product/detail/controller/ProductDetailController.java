@@ -2,15 +2,13 @@ package com.codecorecix.ecommerce.maintenance.product.detail.controller;
 
 import java.util.List;
 
+import com.codecorecix.ecommerce.exception.GenericException;
 import com.codecorecix.ecommerce.maintenance.product.detail.dto.request.ProductDetailRequestDto;
 import com.codecorecix.ecommerce.maintenance.product.detail.dto.response.ProductDetailResponseDto;
 import com.codecorecix.ecommerce.maintenance.product.detail.service.ProductDetailService;
 import com.codecorecix.ecommerce.utils.GenericErrorMessage;
-import com.codecorecix.ecommerce.exception.GenericException;
 import com.codecorecix.ecommerce.utils.GenericResponse;
-import com.codecorecix.ecommerce.utils.GenericResponseConstants;
 import com.codecorecix.ecommerce.utils.GenericUtils;
-
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.http.HttpStatus;
@@ -37,8 +35,7 @@ public class ProductDetailController {
     try {
       List<ProductDetailResponseDto> productDetailResponseDto = this.productDetailService.findByProductId(productId);
       return ResponseEntity.status(HttpStatus.OK).body(
-          GenericUtils.buildGenericResponseSuccess(productDetailResponseDto, GenericResponseConstants.CORRECT_OPERATION,
-              GenericResponseConstants.RPTA_OK));
+          GenericUtils.buildGenericResponseSuccess(null, productDetailResponseDto));
     } catch (final Exception e) {
       throw new GenericException(GenericErrorMessage.DATABASE_SAVE_ERROR);
     }
@@ -49,8 +46,7 @@ public class ProductDetailController {
     try {
       ProductDetailResponseDto productDetailResponseDto = this.productDetailService.saveDetail(requestDto);
       return ResponseEntity.status(HttpStatus.OK).body(
-          GenericUtils.buildGenericResponseSuccess(productDetailResponseDto, GenericResponseConstants.CORRECT_OPERATION,
-              GenericResponseConstants.RPTA_OK));
+          GenericUtils.buildGenericResponseSuccess(null, productDetailResponseDto));
     } catch (final Exception e) {
       throw new GenericException(GenericErrorMessage.DATABASE_SAVE_ERROR);
     }
@@ -63,13 +59,10 @@ public class ProductDetailController {
     if (ObjectUtils.isNotEmpty(response)) {
       productDetailRequestDto.setId(id);
       return ResponseEntity.status(HttpStatus.OK).body(
-          GenericUtils.buildGenericResponseSuccess(this.productDetailService.saveDetail(productDetailRequestDto),
-              GenericResponseConstants.CORRECT_OPERATION,
-              GenericResponseConstants.RPTA_OK));
+          GenericUtils.buildGenericResponseSuccess(null, this.productDetailService.saveDetail(productDetailRequestDto)));
     } else {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-          GenericUtils.buildGenericResponseSuccess(response, GenericResponseConstants.WRONG_OPERATION,
-              GenericResponseConstants.RPTA_ERROR));
+          GenericUtils.buildGenericResponseError(null, null));
     }
   }
 
@@ -78,9 +71,7 @@ public class ProductDetailController {
     try {
       this.productDetailService.deleteDetail(id);
       return ResponseEntity.status(HttpStatus.OK).body(
-          GenericUtils.buildGenericResponseSuccess(new ProductDetailResponseDto(),
-              GenericResponseConstants.CORRECT_OPERATION,
-              GenericResponseConstants.RPTA_OK));
+          GenericUtils.buildGenericResponseSuccess(null, new ProductDetailResponseDto()));
     } catch (final Exception e) {
       throw new GenericException(GenericErrorMessage.DATABASE_DELETE_ERROR);
     }

@@ -10,10 +10,9 @@ import com.codecorecix.ecommerce.maintenance.product.info.api.dto.response.Produ
 import com.codecorecix.ecommerce.maintenance.product.info.mapper.ProductFieldsMapper;
 import com.codecorecix.ecommerce.maintenance.product.info.repository.ProductRepository;
 import com.codecorecix.ecommerce.maintenance.product.info.utils.ProductConstants;
-import com.codecorecix.ecommerce.maintenance.product.info.utils.ProductUtils;
 import com.codecorecix.ecommerce.utils.GenericResponse;
 import com.codecorecix.ecommerce.utils.GenericResponseConstants;
-
+import com.codecorecix.ecommerce.utils.GenericUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -58,7 +57,8 @@ public class ProductServiceImpl implements ProductService {
       return new GenericResponse<>(GenericResponseConstants.RPTA_OK, GenericResponseConstants.CORRECT_OPERATION, null);
     } else {
       return new GenericResponse<>(GenericResponseConstants.RPTA_ERROR,
-          StringUtils.joinWith(GenericResponseConstants.DASH, GenericResponseConstants.INCORRECT_OPERATION, ProductConstants.NO_EXIST),
+          StringUtils.joinWith(GenericResponseConstants.DASH, GenericResponseConstants.INCORRECT_OPERATION,
+              ProductConstants.FIND_MESSAGE_ERROR),
           null);
     }
   }
@@ -72,7 +72,8 @@ public class ProductServiceImpl implements ProductService {
       return new GenericResponse<>(GenericResponseConstants.RPTA_OK, GenericResponseConstants.CORRECT_OPERATION, null);
     } else {
       return new GenericResponse<>(GenericResponseConstants.RPTA_ERROR,
-          StringUtils.joinWith(GenericResponseConstants.DASH, GenericResponseConstants.INCORRECT_OPERATION, ProductConstants.NO_EXIST),
+          StringUtils.joinWith(GenericResponseConstants.DASH, GenericResponseConstants.INCORRECT_OPERATION,
+              ProductConstants.FIND_MESSAGE_ERROR),
           null);
     }
   }
@@ -80,8 +81,9 @@ public class ProductServiceImpl implements ProductService {
   @Override
   public GenericResponse<ProductResponseDto> findById(final Integer id) {
     final Optional<Product> product = this.productRepository.findById(id);
-    return product.map(value -> ProductUtils.buildGenericResponseSuccess(this.mapper.destinationToSource(value)))
-        .orElseGet(ProductUtils::buildGenericResponseError);
+    return product.map(
+            value -> GenericUtils.buildGenericResponseSuccess(ProductConstants.FIND_MESSAGE, this.mapper.destinationToSource(value)))
+        .orElseGet(() -> GenericUtils.buildGenericResponseError(ProductConstants.FIND_MESSAGE_ERROR, null));
   }
 
   @Override

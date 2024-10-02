@@ -2,7 +2,6 @@ package com.codecorecix.ecommerce.order.info.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.codecorecix.ecommerce.event.clients.MaintenanceClientRest;
 import com.codecorecix.ecommerce.event.entities.Order;
@@ -14,7 +13,6 @@ import com.codecorecix.ecommerce.order.info.mapper.OrderFieldsMapper;
 import com.codecorecix.ecommerce.order.info.repository.OrderRepository;
 import com.codecorecix.ecommerce.utils.GenericResponse;
 import com.codecorecix.ecommerce.utils.GenericResponseConstants;
-
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +37,7 @@ public class OrderServiceImpl implements OrderService {
       orderInfo.getOrderDetails().forEach(detail -> detail.setOrder(orderInfo));
       orderInfo.setOrderDate(LocalDateTime.now());
       GenericResponse<List<ProductInfo>> response = this.maintenanceClientRest.checkProducts(
-          orderRequestDto.getOrderDetails().stream().map(OrderDetailRequestDto::getProductId).collect(Collectors.toList()));
+          orderRequestDto.getOrderDetails().stream().map(OrderDetailRequestDto::getProductId).toList());
       final Order orderBD = this.orderRepository.save(orderInfo);
       final OrderResponseDto orderResponseDto = this.orderFieldsMapper.destinationToSource(orderBD);
       return new GenericResponse<>(GenericResponseConstants.RPTA_OK, GenericResponseConstants.CORRECT_OPERATION, orderResponseDto);

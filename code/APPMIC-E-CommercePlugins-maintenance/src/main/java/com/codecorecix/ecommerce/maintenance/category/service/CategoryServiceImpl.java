@@ -79,7 +79,7 @@ public class CategoryServiceImpl implements CategoryService {
   public GenericResponse<CategoryResponseDto> findById(final Integer id) {
     final Optional<Category> category = this.repository.findById(id);
     return category.map(value -> CategoryUtils.buildGenericResponseSuccess(this.mapper.destinationToSource(value)))
-        .orElseGet(CategoryUtils::buildGenericResponseError);
+        .orElseGet(CategoryUtils::buildGenericResponseSuccessError);
   }
 
   private List<Category> getHierarchicalList(final List<Category> categories, final boolean isActive) {

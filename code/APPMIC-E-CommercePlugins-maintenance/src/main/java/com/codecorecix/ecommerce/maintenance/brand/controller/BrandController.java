@@ -3,13 +3,12 @@ package com.codecorecix.ecommerce.maintenance.brand.controller;
 import java.util.List;
 import java.util.Objects;
 
+import com.codecorecix.ecommerce.exception.GenericUnprocessableEntityException;
 import com.codecorecix.ecommerce.maintenance.brand.api.dto.request.BrandRequestDto;
 import com.codecorecix.ecommerce.maintenance.brand.api.dto.response.BrandResponseDto;
 import com.codecorecix.ecommerce.maintenance.brand.service.BrandService;
 import com.codecorecix.ecommerce.maintenance.brand.utils.BrandConstants;
 import com.codecorecix.ecommerce.utils.GenericResponse;
-import com.codecorecix.ecommerce.exception.GenericUnprocessableEntityException;
-
 import jakarta.validation.Valid;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.http.HttpStatus;
@@ -95,5 +94,4 @@ public class BrandController {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
   }
-
 }

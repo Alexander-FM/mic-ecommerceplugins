@@ -1,10 +1,12 @@
-package com.codecorecix.ecommerce.utils;
+package com.codecorecix.ecommerce.utils.errorhandler;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.codecorecix.ecommerce.utils.GenericResponse;
+import com.codecorecix.ecommerce.utils.GenericResponseConstants;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.apache.commons.lang3.StringUtils;
@@ -14,7 +16,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@RestControllerAdvice(basePackages = "com.codecorecix.ecommerce.order")
+@RestControllerAdvice
 public class GenericExceptionHandler {
 
   @ExceptionHandler(Exception.class)

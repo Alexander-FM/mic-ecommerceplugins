@@ -27,7 +27,7 @@ public class OrderStatusUtils {
    *
    * @return GenericResponse of OrderStatusResponseDto The generic response.
    */
-  public static GenericResponse<OrderStatusResponseDto> buildGenericResponseSuccess(final OrderStatusResponseDto orderStatusResponseDto) {
+  public static GenericResponse<OrderStatusResponseDto> buildGenericResponse(final OrderStatusResponseDto orderStatusResponseDto) {
     return new GenericResponse<>(GenericResponseConstants.RPTA_OK,
         StringUtils.joinWith(GenericResponseConstants.DASH, GenericResponseConstants.CORRECT_OPERATION), orderStatusResponseDto);
   }
