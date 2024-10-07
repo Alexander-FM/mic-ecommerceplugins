@@ -1,12 +1,12 @@
-package com.codecorecix.ecommerce.maintenance.customer.mapper;
+package com.codecorecix.ecommerce.maintenance.employee.mapper;
 
 import java.util.List;
 import java.util.Objects;
 
 import com.codecorecix.ecommerce.event.entities.Address;
-import com.codecorecix.ecommerce.event.entities.Customer;
+import com.codecorecix.ecommerce.event.entities.Employee;
 import com.codecorecix.ecommerce.maintenance.customer.api.dto.request.CustomerRequestDto;
-import com.codecorecix.ecommerce.maintenance.customer.api.dto.response.CustomerResponseDto;
+import com.codecorecix.ecommerce.maintenance.employee.api.dto.response.EmployeeResponseDto;
 import com.codecorecix.ecommerce.utils.GenericResponseConstants;
 
 import org.apache.commons.lang3.StringUtils;
@@ -15,15 +15,15 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 @Mapper(componentModel = "spring")
-public interface CustomerFieldsMapper {
+public interface EmployeeFieldsMapper {
 
-  Customer sourceToDestination(final CustomerRequestDto source);
-
-  @Mapping(target = "addressName", source = "address", qualifiedByName = "concatenateAddress")
-  CustomerResponseDto destinationToSource(final Customer destination);
+  Employee sourceToDestination(final CustomerRequestDto source);
 
   @Mapping(target = "addressName", source = "address", qualifiedByName = "concatenateAddress")
-  List<CustomerResponseDto> toDto(final List<Customer> entityList);
+  EmployeeResponseDto destinationToSource(final Employee destination);
+
+  @Mapping(target = "addressName", source = "address", qualifiedByName = "concatenateAddress")
+  List<EmployeeResponseDto> toDto(final List<Employee> entityList);
 
   @Named("concatenateAddress")
   default String concatenateAddress(final Address address) {

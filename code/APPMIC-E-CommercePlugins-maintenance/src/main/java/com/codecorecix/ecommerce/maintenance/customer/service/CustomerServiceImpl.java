@@ -1,5 +1,6 @@
 package com.codecorecix.ecommerce.maintenance.customer.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +12,7 @@ import com.codecorecix.ecommerce.maintenance.customer.repository.CustomerReposit
 import com.codecorecix.ecommerce.maintenance.customer.utils.CustomerConstants;
 import com.codecorecix.ecommerce.utils.GenericResponse;
 import com.codecorecix.ecommerce.utils.GenericUtils;
+
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,9 +31,19 @@ public class CustomerServiceImpl implements CustomerService {
   }
 
   @Override
-  public GenericResponse<CustomerResponseDto> saveCustomer(final CustomerRequestDto customerRequestDto) {
-    final Customer customer = this.repository.save(this.mapper.sourceToDestination(customerRequestDto));
-    return GenericUtils.buildGenericResponseSuccess(CustomerConstants.SAVE_MESSAGE, this.mapper.destinationToSource(customer));
+  public GenericResponse<CustomerResponseDto> saveCustomer(final CustomerRequestDto customerRequestDto, final boolean isUpdated) {
+    final Customer customerBD = this.repository.findById(customerRequestDto.getId()).orElseThrow();
+    final Customer customerMapped = this.mapper.sourceToDestination(customerRequestDto);
+    if (isUpdated) {
+      customerMapped.setUserModification("UserModification");
+      customerMapped.setModificationDate(LocalDateTime.now());
+      customerMapped.getAddress().setId(customerBD.getAddress().getId());
+    } else {
+      customerMapped.setRegistrationDate(customerBD.getRegistrationDate());
+      customerMapped.setUserRegistration("UserRegistration");
+    }
+    final Customer customerSaved = this.repository.save(customerMapped);
+    return GenericUtils.buildGenericResponseSuccess(CustomerConstants.SAVE_MESSAGE, this.mapper.destinationToSource(customerSaved));
   }
 
   @Override

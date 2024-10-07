@@ -27,13 +27,13 @@ import org.hibernate.annotations.CreationTimestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "Customers", uniqueConstraints = {
+@Table(name = "Employees", uniqueConstraints = {
+    @UniqueConstraint(columnNames = "registrationDate", name = "UK_Customers_registrationDate"),
     @UniqueConstraint(columnNames = "email", name = "UK_Customers_email"),
     @UniqueConstraint(columnNames = "phoneNumberOne", name = "UK_Customers_phoneNumberOne"),
-    @UniqueConstraint(columnNames = "phoneNumberTwo", name = "UK_Customers_phoneNumberTwo"),
-    @UniqueConstraint(columnNames = "phoneNumberThree", name = "UK_Customers_phoneNumberThree")
+    @UniqueConstraint(columnNames = "phoneNumberTwo", name = "UK_Customers_phoneNumberTwo")
 })
-public class Customer extends Person implements Serializable {
+public class Employee extends Person implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,9 +47,6 @@ public class Customer extends Person implements Serializable {
 
   @Column
   private String phoneNumberTwo;
-
-  @Column
-  private String phoneNumberThree;
 
   @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "address_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "FK_Customers_Address"))

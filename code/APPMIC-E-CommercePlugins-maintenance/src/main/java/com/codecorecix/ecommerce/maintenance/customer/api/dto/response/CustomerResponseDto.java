@@ -1,9 +1,9 @@
 package com.codecorecix.ecommerce.maintenance.customer.api.dto.response;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
 
-import com.codecorecix.ecommerce.event.entities.Address;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -13,7 +13,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomerResponseDto {
+public class CustomerResponseDto implements Serializable {
+
+  private Integer id;
 
   private String name;
 
@@ -31,9 +33,15 @@ public class CustomerResponseDto {
 
   private String phoneNumberThree;
 
-  private Address address;
+  private String addressName;
 
   private Boolean isActive;
 
+  private String userRegistration;
+
   private LocalDateTime registrationDate;
+
+  private String userModification;
+
+  private LocalDateTime modificationDate;
 }

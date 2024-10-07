@@ -19,9 +19,10 @@ public interface CustomerService {
    * Method used to save the customer.
    *
    * @param customerRequestDto The customer request dto.
+   * @param isUpdated Is it updated.
    * @return List of CustomerResponseDto.
    */
-  GenericResponse<CustomerResponseDto> saveCustomer(final CustomerRequestDto customerRequestDto);
+  GenericResponse<CustomerResponseDto> saveCustomer(final CustomerRequestDto customerRequestDto, final boolean isUpdated);
 
   /**
    * Method used to delete the customer.
