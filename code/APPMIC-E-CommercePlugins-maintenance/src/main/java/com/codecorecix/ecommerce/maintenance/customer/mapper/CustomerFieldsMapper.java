@@ -17,6 +17,10 @@ import org.mapstruct.Named;
 @Mapper(componentModel = "spring")
 public interface CustomerFieldsMapper {
 
+  @Mapping(target = "userRegistration", ignore = true)
+  @Mapping(target = "registrationDate", ignore = true)
+  @Mapping(target = "userModification", ignore = true)
+  @Mapping(target = "modificationDate", ignore = true)
   Customer sourceToDestination(final CustomerRequestDto source);
 
   @Mapping(target = "addressName", source = "address", qualifiedByName = "concatenateAddress")

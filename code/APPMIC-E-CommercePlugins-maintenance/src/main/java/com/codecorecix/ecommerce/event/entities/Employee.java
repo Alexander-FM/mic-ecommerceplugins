@@ -30,8 +30,7 @@ import org.hibernate.annotations.CreationTimestamp;
 @Table(name = "Employees", uniqueConstraints = {
     @UniqueConstraint(columnNames = "registrationDate", name = "UK_Customers_registrationDate"),
     @UniqueConstraint(columnNames = "email", name = "UK_Customers_email"),
-    @UniqueConstraint(columnNames = "phoneNumberOne", name = "UK_Customers_phoneNumberOne"),
-    @UniqueConstraint(columnNames = "phoneNumberTwo", name = "UK_Customers_phoneNumberTwo")
+    @UniqueConstraint(columnNames = "phoneNumber", name = "UK_Customers_phoneNumber")
 })
 public class Employee extends Person implements Serializable {
 
@@ -43,13 +42,10 @@ public class Employee extends Person implements Serializable {
   private String email;
 
   @Column(nullable = false)
-  private String phoneNumberOne;
-
-  @Column
-  private String phoneNumberTwo;
+  private String phoneNumber;
 
   @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-  @JoinColumn(name = "address_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "FK_Customers_Address"))
+  @JoinColumn(name = "address_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "FK_Employee_Address"))
   private Address address;
 
   @Column

@@ -13,9 +13,9 @@ public class ProductDetailRequestDto implements Serializable {
 
   private Integer id;
 
-  private String nombre;
+  private String name;
 
-  private String descripcion;
+  private String description;
 
   private Integer productId;
 }

@@ -65,10 +65,10 @@ public class ProductServiceImpl implements ProductService {
 
   @Override
   @Transactional
-  public GenericResponse<ProductResponseDto> desactivateOrActivateProduct(final Boolean isActive, final Integer id) {
+  public GenericResponse<ProductResponseDto> disabledOrEnabledProduct(final Boolean isActive, final Integer id) {
     final Optional<Product> product = this.productRepository.findById(id);
     if (product.isPresent()) {
-      this.productRepository.desactivateOrActivateProduct(isActive, id);
+      this.productRepository.disabledOrEnabledProduct(isActive, id);
       return new GenericResponse<>(GenericResponseConstants.RPTA_OK, GenericResponseConstants.CORRECT_OPERATION, null);
     } else {
       return new GenericResponse<>(GenericResponseConstants.RPTA_ERROR,

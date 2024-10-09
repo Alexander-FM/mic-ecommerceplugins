@@ -44,7 +44,7 @@ public interface BrandService {
    * @param isActive True if is active or false en otherwise.
    * @return List of BrandResponseDto.
    */
-  GenericResponse<BrandResponseDto> desactivateOrActivateBrand(final Boolean isActive, final Integer id);
+  GenericResponse<BrandResponseDto> disabledOrEnabledBrand(final Boolean isActive, final Integer id);
 
   /**
    * Method used to find the brand by id.

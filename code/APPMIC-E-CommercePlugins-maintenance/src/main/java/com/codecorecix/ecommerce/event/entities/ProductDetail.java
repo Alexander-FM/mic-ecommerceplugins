@@ -29,10 +29,10 @@ public class ProductDetail implements Serializable {
   private Integer id;
 
   @Column
-  private String nombre;
+  private String name;
 
   @Column
-  private String descripcion;
+  private String description;
 
   /**
    * <p>Para la relación @ManyToOne y @OneToOne, el tipo de carga por defecto es EAGER (ansiosa). Esto significa que la entidad relacionada se cargará

@@ -44,7 +44,7 @@ public interface CategoryService {
    * @param isActive True if is active or false en otherwise.
    * @return List of CategoryResponseDto.
    */
-  GenericResponse<CategoryResponseDto> desactivateOrActivateCategory(final Boolean isActive, final Integer id);
+  GenericResponse<CategoryResponseDto> disabledOrEnabledCategory(final Boolean isActive, final Integer id);
 
   /**
    * Method used to find the category by id.

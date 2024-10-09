@@ -60,10 +60,10 @@ public class BrandServiceImpl implements BrandService {
 
   @Override
   @Transactional
-  public GenericResponse<BrandResponseDto> desactivateOrActivateBrand(final Boolean isActive, final Integer id) {
+  public GenericResponse<BrandResponseDto> disabledOrEnabledBrand(final Boolean isActive, final Integer id) {
     final Optional<Brand> brandOptional = this.repository.findById(id);
     if (brandOptional.isPresent()) {
-      this.repository.desactivateOrActivateBrand(isActive, id);
+      this.repository.disabledOrEnabledBrand(isActive, id);
       return new GenericResponse<>(GenericResponseConstants.RPTA_OK, GenericResponseConstants.CORRECT_OPERATION, null);
     } else {
       return new GenericResponse<>(GenericResponseConstants.RPTA_ERROR,

@@ -18,7 +18,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 
   @Modifying
   @Query("UPDATE Product P SET P.isActive = ?1 WHERE P.id = ?2")
-  void desactivateOrActivateProduct(final Boolean isActive, final Integer id);
+  void disabledOrEnabledProduct(final Boolean isActive, final Integer id);
 
   @Query("SELECT new com.codecorecix.ecommerce.event.models.ProductInfo("
       + "P.id, P.barCode, P.name, P.description, P.price, P.stock, "

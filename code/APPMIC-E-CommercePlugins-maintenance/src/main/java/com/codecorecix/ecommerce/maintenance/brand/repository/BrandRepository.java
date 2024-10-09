@@ -16,5 +16,5 @@ public interface BrandRepository extends JpaRepository<Brand, Integer> {
 
   @Modifying
   @Query("UPDATE Brand B SET B.isActive = ?1 WHERE B.id = ?2")
-  void desactivateOrActivateBrand(final Boolean isActive, final Integer id);
+  void disabledOrEnabledBrand(final Boolean isActive, final Integer id);
 }

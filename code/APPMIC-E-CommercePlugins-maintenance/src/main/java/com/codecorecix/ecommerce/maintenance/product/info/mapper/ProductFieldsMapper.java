@@ -18,6 +18,7 @@ public interface ProductFieldsMapper {
 
   @Mapping(target = "categoryName", source = "destination.category.description")
   @Mapping(target = "brandName", source = "destination.brand.description")
+  @Mapping(target = "details.productId", ignore = true)
   ProductResponseDto destinationToSource(final Product destination);
 
   @Mapping(target = "categoryName", source = "entityList.category.description")
@@ -26,7 +27,7 @@ public interface ProductFieldsMapper {
   List<ProductResponseDto> toDto(final List<Product> entityList);
 
   @AfterMapping
-  default void afterDestinationToSource(@MappingTarget ProductResponseDto productResponseDto, Product product) {
+  default void afterDestinationToSource(@MappingTarget final ProductResponseDto productResponseDto, final Product product) {
     if (product.getDetails() != null) {
       productResponseDto.getDetails().forEach(detail -> detail.setProductId(product.getId()));
     }

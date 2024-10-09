@@ -38,7 +38,7 @@ public interface CustomerService {
    * @param isActive True if is active or false en otherwise.
    * @return List of CustomerResponseDto.
    */
-  GenericResponse<CustomerResponseDto> desactivateOrActivateCustomer(final Boolean isActive, final Integer id);
+  GenericResponse<CustomerResponseDto> disabledOrEnabledCustomer(final Boolean isActive, final Integer id);
 
   /**
    * Method used to find the customer by id.

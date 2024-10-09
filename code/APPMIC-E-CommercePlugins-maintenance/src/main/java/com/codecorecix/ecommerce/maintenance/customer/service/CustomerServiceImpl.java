@@ -32,18 +32,18 @@ public class CustomerServiceImpl implements CustomerService {
 
   @Override
   public GenericResponse<CustomerResponseDto> saveCustomer(final CustomerRequestDto customerRequestDto, final boolean isUpdated) {
-    final Customer customerBD = this.repository.findById(customerRequestDto.getId()).orElseThrow();
     final Customer customerMapped = this.mapper.sourceToDestination(customerRequestDto);
     if (isUpdated) {
+      final Customer customerBD = this.repository.findById(customerRequestDto.getId()).orElseThrow();
       customerMapped.setUserModification("UserModification");
       customerMapped.setModificationDate(LocalDateTime.now());
-      customerMapped.getAddress().setId(customerBD.getAddress().getId());
-    } else {
+      customerMapped.setUserRegistration(customerBD.getUserRegistration());
       customerMapped.setRegistrationDate(customerBD.getRegistrationDate());
-      customerMapped.setUserRegistration("UserRegistration");
+      customerMapped.getAddress().setId(customerBD.getAddress().getId());
     }
-    final Customer customerSaved = this.repository.save(customerMapped);
-    return GenericUtils.buildGenericResponseSuccess(CustomerConstants.SAVE_MESSAGE, this.mapper.destinationToSource(customerSaved));
+    customerMapped.setUserRegistration("UserRegistration");
+    return GenericUtils.buildGenericResponseSuccess(CustomerConstants.SAVE_MESSAGE,
+        this.mapper.destinationToSource(this.repository.save(customerMapped)));
   }
 
   @Override
@@ -57,10 +57,10 @@ public class CustomerServiceImpl implements CustomerService {
 
   @Override
   @Transactional
-  public GenericResponse<CustomerResponseDto> desactivateOrActivateCustomer(final Boolean isActive, final Integer id) {
+  public GenericResponse<CustomerResponseDto> disabledOrEnabledCustomer(final Boolean isActive, final Integer id) {
     final Optional<Customer> customer = this.repository.findById(id);
     return customer.map(value -> {
-      this.repository.desactivateOrActivateCustomer(isActive, id);
+      this.repository.disabledOrEnabledCustomer(isActive, id);
       return GenericUtils.buildGenericResponseSuccess(CustomerConstants.UPDATE_MESSAGE, this.mapper.destinationToSource(value));
     }).orElseGet(() -> GenericUtils.buildGenericResponseError(CustomerConstants.UPDATE_MESSAGE_ERROR, null));
   }

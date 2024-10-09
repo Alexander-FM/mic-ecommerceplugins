@@ -99,12 +99,12 @@ public class ProductController {
     }
   }
 
-  @GetMapping("/desactivateOrActivateProduct/{id}/{isActive}")
-  public ResponseEntity<GenericResponse<ProductResponseDto>> desactivateOrActivateProduct(@PathVariable(value = "id") final Integer id,
+  @GetMapping("/disabledOrEnabledProduct/{id}/{isActive}")
+  public ResponseEntity<GenericResponse<ProductResponseDto>> disabledOrEnabledProduct(@PathVariable(value = "id") final Integer id,
       @PathVariable(value = "isActive") final Boolean isActive) {
     final GenericResponse<ProductResponseDto> response = this.service.findById(id);
     if (ObjectUtils.isNotEmpty(response.getBody())) {
-      return ResponseEntity.status(HttpStatus.OK).body(this.service.desactivateOrActivateProduct(isActive, id));
+      return ResponseEntity.status(HttpStatus.OK).body(this.service.disabledOrEnabledProduct(isActive, id));
     } else {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }

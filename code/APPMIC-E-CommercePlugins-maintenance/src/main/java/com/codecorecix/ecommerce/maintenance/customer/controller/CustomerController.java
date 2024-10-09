@@ -70,12 +70,12 @@ public class CustomerController {
     }
   }
 
-  @GetMapping("/desactivateOrActivateCustomer/{id}/{isActive}")
-  public ResponseEntity<GenericResponse<CustomerResponseDto>> desactivateOrActivateCustomer(@PathVariable(value = "id") final Integer id,
+  @GetMapping("/disabledOrEnabledCustomer/{id}/{isActive}")
+  public ResponseEntity<GenericResponse<CustomerResponseDto>> disabledOrEnabledCustomer(@PathVariable(value = "id") final Integer id,
       @PathVariable(value = "isActive") final Boolean isActive) {
     final GenericResponse<CustomerResponseDto> response = this.service.findById(id);
     if (ObjectUtils.isNotEmpty(response.getBody())) {
-      return ResponseEntity.status(HttpStatus.OK).body(this.service.desactivateOrActivateCustomer(isActive, id));
+      return ResponseEntity.status(HttpStatus.OK).body(this.service.disabledOrEnabledCustomer(isActive, id));
     } else {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }

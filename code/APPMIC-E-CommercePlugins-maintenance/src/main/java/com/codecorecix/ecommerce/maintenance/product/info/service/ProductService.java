@@ -45,7 +45,7 @@ public interface ProductService {
    * @param isActive True if is active or false en otherwise.
    * @return List of ProductResponseDto.
    */
-  GenericResponse<ProductResponseDto> desactivateOrActivateProduct(final Boolean isActive, final Integer id);
+  GenericResponse<ProductResponseDto> disabledOrEnabledProduct(final Boolean isActive, final Integer id);
 
   /**
    * Method used to find the product by id.

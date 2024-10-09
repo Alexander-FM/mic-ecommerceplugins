@@ -26,5 +26,5 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
 
   @Modifying
   @Query("UPDATE Category C SET C.isActive = ?1 WHERE C.id = ?2")
-  void desactivateOrActivateCategory(final Boolean isActive, final Integer id);
+  void disabledOrEnabledCategory(final Boolean isActive, final Integer id);
 }

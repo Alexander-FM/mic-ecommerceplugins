@@ -75,12 +75,12 @@ public class CategoryController {
     }
   }
 
-  @GetMapping("/desactivateOrActivateCategory/{id}/{isActive}")
-  public ResponseEntity<GenericResponse<CategoryResponseDto>> desactivateOrActivateCategory(@PathVariable(value = "id") final Integer id,
+  @GetMapping("/disabledOrEnabledCategory/{id}/{isActive}")
+  public ResponseEntity<GenericResponse<CategoryResponseDto>> disabledOrEnabledCategory(@PathVariable(value = "id") final Integer id,
       @PathVariable(value = "isActive") final Boolean isActive) {
     final GenericResponse<CategoryResponseDto> response = this.service.findById(id);
     if (ObjectUtils.isNotEmpty(response.getBody())) {
-      return ResponseEntity.status(HttpStatus.OK).body(this.service.desactivateOrActivateCategory(isActive, id));
+      return ResponseEntity.status(HttpStatus.OK).body(this.service.disabledOrEnabledCategory(isActive, id));
     } else {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }

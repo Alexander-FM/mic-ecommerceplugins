@@ -74,12 +74,12 @@ public class BrandController {
     }
   }
 
-  @GetMapping("/desactivateOrActivateBrand/{id}/{isActive}")
-  public ResponseEntity<GenericResponse<BrandResponseDto>> desactivateOrActivateBrand(@PathVariable(value = "id") final Integer id,
+  @GetMapping("/disabledOrEnabledBrand/{id}/{isActive}")
+  public ResponseEntity<GenericResponse<BrandResponseDto>> disabledOrEnabledBrand(@PathVariable(value = "id") final Integer id,
       @PathVariable(value = "isActive") final Boolean isActive) {
     final GenericResponse<BrandResponseDto> response = this.service.findById(id);
     if (ObjectUtils.isNotEmpty(response.getBody())) {
-      return ResponseEntity.status(HttpStatus.OK).body(this.service.desactivateOrActivateBrand(isActive, id));
+      return ResponseEntity.status(HttpStatus.OK).body(this.service.disabledOrEnabledBrand(isActive, id));
     } else {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }

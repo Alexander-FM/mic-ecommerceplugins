@@ -54,7 +54,7 @@ public class OrderStatusServiceImpl implements OrderStatusService {
 
   @Override
   @Transactional
-  public GenericResponse<OrderStatusResponseDto> desactivateOrActivateStatus(final Boolean isActive, final Integer id) {
+  public GenericResponse<OrderStatusResponseDto> disabledOrEnabledStatus(final Boolean isActive, final Integer id) {
     final Optional<OrderStatus> statusOptional = this.repository.findById(id);
     if (statusOptional.isPresent()) {
       this.repository.save(new OrderStatus(statusOptional.get().getId(), statusOptional.get().getStatusName(), isActive));

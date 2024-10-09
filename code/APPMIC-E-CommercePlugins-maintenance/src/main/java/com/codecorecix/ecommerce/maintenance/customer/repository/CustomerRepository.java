@@ -11,5 +11,5 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 
   @Modifying
   @Query("UPDATE Customer C SET C.isActive = ?1 WHERE C.id = ?2")
-  void desactivateOrActivateCustomer(final Boolean isActive, final Integer id);
+  void disabledOrEnabledCustomer(final Boolean isActive, final Integer id);
 }

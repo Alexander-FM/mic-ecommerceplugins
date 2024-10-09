@@ -1,10 +1,10 @@
 package com.codecorecix.ecommerce.maintenance.customer.api.dto.request;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 import com.codecorecix.ecommerce.event.entities.Address;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

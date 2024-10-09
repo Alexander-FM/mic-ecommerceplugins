@@ -16,11 +16,11 @@ public class CustomerConstants {
 
   public static final String DELETE_MESSAGE = "The customer was removed successfully";
 
-  public static final String FIND_MESSAGE_ERROR = "The customer was finding successfully";
+  public static final String FIND_MESSAGE_ERROR = "An error occurred while finding the customer";
 
   public static final String SAVE_MESSAGE_ERROR = "An error occurred while saving the customer";
 
-  public static final String UPDATE_MESSAGE_ERROR = "An error occurred while updating the client";
+  public static final String UPDATE_MESSAGE_ERROR = "An error occurred while updating the customer";
 
-  public static final String DELETE_MESSAGE_ERROR = "An error occurred while deleting the client";
+  public static final String DELETE_MESSAGE_ERROR = "An error occurred while deleting the customer";
 }

@@ -37,7 +37,7 @@ public interface OrderStatusService {
    * @param isActive True if is active or false en otherwise.
    * @return List of OrderStatusResponseDto.
    */
-  GenericResponse<OrderStatusResponseDto> desactivateOrActivateStatus(final Boolean isActive, final Integer id);
+  GenericResponse<OrderStatusResponseDto> disabledOrEnabledStatus(final Boolean isActive, final Integer id);
 
   /**
    * Method used to find the status by id.

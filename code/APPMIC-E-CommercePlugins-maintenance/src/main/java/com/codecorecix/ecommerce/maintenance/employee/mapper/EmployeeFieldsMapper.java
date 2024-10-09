@@ -5,7 +5,7 @@ import java.util.Objects;
 
 import com.codecorecix.ecommerce.event.entities.Address;
 import com.codecorecix.ecommerce.event.entities.Employee;
-import com.codecorecix.ecommerce.maintenance.customer.api.dto.request.CustomerRequestDto;
+import com.codecorecix.ecommerce.maintenance.employee.api.dto.request.EmployeeRequestDto;
 import com.codecorecix.ecommerce.maintenance.employee.api.dto.response.EmployeeResponseDto;
 import com.codecorecix.ecommerce.utils.GenericResponseConstants;
 
@@ -17,7 +17,11 @@ import org.mapstruct.Named;
 @Mapper(componentModel = "spring")
 public interface EmployeeFieldsMapper {
 
-  Employee sourceToDestination(final CustomerRequestDto source);
+  @Mapping(target = "userRegistration", ignore = true)
+  @Mapping(target = "registrationDate", ignore = true)
+  @Mapping(target = "userModification", ignore = true)
+  @Mapping(target = "modificationDate", ignore = true)
+  Employee sourceToDestination(final EmployeeRequestDto source);
 
   @Mapping(target = "addressName", source = "address", qualifiedByName = "concatenateAddress")
   EmployeeResponseDto destinationToSource(final Employee destination);

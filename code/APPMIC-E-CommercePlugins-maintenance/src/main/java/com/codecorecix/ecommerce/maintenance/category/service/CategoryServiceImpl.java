@@ -63,10 +63,10 @@ public class CategoryServiceImpl implements CategoryService {
 
   @Override
   @Transactional
-  public GenericResponse<CategoryResponseDto> desactivateOrActivateCategory(final Boolean isActive, final Integer id) {
+  public GenericResponse<CategoryResponseDto> disabledOrEnabledCategory(final Boolean isActive, final Integer id) {
     final Optional<Category> categoryOptional = this.repository.findById(id);
     if (categoryOptional.isPresent()) {
-      this.repository.desactivateOrActivateCategory(isActive, id);
+      this.repository.disabledOrEnabledCategory(isActive, id);
       return new GenericResponse<>(GenericResponseConstants.RPTA_OK, GenericResponseConstants.CORRECT_OPERATION, null);
     } else {
       return new GenericResponse<>(GenericResponseConstants.RPTA_ERROR,
