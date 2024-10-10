@@ -30,7 +30,7 @@ public class OrderController {
     if (ObjectUtils.isNotEmpty(orderRequestDto.getId())) {
       throw new GenericUnprocessableEntityException(OrderConstants.UNPROCESSABLE_ENTITY_EXCEPTION);
     } else {
-      return ResponseEntity.status(HttpStatus.OK).body(this.service.saveOrder(orderRequestDto));
+      return ResponseEntity.status(HttpStatus.CREATED).body(this.service.saveOrder(orderRequestDto));
     }
   }
 }

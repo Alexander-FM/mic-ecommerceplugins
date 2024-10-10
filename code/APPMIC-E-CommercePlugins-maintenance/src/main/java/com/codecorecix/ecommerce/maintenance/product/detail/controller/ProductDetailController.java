@@ -45,7 +45,7 @@ public class ProductDetailController {
   public ResponseEntity<GenericResponse<ProductDetailResponseDto>> saveDetail(@RequestBody ProductDetailRequestDto requestDto) {
     try {
       ProductDetailResponseDto productDetailResponseDto = this.productDetailService.saveDetail(requestDto);
-      return ResponseEntity.status(HttpStatus.OK).body(
+      return ResponseEntity.status(HttpStatus.CREATED).body(
           GenericUtils.buildGenericResponseSuccess(null, productDetailResponseDto));
     } catch (final Exception e) {
       throw new GenericException(GenericErrorMessage.DATABASE_SAVE_ERROR);

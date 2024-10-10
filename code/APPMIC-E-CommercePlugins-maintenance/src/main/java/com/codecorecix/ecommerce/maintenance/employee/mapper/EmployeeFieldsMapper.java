@@ -34,6 +34,10 @@ public interface EmployeeFieldsMapper {
     if (Objects.isNull(address)) {
       return "Has no address";
     }
-    return StringUtils.joinWith(GenericResponseConstants.DASH, address.getAddressName(), address.getResidenceNumber());
+    return StringUtils.joinWith(GenericResponseConstants.COMMA, StringUtils.joinWith(GenericResponseConstants.SPACE,
+        address.getAddressName(), address.getResidenceNumber()), StringUtils.upperCase(
+        StringUtils.joinWith(GenericResponseConstants.COMMA, address.getProvince(), address.getDistrict(), address.getPostalCode(),
+            address.getDepartment())
+    ));
   }
 }

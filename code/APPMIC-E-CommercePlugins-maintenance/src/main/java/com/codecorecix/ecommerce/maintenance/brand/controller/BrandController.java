@@ -58,7 +58,7 @@ public class BrandController {
     if (ObjectUtils.isNotEmpty(categoryRequestDto.getId())) {
       throw new GenericUnprocessableEntityException(BrandConstants.UNPROCESSABLE_ENTITY_EXCEPTION);
     } else {
-      return ResponseEntity.status(HttpStatus.OK).body(this.service.saveBrand(categoryRequestDto));
+      return ResponseEntity.status(HttpStatus.CREATED).body(this.service.saveBrand(categoryRequestDto));
     }
   }
 

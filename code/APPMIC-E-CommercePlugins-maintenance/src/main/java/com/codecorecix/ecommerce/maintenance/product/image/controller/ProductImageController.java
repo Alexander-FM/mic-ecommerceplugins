@@ -60,7 +60,7 @@ public class ProductImageController {
             StringUtils.join(GenericResponseConstants.ORIGINAL_URL, googleDriveResponse.getUrl(), GenericResponseConstants.VIEW));
         final GenericResponse<ProductImageResponseDto> productImageResponseDto =
             GenericUtils.buildGenericResponseSuccess(null, this.productImageService.saveImage(productImageRequestDto));
-        return ResponseEntity.status(HttpStatus.OK).body(productImageResponseDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(productImageResponseDto);
       } else {
         Files.delete(tempFilePath);
         Files.delete(tempDir);

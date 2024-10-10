@@ -54,7 +54,7 @@ public class CustomerController {
     if (ObjectUtils.isNotEmpty(customerRequestDto.getId())) {
       throw new GenericUnprocessableEntityException(GenericResponseConstants.UNPROCESSABLE_ENTITY_EXCEPTION);
     } else {
-      return ResponseEntity.status(HttpStatus.OK).body(this.service.saveCustomer(customerRequestDto, false));
+      return ResponseEntity.status(HttpStatus.CREATED).body(this.service.saveCustomer(customerRequestDto, false));
     }
   }
 

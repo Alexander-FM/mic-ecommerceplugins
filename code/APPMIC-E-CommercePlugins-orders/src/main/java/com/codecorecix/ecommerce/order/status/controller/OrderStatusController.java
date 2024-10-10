@@ -52,7 +52,7 @@ public class OrderStatusController {
     if (ObjectUtils.isNotEmpty(orderStatusRequestDto.getId())) {
       throw new GenericUnprocessableEntityException(OrderStatusConstants.UNPROCESSABLE_ENTITY_EXCEPTION);
     } else {
-      return ResponseEntity.status(HttpStatus.OK).body(this.service.saveStatus(orderStatusRequestDto));
+      return ResponseEntity.status(HttpStatus.CREATED).body(this.service.saveStatus(orderStatusRequestDto));
     }
   }
 

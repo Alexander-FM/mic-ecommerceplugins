@@ -18,7 +18,7 @@ public interface ProductFieldsMapper {
 
   @Mapping(target = "categoryName", source = "destination.category.description")
   @Mapping(target = "brandName", source = "destination.brand.description")
-  @Mapping(target = "details.productId", ignore = true)
+  @Mapping(target = "details", ignore = true)
   ProductResponseDto destinationToSource(final Product destination);
 
   @Mapping(target = "categoryName", source = "entityList.category.description")

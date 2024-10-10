@@ -59,7 +59,7 @@ public class CategoryController {
     if (ObjectUtils.isNotEmpty(categoryRequestDto.getId())) {
       throw new GenericUnprocessableEntityException(CategoryConstants.UNPROCESSABLE_ENTITY_EXCEPTION);
     } else {
-      return ResponseEntity.status(HttpStatus.OK).body(this.service.saveCategory(categoryRequestDto));
+      return ResponseEntity.status(HttpStatus.CREATED).body(this.service.saveCategory(categoryRequestDto));
     }
   }
 

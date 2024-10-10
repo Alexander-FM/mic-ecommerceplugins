@@ -81,7 +81,7 @@ public class ProductController {
     if (ObjectUtils.isNotEmpty(productRequestDto.getId())) {
       throw new GenericUnprocessableEntityException(GenericResponseConstants.UNPROCESSABLE_ENTITY_EXCEPTION);
     } else {
-      return ResponseEntity.status(HttpStatus.OK).body(this.service.saveProduct(productRequestDto));
+      return ResponseEntity.status(HttpStatus.CREATED).body(this.service.saveProduct(productRequestDto));
     }
   }
 

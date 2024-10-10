@@ -32,5 +32,7 @@ public class GenericResponseConstants {
 
   public static final String PERIOD = ".";
 
-  public static final String COMMA = ",";
+  public static final String COMMA = ", ";
+
+  public static final String SPACE = " ";
 }

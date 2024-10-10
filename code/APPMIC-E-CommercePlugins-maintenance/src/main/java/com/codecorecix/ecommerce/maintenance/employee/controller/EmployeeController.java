@@ -52,7 +52,7 @@ public class EmployeeController {
     if (ObjectUtils.isNotEmpty(employeeRequestDto.getId())) {
       throw new GenericUnprocessableEntityException(GenericResponseConstants.UNPROCESSABLE_ENTITY_EXCEPTION);
     } else {
-      return ResponseEntity.status(HttpStatus.OK).body(this.service.saveEmployee(employeeRequestDto, false));
+      return ResponseEntity.status(HttpStatus.CREATED).body(this.service.saveEmployee(employeeRequestDto, false));
     }
   }
 
