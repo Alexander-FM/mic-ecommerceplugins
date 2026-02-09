@@ -60,6 +60,13 @@ export class AppComponent implements OnInit {
   loadCartCount(): void {
     this.cartService.cartItems$.subscribe(() => {
       this.cartItemCount = this.cartService.getCartItemCount();
+      // Rebuild menu to update badge
+      if (this.menuItems.length > 0) {
+        const cartMenuItem = this.menuItems.find(item => item.label === 'Carrito');
+        if (cartMenuItem) {
+          cartMenuItem.badge = this.cartItemCount > 0 ? this.cartItemCount.toString() : undefined;
+        }
+      }
     });
   }
 
