@@ -54,7 +54,7 @@
                   buttonLayout="horizontal"
                   [min]="1"
                   [max]="item.product.stock"
-                  (onInput)="updateQuantity(item.product.id!, item.quantity)"
+                  (onInput)="updateQuantity(item.product.id, item.quantity)"
                   incrementButtonIcon="pi pi-plus"
                   decrementButtonIcon="pi pi-minus"
                 ></p-inputNumber>
@@ -68,7 +68,7 @@
                   severity="danger"
                   [text]="true"
                   [rounded]="true"
-                  (onClick)="removeItem(item.product.id!)"
+                  (onClick)="removeItem(item.product.id)"
                   pTooltip="Eliminar"
                   tooltipPosition="top"
                 ></p-button>

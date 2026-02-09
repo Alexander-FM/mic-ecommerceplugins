@@ -128,4 +128,9 @@ export class ProductsComponent implements OnInit {
     this.maxPrice = 10000;
     this.filteredProducts = this.products;
   }
+
+  onImageError(event: Event): void {
+    const target = event.target as HTMLImageElement;
+    target.src = '/assets/images/product-placeholder.svg';
+  }
 }

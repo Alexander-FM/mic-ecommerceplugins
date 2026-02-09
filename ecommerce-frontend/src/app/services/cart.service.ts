@@ -73,6 +73,7 @@ export class CartService {
     return this.cartItems.reduce((total, item) => total + (item.product.price * item.quantity), 0);
   }
 
+  // TODO: Add tax, shipping, and discount calculations in future iterations
   getTotal(): number {
     return this.getSubtotal();
   }

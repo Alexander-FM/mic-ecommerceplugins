@@ -55,7 +55,8 @@ export class CartComponent implements OnInit {
     this.total = this.cartService.getTotal();
   }
 
-  updateQuantity(productId: number, quantity: number): void {
+  updateQuantity(productId: number | undefined, quantity: number): void {
+    if (!productId) return;
     if (quantity > 0) {
       this.cartService.updateQuantity(productId, quantity);
       this.messageService.add({
@@ -66,7 +67,8 @@ export class CartComponent implements OnInit {
     }
   }
 
-  removeItem(productId: number): void {
+  removeItem(productId: number | undefined): void {
+    if (!productId) return;
     this.cartService.removeFromCart(productId);
     this.messageService.add({
       severity: 'info',

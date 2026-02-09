@@ -8,6 +8,7 @@ export interface Product {
   categoryName?: string;
   brandName?: string;
   isRecommended?: boolean;
+  imageUrl?: string;
 }
 
 export interface Category {
