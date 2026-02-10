@@ -1,0 +1,155 @@
+<p-toast></p-toast>
+
+<div class="products-container">
+  <div class="filters-section">
+    <div class="p-fluid">
+      <h3>Filtros</h3>
+      
+      <div class="p-field">
+        <label for="search">Buscar</label>
+        <span class="p-input-icon-left">
+          <i class="pi pi-search"></i>
+          <input 
+            id="search"
+            type="text" 
+            pInputText 
+            [(ngModel)]="searchText" 
+            (input)="filterProducts()"
+            placeholder="Buscar productos..." 
+          />
+        </span>
+      </div>
+
+      <div class="p-field">
+        <label for="brand">Marca</label>
+        <p-dropdown
+          id="brand"
+          [options]="brands"
+          [(ngModel)]="selectedBrand"
+          optionLabel="description"
+          placeholder="Seleccionar marca"
+          [showClear]="true"
+          (onChange)="filterProducts()"
+        ></p-dropdown>
+      </div>
+
+      <div class="p-field">
+        <label for="minPrice">Precio mínimo: ${{ minPrice }}</label>
+        <input 
+          id="minPrice"
+          type="range" 
+          [(ngModel)]="minPrice" 
+          (change)="filterProducts()"
+          min="0" 
+          max="10000" 
+          step="100"
+        />
+      </div>
+
+      <div class="p-field">
+        <label for="maxPrice">Precio máximo: ${{ maxPrice }}</label>
+        <input 
+          id="maxPrice"
+          type="range" 
+          [(ngModel)]="maxPrice" 
+          (change)="filterProducts()"
+          min="0" 
+          max="10000" 
+          step="100"
+        />
+      </div>
+
+      <p-button 
+        label="Limpiar filtros" 
+        icon="pi pi-filter-slash"
+        [outlined]="true"
+        (onClick)="resetFilters()"
+      ></p-button>
+    </div>
+  </div>
+
+  <div class="products-section">
+    <h2>Productos</h2>
+    <p class="results-count">{{ filteredProducts.length }} productos encontrados</p>
+
+    <div class="products-grid" *ngIf="!loading">
+      <p-card *ngFor="let product of filteredProducts" class="product-card">
+        <ng-template pTemplate="header">
+          <div class="product-image-container">
+            <img 
+              [src]="product.imageUrl || '/assets/images/product-placeholder.svg'" 
+              [alt]="product.name"
+              class="product-image"
+              (error)="onImageError($event)"
+            />
+          </div>
+        </ng-template>
+        
+        <div class="product-info">
+          <h3 class="product-name">{{ product.name }}</h3>
+          <p class="product-description">{{ product.description || 'Sin descripción' }}</p>
+          
+          <div class="product-details">
+            <p-tag 
+              *ngIf="product.categoryName" 
+              [value]="product.categoryName" 
+              severity="info"
+            ></p-tag>
+            <p-tag 
+              *ngIf="product.brandName" 
+              [value]="product.brandName" 
+              severity="secondary"
+            ></p-tag>
+            <p-tag 
+              *ngIf="product.isRecommended" 
+              value="Recomendado" 
+              severity="success"
+              icon="pi pi-star-fill"
+            ></p-tag>
+          </div>
+
+          <div class="product-stock">
+            <span [class]="product.stock > 0 ? 'in-stock' : 'out-of-stock'">
+              <i [class]="product.stock > 0 ? 'pi pi-check-circle' : 'pi pi-times-circle'"></i>
+              {{ product.stock > 0 ? 'Disponible (' + product.stock + ')' : 'Sin stock' }}
+            </span>
+          </div>
+
+          <div class="product-price">
+            <span class="price-label">Precio:</span>
+            <span class="price-value">${{ product.price | number:'1.2-2' }}</span>
+          </div>
+        </div>
+
+        <ng-template pTemplate="footer">
+          <div class="product-actions">
+            <p-button 
+              label="Agregar al carrito" 
+              icon="pi pi-shopping-cart"
+              [disabled]="product.stock <= 0"
+              (onClick)="addToCart(product)"
+            ></p-button>
+            <p-button 
+              label="Comprar" 
+              icon="pi pi-bolt"
+              severity="success"
+              [disabled]="product.stock <= 0"
+              (onClick)="buyNow(product)"
+            ></p-button>
+          </div>
+        </ng-template>
+      </p-card>
+    </div>
+
+    <div *ngIf="loading" class="loading-container">
+      <i class="pi pi-spin pi-spinner" style="font-size: 3rem"></i>
+      <p>Cargando productos...</p>
+    </div>
+
+    <div *ngIf="!loading && filteredProducts.length === 0" class="no-products">
+      <i class="pi pi-inbox" style="font-size: 4rem"></i>
+      <h3>No se encontraron productos</h3>
+      <p>Intenta ajustar los filtros de búsqueda</p>
+    </div>
+  </div>
+</div>

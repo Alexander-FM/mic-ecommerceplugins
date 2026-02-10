@@ -1,0 +1,53 @@
+<div class="card" *ngIf="showMenu">
+  <p-menubar [model]="menuItems">
+    <ng-template pTemplate="start">
+      <div class="flex align-items-center gap-2">
+        <span class="text-primary font-bold text-2xl">E</span>
+        <div>
+          <p class="m-0 font-bold">E-Commerce</p>
+          <small class="text-color-secondary">Gestión</small>
+        </div>
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="item" let-item let-root="root">
+      <a 
+        class="flex align-items-center p-menubar-item-link" 
+        [routerLink]="item.routerLink || null"
+        [queryParams]="item.queryParams || null" 
+        [fragment]="item.fragment || null" 
+        [class.disabled]="item.disabled"
+        [attr.aria-disabled]="item.disabled"
+        (click)="item.command ? item.command() : null"
+      >
+        <i *ngIf="item.icon" class="pi" [ngClass]="item.icon"></i>
+        <span class="ml-2">{{ item.label }}</span>
+        <p-badge 
+          *ngIf="item.badge" 
+          [ngClass]="{ 'ml-auto': !root, 'ml-2': root }" 
+          [value]="item.badge" 
+        />
+        <i *ngIf="item.items" [ngClass]="['ml-auto pi', root ? 'pi-angle-down' : 'pi-angle-right']"></i>
+      </a>
+    </ng-template>
+
+    <ng-template pTemplate="end">
+      <div class="flex align-items-center gap-2">
+        <span class="text-sm font-semibold text-color-secondary mr-2">{{ username }}</span>
+        <p-button
+          icon="pi pi-sign-out"
+          [rounded]="true"
+          [text]="true"
+          severity="danger"
+          (onClick)="logout()"
+          pTooltip="Cerrar Sesión"
+          tooltipPosition="bottom"
+        ></p-button>
+      </div>
+    </ng-template>
+  </p-menubar>
+</div>
+
+<main [class.p-3]="showMenu">
+  <router-outlet />
+</main>
