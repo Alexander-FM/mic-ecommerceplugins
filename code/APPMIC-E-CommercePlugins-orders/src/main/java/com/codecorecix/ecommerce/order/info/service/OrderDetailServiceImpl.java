@@ -38,7 +38,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     try {
       OrdersUtils.validRequestDto(orderDetailRequestDto);
       GenericResponse<List<ProductInfo>> response = this.maintenanceClientRest.checkProducts(
-          orderDetailRequestDto.stream().map(OrderDetailRequestDto::getProductId).toList());
+          orderDetailRequestDto.stream().map(OrderDetailRequestDto::getProductId).toList(), token);
       if (response.getBody().isEmpty()) {
         throw new OrderException(OrderErrorMessage.SERVICE_PRODUCTS_NOT_AVAILABLE);
       }

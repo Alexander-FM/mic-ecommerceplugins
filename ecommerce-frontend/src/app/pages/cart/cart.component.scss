@@ -1,0 +1,183 @@
+.cart-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+
+  h2 {
+    margin-top: 0;
+    margin-bottom: 2rem;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    i {
+      color: #2563eb;
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
+}
+
+.cart-content {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 2rem;
+
+  @media (max-width: 968px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cart-items {
+  .cart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+
+    h3 {
+      margin: 0;
+      color: #333;
+    }
+  }
+
+  .product-info {
+    h4 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1rem;
+      color: #333;
+    }
+
+    .product-details {
+      margin: 0;
+      font-size: 0.85rem;
+      color: #666;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+  }
+
+  .price {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #2563eb;
+  }
+
+  .item-total {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #2563eb;
+  }
+}
+
+.cart-summary {
+  h3 {
+    margin: 0;
+    padding: 1rem;
+    color: #333;
+  }
+
+  .summary-details {
+    padding: 0 1rem 1rem 1rem;
+  }
+
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #e5e7eb;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .label {
+      color: #666;
+      font-size: 1rem;
+    }
+
+    .value {
+      font-weight: 500;
+      color: #333;
+      font-size: 1rem;
+    }
+
+    &.total-row {
+      padding-top: 1rem;
+      margin-top: 0.5rem;
+      border-top: 2px solid #e5e7eb;
+
+      .label {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #333;
+      }
+
+      .value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #2563eb;
+      }
+    }
+  }
+
+  .summary-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem;
+
+    ::ng-deep button {
+      width: 100%;
+    }
+  }
+}
+
+.empty-cart {
+  max-width: 600px;
+  margin: 2rem auto;
+
+  .empty-cart-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 3rem 2rem;
+
+    h3 {
+      margin: 1rem 0 0.5rem 0;
+      color: #333;
+      font-size: 1.5rem;
+    }
+
+    p {
+      margin: 0.5rem 0 2rem 0;
+      color: #666;
+      font-size: 1rem;
+    }
+  }
+}
+
+::ng-deep {
+  .p-inputnumber {
+    width: 130px;
+
+    .p-inputnumber-button {
+      width: 2rem;
+    }
+
+    .p-inputnumber-input {
+      text-align: center;
+    }
+  }
+
+  .p-datatable {
+    .p-datatable-tbody > tr > td {
+      vertical-align: middle;
+    }
+  }
+}
