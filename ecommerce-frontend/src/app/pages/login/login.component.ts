@@ -34,7 +34,7 @@ export class LoginComponent implements OnInit {
       const state = params['state'];
 
       if (code) {
-        this.handleOAuthCallback(code);
+        this.handleOAuthCallback(code, state);
       }
     });
   }
@@ -42,21 +42,36 @@ export class LoginComponent implements OnInit {
   /**
    * Inicia el flujo de autenticación OAuth
    */
-  initiateLogin(): void {
+  async initiateLogin(): Promise<void> {
     this.isLoading = true;
-    this.authService.initiateOAuthFlow();
+    try {
+      await this.authService.initiateOAuthFlow();
+    } catch (error) {
+      this.isLoading = false;
+      this.errorMessage = 'No se pudo iniciar el flujo OAuth. Intente nuevamente.';
+      console.error('Error initiating OAuth flow:', error);
+    }
   }
 
   /**
    * Maneja el callback del OAuth
    */
-  private handleOAuthCallback(code: string): void {
+  private handleOAuthCallback(code: string, state?: string): void {
     this.isLoading = true;
     this.errorMessage = '';
+
+    const storedState = this.authService.getStoredState();
+    if (!state || !storedState || state !== storedState) {
+      this.isLoading = false;
+      this.errorMessage = 'Estado OAuth invalido. Intente nuevamente.';
+      this.authService.clearPkceState();
+      return;
+    }
 
     this.authService.exchangeCodeForToken(code).subscribe({
       next: (response) => {
         this.authService.processTokenResponse(response);
+        this.authService.clearPkceState();
         this.messageService.add({
           severity: 'success',
           summary: 'Éxito',

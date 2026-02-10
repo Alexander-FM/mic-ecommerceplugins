@@ -42,6 +42,7 @@ import org.springframework.security.oauth2.server.authorization.settings.TokenSe
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -51,9 +52,12 @@ public class SecurityConfig {
 
   private final UserDetailsService userDetailsService;
 
-  public SecurityConfig(final Environment environment, final UserDetailsService userDetailsService) {
+  private final CorsConfigurationSource corsConfigurationSource;
+
+  public SecurityConfig(Environment environment, UserDetailsService userDetailsService, CorsConfigurationSource corsConfigurationSource) {
     this.environment = environment;
     this.userDetailsService = userDetailsService;
+    this.corsConfigurationSource = corsConfigurationSource;
   }
 
   @Bean
@@ -64,26 +68,27 @@ public class SecurityConfig {
   @Bean
   @Order(1)
   public SecurityFilterChain authorizationServerSecurityFilterChain(final HttpSecurity http)
-      throws Exception {
+    throws Exception {
     OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
     http.getConfigurer(OAuth2AuthorizationServerConfigurer.class).oidc(withDefaults());
+    http.cors(cors -> cors.configurationSource(corsConfigurationSource));
     http
-        .exceptionHandling(exceptions -> exceptions
-            .defaultAuthenticationEntryPointFor(
-                new LoginUrlAuthenticationEntryPoint("/login"),
-                new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
-            ))
-        .oauth2ResourceServer(resources -> resources.jwt(Customizer.withDefaults()));
+      .exceptionHandling(exceptions -> exceptions
+        .defaultAuthenticationEntryPointFor(
+          new LoginUrlAuthenticationEntryPoint("/login"),
+          new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
+        ))
+      .oauth2ResourceServer(resources -> resources.jwt(Customizer.withDefaults()));
     return http.build();
   }
 
   @Bean
   @Order(2)
   public SecurityFilterChain defaultSecurityFilterChain(final HttpSecurity http)
-      throws Exception {
+    throws Exception {
     http
-        .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated())
-        .formLogin(withDefaults()).csrf(AbstractHttpConfigurer::disable);
+      .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated())
+      .formLogin(withDefaults()).csrf(AbstractHttpConfigurer::disable);
     return http.build();
   }
 
@@ -94,26 +99,44 @@ public class SecurityConfig {
 
   @Bean
   public RegisteredClientRepository registeredClientRepository() {
-    RegisteredClient oidcClient = RegisteredClient.withId(UUID.randomUUID().toString())
-        .clientId("maintenance-client")
-        .clientSecret(passwordEncoder().encode("12345"))
-        //.clientSecret("{noop}12345")
-        .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-        .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-        .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-        .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-        .redirectUri(environment.getProperty("LB_MAINTENANCE_URI", "http://127.0.0.1:9090")
-            + "/login/oauth2/code/maintenance-client")
-        .redirectUri(environment.getProperty("LB_MAINTENANCE_URI", "http://127.0.0.1:9090") + "/api/users/authorized")
-        .tokenSettings(TokenSettings.builder().accessTokenTimeToLive(Duration.ofHours(1)).build())
-        .scope(OidcScopes.OPENID)
-        .scope(OidcScopes.PROFILE)
-        .scope("read")
-        .scope("write")
-        .clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).build())
-        .build();
+    RegisteredClient maintenanceClient = RegisteredClient.withId(UUID.randomUUID().toString())
+      .clientId("maintenance-client")
+      .clientSecret(passwordEncoder().encode("12345"))
+      .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+      .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+      .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+      .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+      .redirectUri(environment.getProperty("LB_MAINTENANCE_URI", "http://127.0.0.1:9090")
+        + "/login/oauth2/code/maintenance-client")
+      .redirectUri(environment.getProperty("LB_MAINTENANCE_URI", "http://127.0.0.1:9090")
+        + "/api/users/authorized")
+      .tokenSettings(TokenSettings.builder().accessTokenTimeToLive(Duration.ofHours(1)).build())
+      .scope(OidcScopes.OPENID)
+      .scope(OidcScopes.PROFILE)
+      .scope("read")
+      .scope("write")
+      .clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).build())
+      .build();
 
-    return new InMemoryRegisteredClientRepository(oidcClient);
+    RegisteredClient spaClient = RegisteredClient.withId(UUID.randomUUID().toString())
+      .clientId("maintenance-spa")
+      .clientAuthenticationMethod(ClientAuthenticationMethod.NONE)
+      .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+      .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+      .redirectUri("http://localhost:4200/auth/callback")
+      .redirectUri("http://127.0.0.1:4200/auth/callback")
+      .tokenSettings(TokenSettings.builder().accessTokenTimeToLive(Duration.ofHours(1)).build())
+      .scope(OidcScopes.OPENID)
+      .scope(OidcScopes.PROFILE)
+      .scope("read")
+      .scope("write")
+      .clientSettings(ClientSettings.builder()
+        .requireAuthorizationConsent(false)
+        .requireProofKey(true) // PKCE obligatorio
+        .build())
+      .build();
+
+    return new InMemoryRegisteredClientRepository(maintenanceClient, spaClient);
   }
 
   @Bean
@@ -122,9 +145,9 @@ public class SecurityConfig {
     RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
     RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
     RSAKey rsaKey = new RSAKey.Builder(publicKey)
-        .privateKey(privateKey)
-        .keyID(UUID.randomUUID().toString())
-        .build();
+      .privateKey(privateKey)
+      .keyID(UUID.randomUUID().toString())
+      .build();
     JWKSet jwkSet = new JWKSet(rsaKey);
     return new ImmutableJWKSet<>(jwkSet);
   }

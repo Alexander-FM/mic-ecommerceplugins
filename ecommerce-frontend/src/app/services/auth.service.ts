@@ -7,10 +7,12 @@ import { TokenResponse, AuthUser, AuthState } from '../models/auth.models';
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly OAUTH_AUTH_URL = 'http://127.0.0.1:9090/oauth2/authorization/maintenance-client';
+  private readonly AUTHORIZATION_ENDPOINT = 'http://127.0.0.1:9001/oauth2/authorize';
   private readonly TOKEN_URL = 'http://127.0.0.1:9001/oauth2/token';
   private readonly REDIRECT_URI = 'http://localhost:4200/auth/callback';
-  private readonly CLIENT_ID = 'maintenance-client';
+  private readonly CLIENT_ID = 'maintenance-spa';
+  private readonly STORAGE_KEY_CODE_VERIFIER = 'pkce_code_verifier';
+  private readonly STORAGE_KEY_STATE = 'pkce_state';
   private readonly STORAGE_KEY_TOKEN = 'auth_token';
   private readonly STORAGE_KEY_REFRESH = 'auth_refresh_token';
   private readonly STORAGE_KEY_ID = 'auth_id_token';
@@ -37,19 +39,42 @@ export class AuthService {
   /**
    * Inicia el flujo de autenticación OAuth 2.0
    */
-  initiateOAuthFlow(): void {
-    window.location.href = this.OAUTH_AUTH_URL;
+  async initiateOAuthFlow(): Promise<void> {
+    const codeVerifier = this.generateCodeVerifier();
+    const codeChallenge = await this.generateCodeChallenge(codeVerifier);
+    const state = this.generateRandomString(32);
+
+    sessionStorage.setItem(this.STORAGE_KEY_CODE_VERIFIER, codeVerifier);
+    sessionStorage.setItem(this.STORAGE_KEY_STATE, state);
+
+    const params = new URLSearchParams({
+      response_type: 'code',
+      client_id: this.CLIENT_ID,
+      redirect_uri: this.REDIRECT_URI,
+      scope: 'openid profile read write',
+      code_challenge: codeChallenge,
+      code_challenge_method: 'S256',
+      state: state
+    });
+
+    window.location.href = `${this.AUTHORIZATION_ENDPOINT}?${params.toString()}`;
   }
 
   /**
    * Intercambia el código por un token (llamado desde el callback)
    */
   exchangeCodeForToken(code: string): Observable<TokenResponse> {
+    const codeVerifier = sessionStorage.getItem(this.STORAGE_KEY_CODE_VERIFIER);
+    if (!codeVerifier) {
+      throw new Error('PKCE code verifier not found. Restart login flow.');
+    }
+
     const body = new URLSearchParams();
     body.set('code', code);
     body.set('grant_type', 'authorization_code');
     body.set('redirect_uri', this.REDIRECT_URI);
     body.set('client_id', this.CLIENT_ID);
+    body.set('code_verifier', codeVerifier);
 
     return this.http.post<TokenResponse>(this.TOKEN_URL, body.toString(), {
       headers: {
@@ -138,6 +163,48 @@ export class AuthService {
       console.error('Error decoding token:', error);
       return null;
     }
+  }
+
+  private generateCodeVerifier(): string {
+    return this.generateRandomString(64);
+  }
+
+  private async generateCodeChallenge(codeVerifier: string): Promise<string> {
+    const data = new TextEncoder().encode(codeVerifier);
+    const digest = await window.crypto.subtle.digest('SHA-256', data);
+    return this.base64UrlEncode(new Uint8Array(digest));
+  }
+
+  private base64UrlEncode(buffer: Uint8Array): string {
+    let binary = '';
+    for (let i = 0; i < buffer.byteLength; i += 1) {
+      binary += String.fromCharCode(buffer[i]);
+    }
+
+    return btoa(binary)
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=+$/, '');
+  }
+
+  private generateRandomString(length: number): string {
+    const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
+    const randomValues = new Uint8Array(length);
+    window.crypto.getRandomValues(randomValues);
+    let result = '';
+    for (let i = 0; i < randomValues.length; i += 1) {
+      result += charset[randomValues[i] % charset.length];
+    }
+    return result;
+  }
+
+  getStoredState(): string | null {
+    return sessionStorage.getItem(this.STORAGE_KEY_STATE);
+  }
+
+  clearPkceState(): void {
+    sessionStorage.removeItem(this.STORAGE_KEY_CODE_VERIFIER);
+    sessionStorage.removeItem(this.STORAGE_KEY_STATE);
   }
 
   /**
