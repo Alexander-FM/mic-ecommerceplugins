@@ -37,8 +37,8 @@ public class OrderController {
 
   @PostMapping
   public ResponseEntity<GenericResponse<OrderResponseDto>> saveOrder(@RequestBody final OrderRequestDto orderRequestDto,
-      @RequestHeader(value = "Authorization") final String token) {
-    log.info("You are using the value: {}", environment.getProperty("feign.client.url"));
+      @RequestHeader(value = "Token-External") final String token) {
+    log.info("You are using the value: {}", environment.getProperty("app.external.maintenance-service-url"));
     if (ObjectUtils.isNotEmpty(orderRequestDto.getId())) {
       throw new GenericUnprocessableEntityException(OrderConstants.UNPROCESSABLE_ENTITY_EXCEPTION);
     } else {

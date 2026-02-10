@@ -1,0 +1,31 @@
+<div class="login-container">
+  <p-toast></p-toast>
+
+  <p-card class="login-card">
+    <div class="text-center">
+      <h1 class="title">E-Commerce</h1>
+      <p class="subtitle">Inicia sesión para continuar</p>
+    </div>
+
+    <div *ngIf="errorMessage" class="error-container">
+      <p-message severity="error" [text]="errorMessage" styleClass="w-full"></p-message>
+    </div>
+
+    <div class="button-container">
+      <p-button
+        label="Iniciar sesión con OAuth"
+        icon="pi pi-google"
+        (onClick)="initiateLogin()"
+        [loading]="isLoading"
+        [disabled]="isLoading"
+        iconPos="left"
+        class="w-full"
+        severity="primary"
+      ></p-button>
+    </div>
+
+    <div class="info-text">
+      <p>Se redirigirá a la página de autenticación segura.</p>
+    </div>
+  </p-card>
+</div>

@@ -3,6 +3,7 @@ package com.codecorecix.ecommerce;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.cloud.openfeign.FeignAutoConfiguration;
@@ -10,7 +11,7 @@ import org.springframework.cloud.openfeign.FeignAutoConfiguration;
 @EnableDiscoveryClient
 @EnableFeignClients
 @ImportAutoConfiguration({FeignAutoConfiguration.class})
-@SpringBootApplication
+@SpringBootApplication(exclude = {UserDetailsServiceAutoConfiguration.class})
 public class ApplicationOrders {
 
   public static void main(String[] args) {

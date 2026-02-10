@@ -5,9 +5,11 @@ import { MenubarModule } from 'primeng/menubar';
 import { ButtonModule } from 'primeng/button';
 import { BadgeModule } from 'primeng/badge';
 import { TooltipModule } from 'primeng/tooltip';
-import { MenuItem } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
+import { MenuItem, MessageService } from 'primeng/api';
 import { CategoryService } from './services/category.service';
 import { CartService } from './services/cart.service';
+import { AuthService } from './services/auth.service';
 import { Category } from './models/ecommerce.models';
 
 @Component({
@@ -20,10 +22,12 @@ import { Category } from './models/ecommerce.models';
     MenubarModule,
     ButtonModule,
     BadgeModule,
-    TooltipModule
+    TooltipModule,
+    ToastModule
   ],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrl: './app.component.scss',
+  providers: [MessageService]
 })
 export class AppComponent implements OnInit {
   title = 'ecommerce-frontend';
@@ -35,12 +39,16 @@ export class AppComponent implements OnInit {
   constructor(
     private categoryService: CategoryService,
     private cartService: CartService,
-    private router: Router
+    private authService: AuthService,
+    private router: Router,
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
-    this.loadCategories();
-    this.loadCartCount();
+    if (this.authService.isAuthenticated()) {
+      this.loadCategories();
+      this.loadCartCount();
+    }
   }
 
   loadCategories(): void {
@@ -123,13 +131,22 @@ export class AppComponent implements OnInit {
   }
 
   navigateToCategory(category: Category): void {
-    this.router.navigate(['/products'], { 
+    this.router.navigate(['/products'], {
       queryParams: { categoryId: category.id }
     });
   }
 
   logout(): void {
-    console.log('Logout clicked');
+    this.authService.logout();
+    this.messageService.add({
+      severity: 'info',
+      summary: 'Sesión cerrada',
+      detail: 'Has cerrado sesión exitosamente',
+      life: 2000
+    });
+    setTimeout(() => {
+      this.router.navigate(['/login']);
+    }, 2000);
   }
 }
 

@@ -1,0 +1,60 @@
+.navbar {
+  margin-bottom: 1rem;
+
+  .toolbar-container {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 1rem;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .app-title {
+    color: white;
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+
+  .user-section {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: white;
+
+    .user-name {
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+  }
+}
+
+::ng-deep {
+  .navbar .p-toolbar {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+
+    .p-toolbar-group-left,
+    .p-toolbar-group-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .navbar {
+    .app-title {
+      font-size: 1.25rem;
+    }
+
+    .user-section {
+      gap: 0.5rem;
+
+      .user-name {
+        display: none;
+      }
+    }
+  }
+}

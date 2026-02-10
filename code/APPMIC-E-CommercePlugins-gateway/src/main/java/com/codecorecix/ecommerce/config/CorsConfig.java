@@ -1,4 +1,4 @@
-package com.codesoft.config;
+package com.codecorecix.ecommerce.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

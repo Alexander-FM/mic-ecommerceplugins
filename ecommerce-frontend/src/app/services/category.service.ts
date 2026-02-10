@@ -7,7 +7,7 @@ import { Category, GenericResponse } from '../models/ecommerce.models';
   providedIn: 'root'
 })
 export class CategoryService {
-  private baseEndpoint = '/maintenance/api/categories';
+  private baseEndpoint = '/api/categories';
 
   constructor(private apiService: ApiService) {}
 

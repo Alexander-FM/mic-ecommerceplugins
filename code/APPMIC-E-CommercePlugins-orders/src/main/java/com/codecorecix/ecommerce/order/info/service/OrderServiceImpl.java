@@ -52,6 +52,10 @@ public class OrderServiceImpl implements OrderService {
       this.orderDetailService.saveOrderDetails(orderRequestDto.getOrderDetails(), orderBD.getId(), token);
       final OrderResponseDto orderResponseDto = this.orderFieldsMapper.destinationToSource(orderBD);
       return new GenericResponse<>(GenericResponseConstants.RPTA_OK, GenericResponseConstants.CORRECT_OPERATION, orderResponseDto);
+    } catch (final FeignException.Unauthorized ex1) {
+      throw new OrderException(OrderErrorMessage.SERVICE_PRODUCTS_NOT_AUTHORIZED);
+    } catch (final FeignException.Forbidden ex2) {
+      throw new OrderException(OrderErrorMessage.SERVICE_PRODUCTS_FORBIDDEN);
     } catch (final FeignException e) {
       throw new OrderException(OrderErrorMessage.SERVICE_PRODUCTS_NOT_AVAILABLE);
     } catch (final OrderException ex) {

@@ -1,0 +1,76 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 1rem;
+
+  .login-card {
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+
+    .title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #333;
+      margin: 1rem 0 0.5rem 0;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: #666;
+      margin-bottom: 2rem;
+    }
+
+    .error-container {
+      margin-bottom: 1.5rem;
+    }
+
+    .button-container {
+      margin: 2rem 0;
+      display: flex;
+      gap: 1rem;
+      flex-direction: column;
+
+      ::ng-deep {
+        .p-button {
+          padding: 0.75rem 1.5rem;
+          font-size: 1rem;
+          font-weight: 600;
+
+          &:disabled {
+            opacity: 0.6;
+          }
+        }
+      }
+    }
+
+    .info-text {
+      text-align: center;
+      color: #999;
+      font-size: 0.875rem;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #eee;
+
+      p {
+        margin: 0;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .login-container {
+    .login-card {
+      max-width: 100%;
+
+      .title {
+        font-size: 1.5rem;
+      }
+    }
+  }
+}

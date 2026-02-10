@@ -56,6 +56,8 @@ public class GenericExceptionHandler {
     HttpStatus status = switch (errorMessage) {
       case ERROR_RESOURCE_STATUS_NOT_AVAILABLE, ERROR_RESOURCE_ORDER_NOT_AVAILABLE -> HttpStatus.NOT_FOUND;
       case SERVICE_PRODUCTS_NOT_AVAILABLE -> HttpStatus.SERVICE_UNAVAILABLE;
+      case SERVICE_PRODUCTS_FORBIDDEN -> HttpStatus.FORBIDDEN;
+      case SERVICE_PRODUCTS_NOT_AUTHORIZED -> HttpStatus.UNAUTHORIZED;
       case ERROR_INTERNAL -> HttpStatus.INTERNAL_SERVER_ERROR;
       case INVALID_TOKEN -> HttpStatus.UNAUTHORIZED;
     };
