@@ -4,23 +4,23 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: ${LB_AUTH_ISSUER_URI:http://127.0.0.1:9001}
-      client:
-        registration:
-          maintenance-client:
-            provider: spring
-            client-id: maintenance-client
-            client-secret: 12345
-            authorization-grant-type: authorization_code
-            redirect-uri: ${LB_MAINTENANCE_URI:http://127.0.0.1:9090}/api/users/authorized
-            scope:
-              - openid
-              - profile
-              - read
-              - write
-            client-name: maintenance-client
-        provider:
-          spring:
-            issuer-uri: ${LB_AUTH_ISSUER_URI:http://127.0.0.1:9001}
+            #client:
+            #registration:
+            #maintenance-client:
+            #provider: spring
+            #client-id: maintenance-client
+            #client-secret: 12345
+            #authorization-grant-type: authorization_code
+            #redirect-uri: ${LB_MAINTENANCE_URI:http://127.0.0.1:9090}/api/users/authorized
+            #scope:
+            #- openid
+            #- profile
+            #- read
+            #- write
+            #client-name: maintenance-client
+            #provider:
+          #spring:
+          #issuer-uri: ${LB_AUTH_ISSUER_URI:http://127.0.0.1:9001}
 # Configuration by default
 config:
   texto: Configurando ambiente por defecto
