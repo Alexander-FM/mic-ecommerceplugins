@@ -1,7 +1,7 @@
 <div class="app-container">
   <p-toast></p-toast>
 
-  <div class="card" *ngIf="showMenu">
+  <div class="navbar" *ngIf="showMenu">
     <p-menubar [model]="menuItems">
       <ng-template pTemplate="start">
         <div class="flex align-items-center gap-2">
@@ -51,11 +51,7 @@
     </p-menubar>
   </div>
 
-  <div class="router-container">
+  <div class="main-content">
     <router-outlet></router-outlet>
   </div>
 </div>
-
-<main [class.p-3]="showMenu">
-  <router-outlet />
-</main>

@@ -8,7 +8,6 @@
       <div class="p-field">
         <label for="search">Buscar</label>
         <span class="p-input-icon-left">
-          <i class="pi pi-search"></i>
           <input
             id="search"
             type="text"
@@ -22,7 +21,7 @@
 
       <div class="p-field">
         <label for="brand">Marca</label>
-        <p-dropdown
+        <p-select
           id="brand"
           [options]="brands"
           [(ngModel)]="selectedBrand"
@@ -30,7 +29,7 @@
           placeholder="Seleccionar marca"
           [showClear]="true"
           (onChange)="filterProducts()"
-        ></p-dropdown>
+        ></p-select>
       </div>
 
       <div class="p-field">
@@ -77,7 +76,7 @@
         <ng-template pTemplate="header">
           <div class="product-image-container">
             <img
-              [src]="product.imageUrl || '/assets/images/product-placeholder.svg'"
+              [src]="product.imageUrl || 'imagen_not_found_sorry.png'"
               [alt]="product.name"
               class="product-image"
               (error)="onImageError($event)"

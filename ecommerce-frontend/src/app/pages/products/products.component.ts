@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { DataViewModule } from 'primeng/dataview';
 import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
@@ -24,7 +24,7 @@ import { Product, Brand } from '../../models/ecommerce.models';
     CardModule,
     ButtonModule,
     InputTextModule,
-    DropdownModule,
+    SelectModule,
     DataViewModule,
     TagModule,
     ToastModule
@@ -49,7 +49,7 @@ export class ProductsComponent implements OnInit {
     private cartService: CartService,
     private messageService: MessageService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadProducts();
@@ -149,6 +149,6 @@ export class ProductsComponent implements OnInit {
 
   onImageError(event: Event): void {
     const target = event.target as HTMLImageElement;
-    target.src = '/assets/images/product-placeholder.svg';
+    target.src = 'imagen_not_found_sorry.png';// Ruta a una imagen de "no encontrado"
   }
 }
