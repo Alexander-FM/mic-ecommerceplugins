@@ -33,6 +33,9 @@ export class LoginComponent implements OnInit {
       const code = params['code'];
       const state = params['state'];
 
+      // Debug: log todos los parámetros recibidos
+      console.log('🔍 Query params recibidos:', { code, state, allParams: params });
+
       if (code) {
         this.handleOAuthCallback(code, state);
       }
@@ -60,16 +63,26 @@ export class LoginComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = '';
 
+    console.log('🔐 Procesando callback OAuth...');
+    console.log('📦 Code:', code.substring(0, 20) + '...');
+    console.log('🔒 State recibido:', state);
+
     const storedState = this.authService.getStoredState();
+    console.log('🔍 State almacenado:', storedState);
+
     if (!state || !storedState || state !== storedState) {
       this.isLoading = false;
       this.errorMessage = 'Estado OAuth invalido. Intente nuevamente.';
+      console.error('❌ State mismatch:', { received: state, stored: storedState });
       this.authService.clearPkceState();
       return;
     }
 
+    console.log('✅ State válido. Intercambiando código por token...');
+
     this.authService.exchangeCodeForToken(code).subscribe({
       next: (response) => {
+        console.log('✅ Token recibido exitosamente:', { access_token: response.access_token.substring(0, 20) + '...', expires_in: response.expires_in });
         this.authService.processTokenResponse(response);
         this.authService.clearPkceState();
         this.messageService.add({
@@ -86,12 +99,27 @@ export class LoginComponent implements OnInit {
       },
       error: (error) => {
         this.isLoading = false;
-        this.errorMessage = 'Error al obtener el token. Por favor, intente nuevamente.';
-        console.error('Error exchanging code for token:', error);
+        console.error('❌ Error intercambiando código:', error);
+
+        let errorMsg = 'Error al obtener el token. Por favor, intente nuevamente.';
+        if (error.status === 400) {
+          errorMsg = 'Código inválido o expirado. Intente de nuevo.';
+        } else if (error.status === 401) {
+          errorMsg = 'No autorizado. Verifique sus credenciales.';
+        } else if (error.status === 0) {
+          errorMsg = 'Error de conexión. Verifique que el servidor OAuth esté disponible en http://127.0.0.1:9001';
+        } else if (error.error?.error) {
+          errorMsg = `${error.error.error}: ${error.error.error_description || ''}`;
+        }
+
+        this.errorMessage = errorMsg;
+        this.authService.clearPkceState();
+        console.error('📝 Detalles del error:', error);
+
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: this.errorMessage,
+          detail: errorMsg,
           life: 5000
         });
       }

@@ -60,19 +60,37 @@ export class ProductsComponent implements OnInit {
     this.loading = true;
     this.productService.getActiveProducts().subscribe({
       next: (response) => {
+        console.log('✅ Productos recibidos:', response);
         if (response.body) {
           this.products = response.body;
           this.filteredProducts = response.body;
+          console.log('📦 Total productos:', this.products.length);
           this.loading = false;
         }
       },
       error: (error) => {
-        console.error('Error loading products:', error);
+        console.error('❌ Error loading products:', error);
+
+        let errorMsg = 'No se pudieron cargar los productos';
+        if (error.status === 401) {
+          errorMsg = 'No autorizado. El token ha expirado.';
+        } else if (error.status === 403) {
+          errorMsg = 'Acceso denegado a los productos.';
+        } else if (error.status === 0) {
+          errorMsg = 'Error de conexión. Verifica que la API está disponible.';
+        } else if (error.error?.message) {
+          errorMsg = error.error.message;
+        }
+
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: 'No se pudieron cargar los productos'
+          detail: errorMsg
         });
+
+        console.log('📝 Status:', error.status);
+        console.log('📝 Error completo:', error.error);
+
         this.loading = false;
       }
     });
@@ -93,14 +111,14 @@ export class ProductsComponent implements OnInit {
 
   filterProducts(): void {
     this.filteredProducts = this.products.filter(product => {
-      const matchesSearch = !this.searchText || 
+      const matchesSearch = !this.searchText ||
         product.name.toLowerCase().includes(this.searchText.toLowerCase()) ||
         (product.description?.toLowerCase().includes(this.searchText.toLowerCase()));
-      
-      const matchesBrand = !this.selectedBrand || 
+
+      const matchesBrand = !this.selectedBrand ||
         product.brandName === this.selectedBrand.description;
-      
-      const matchesPrice = product.price >= this.minPrice && 
+
+      const matchesPrice = product.price >= this.minPrice &&
         product.price <= this.maxPrice;
 
       return matchesSearch && matchesBrand && matchesPrice;

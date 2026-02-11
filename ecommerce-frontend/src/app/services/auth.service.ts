@@ -44,8 +44,15 @@ export class AuthService {
     const codeChallenge = await this.generateCodeChallenge(codeVerifier);
     const state = this.generateRandomString(32);
 
+    console.log('🔄 Iniciando flujo OAuth 2.0 PKCE...');
+    console.log('🔑 Code Verifier generado (len=' + codeVerifier.length + '):', codeVerifier.substring(0, 20) + '...');
+    console.log('🔐 Code Challenge (SHA-256, Base64URL):', codeChallenge);
+    console.log('🛡️ State generado:', state);
+
     sessionStorage.setItem(this.STORAGE_KEY_CODE_VERIFIER, codeVerifier);
     sessionStorage.setItem(this.STORAGE_KEY_STATE, state);
+
+    console.log('✅ PKCE data guardado en sessionStorage');
 
     const params = new URLSearchParams({
       response_type: 'code',
@@ -57,7 +64,9 @@ export class AuthService {
       state: state
     });
 
-    window.location.href = `${this.AUTHORIZATION_ENDPOINT}?${params.toString()}`;
+    const authUrl = `${this.AUTHORIZATION_ENDPOINT}?${params.toString()}`;
+    console.log('🌐 Redirecting a:', authUrl);
+    window.location.href = authUrl;
   }
 
   /**
@@ -66,8 +75,12 @@ export class AuthService {
   exchangeCodeForToken(code: string): Observable<TokenResponse> {
     const codeVerifier = sessionStorage.getItem(this.STORAGE_KEY_CODE_VERIFIER);
     if (!codeVerifier) {
+      console.error('❌ PKCE code verifier not found in sessionStorage');
       throw new Error('PKCE code verifier not found. Restart login flow.');
     }
+
+    console.log('🔑 Code Verifier length:', codeVerifier.length);
+    console.log('🔑 Code Verifier (primeros 20 chars):', codeVerifier.substring(0, 20));
 
     const body = new URLSearchParams();
     body.set('code', code);
@@ -75,6 +88,14 @@ export class AuthService {
     body.set('redirect_uri', this.REDIRECT_URI);
     body.set('client_id', this.CLIENT_ID);
     body.set('code_verifier', codeVerifier);
+
+    console.log('🌐 POST a:', this.TOKEN_URL);
+    console.log('📦 Parámetros enviados:');
+    console.log('  - code:', code.substring(0, 20) + '...');
+    console.log('  - grant_type:', 'authorization_code');
+    console.log('  - redirect_uri:', this.REDIRECT_URI);
+    console.log('  - client_id:', this.CLIENT_ID);
+    console.log('  - code_verifier:', codeVerifier);
 
     return this.http.post<TokenResponse>(this.TOKEN_URL, body.toString(), {
       headers: {

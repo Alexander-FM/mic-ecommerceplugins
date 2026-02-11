@@ -28,20 +28,21 @@ public class SecurityConfig {
 
   @Bean
   SecurityFilterChain securityFilterChain(final HttpSecurity http) throws Exception {
-    http.authorizeRequests(authorizeRequests -> authorizeRequests
-            .requestMatchers("/api/users/authorized", "/api/users/login", "/api/users").permitAll()
-            .requestMatchers(HttpMethod.GET, COMMON_PATHS).hasAnyAuthority(SCOPE_READ, SCOPE_WRITE)
-            .requestMatchers(HttpMethod.POST, ROOT_PATH).hasAnyAuthority(SCOPE_WRITE)
-            .requestMatchers(HttpMethod.PUT, COMMON_PATHS).hasAnyAuthority(SCOPE_WRITE)
-            .requestMatchers(HttpMethod.DELETE, COMMON_PATHS).hasAnyAuthority(SCOPE_WRITE)
-            .requestMatchers(HttpMethod.PATCH, COMMON_PATHS).hasAnyAuthority(SCOPE_WRITE)
-            .anyRequest().authenticated()
-        )
-        .csrf(AbstractHttpConfigurer::disable)
-        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .oauth2Login(oauth2 -> oauth2.loginPage("/oauth2/authorization/maintenance-client"))
-        .oauth2Client(Customizer.withDefaults())
-        .oauth2ResourceServer(resourceServer -> resourceServer.jwt(Customizer.withDefaults()));
+    http.authorizeHttpRequests(authorizeRequests -> authorizeRequests
+        .requestMatchers("/api/users/authorized", "/api/users/login", "/api/users").permitAll()
+        .requestMatchers(HttpMethod.GET, COMMON_PATHS).hasAnyAuthority(SCOPE_READ, SCOPE_WRITE)
+        .requestMatchers(HttpMethod.POST, ROOT_PATH).hasAnyAuthority(SCOPE_WRITE)
+        .requestMatchers(HttpMethod.PUT, COMMON_PATHS).hasAnyAuthority(SCOPE_WRITE)
+        .requestMatchers(HttpMethod.DELETE, COMMON_PATHS).hasAnyAuthority(SCOPE_WRITE)
+        .requestMatchers(HttpMethod.PATCH, COMMON_PATHS).hasAnyAuthority(SCOPE_WRITE)
+        .anyRequest().authenticated()
+      )
+      .cors(Customizer.withDefaults())
+      .csrf(AbstractHttpConfigurer::disable)
+      .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+      .oauth2Login(oauth2 -> oauth2.loginPage("/oauth2/authorization/maintenance-client"))
+      .oauth2Client(Customizer.withDefaults())
+      .oauth2ResourceServer(resourceServer -> resourceServer.jwt(Customizer.withDefaults()));
     return http.build();
   }
 }

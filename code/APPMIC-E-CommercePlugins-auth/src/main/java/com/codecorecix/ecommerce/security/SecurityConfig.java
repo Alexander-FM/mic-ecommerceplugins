@@ -7,6 +7,7 @@ import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.time.Duration;
+import java.util.List;
 import java.util.UUID;
 
 import com.nimbusds.jose.jwk.JWKSet;
@@ -42,7 +43,9 @@ import org.springframework.security.oauth2.server.authorization.settings.TokenSe
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -52,12 +55,10 @@ public class SecurityConfig {
 
   private final UserDetailsService userDetailsService;
 
-  private final CorsConfigurationSource corsConfigurationSource;
-
-  public SecurityConfig(Environment environment, UserDetailsService userDetailsService, CorsConfigurationSource corsConfigurationSource) {
+  public SecurityConfig(Environment environment, UserDetailsService userDetailsService) {
     this.environment = environment;
     this.userDetailsService = userDetailsService;
-    this.corsConfigurationSource = corsConfigurationSource;
+
   }
 
   @Bean
@@ -71,7 +72,7 @@ public class SecurityConfig {
     throws Exception {
     OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
     http.getConfigurer(OAuth2AuthorizationServerConfigurer.class).oidc(withDefaults());
-    http.cors(cors -> cors.configurationSource(corsConfigurationSource));
+    http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
     http
       .exceptionHandling(exceptions -> exceptions
         .defaultAuthenticationEntryPointFor(
@@ -124,7 +125,6 @@ public class SecurityConfig {
       .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
       .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
       .redirectUri("http://localhost:4200/auth/callback")
-      .redirectUri("http://127.0.0.1:4200/auth/callback")
       .tokenSettings(TokenSettings.builder().accessTokenTimeToLive(Duration.ofHours(1)).build())
       .scope(OidcScopes.OPENID)
       .scope(OidcScopes.PROFILE)
@@ -132,7 +132,7 @@ public class SecurityConfig {
       .scope("write")
       .clientSettings(ClientSettings.builder()
         .requireAuthorizationConsent(false)
-        .requireProofKey(true) // PKCE obligatorio
+        .requireProofKey(true)
         .build())
       .build();
 
@@ -172,5 +172,25 @@ public class SecurityConfig {
   @Bean
   public AuthorizationServerSettings authorizationServerSettings() {
     return AuthorizationServerSettings.builder().build();
+  }
+
+  @Bean
+  public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration configuration = new CorsConfiguration();
+    configuration.setAllowedOrigins(java.util.Arrays.asList(
+      "http://localhost:3000",
+      "http://localhost:4200",
+      "http://localhost"
+    ));
+    configuration.setAllowedMethods(java.util.Arrays.asList(
+      "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"
+    ));
+    configuration.setAllowedHeaders(List.of("*"));
+    configuration.setAllowCredentials(true);
+    configuration.setMaxAge(3600L);
+
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
+    return source;
   }
 }
