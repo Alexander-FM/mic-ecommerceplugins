@@ -45,10 +45,21 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    if (this.authService.isAuthenticated()) {
-      this.loadCategories();
-      this.loadCartCount();
-    }
+    // Escuchar cambios en el estado de autenticación
+    this.authService.authState$.subscribe((authState) => {
+      if (authState.isAuthenticated) {
+        console.log('✅ Usuario autenticado, cargando menú...');
+        this.showMenu = true;
+        this.username = authState.user?.['preferred_username'] || 'Usuario';
+        this.loadCategories();
+        this.loadCartCount();
+      } else {
+        console.log('❌ Usuario no autenticado, ocultando menú...');
+        this.showMenu = false;
+        this.menuItems = [];
+        this.cartItemCount = 0;
+      }
+    });
   }
 
   loadCategories(): void {
@@ -138,7 +149,7 @@ export class AppComponent implements OnInit {
 
   logout(): void {
     this.authService.logout();
-    this.showMenu = false;
+    // El navbar se ocultará automáticamente gracias a authState$ subscription
     this.messageService.add({
       severity: 'info',
       summary: 'Sesión cerrada',
