@@ -138,6 +138,7 @@ export class AppComponent implements OnInit {
 
   logout(): void {
     this.authService.logout();
+    this.showMenu = false;
     this.messageService.add({
       severity: 'info',
       summary: 'Sesión cerrada',
