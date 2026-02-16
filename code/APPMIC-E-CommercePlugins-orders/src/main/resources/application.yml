@@ -1,6 +1,11 @@
 server:
   port: ${PORT:9091}
 spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${LB_AUTH_ISSUER_URI:http://127.0.0.1:9001}
   application:
     name: appmic-e-commerceplugins-orders
   datasource:
@@ -23,11 +28,6 @@ spring:
         all-namespaces: true
   profiles:
     default: ${SPRING_PROFILES_ACTIVE:dev}
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: ${LB_AUTH_ISSUER_URI:http://127.0.0.1:9001}
 resilience4j:
   circuitbreaker:
     instances:
@@ -37,11 +37,6 @@ resilience4j:
         failure-rate-threshold: 50
         wait-duration-in-open-state:
           seconds: 10
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: ${LB_AUTH_ISSUER_URI:http://127.0.0.1:9001}
 # Configuration for dev profile
 ---
 spring:

@@ -119,6 +119,23 @@ public class SecurityConfig {
       .clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).build())
       .build();
 
+    RegisteredClient orderClient = RegisteredClient.withId(UUID.randomUUID().toString())
+      .clientId("order-client")
+      .clientSecret(passwordEncoder().encode("12345"))
+      .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+      .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+      .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+      .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+      .redirectUri(environment.getProperty("LB_ORDER_URI", "http://127.0.0.1:9091")
+        + "/login/oauth2/code/order-client")
+      .tokenSettings(TokenSettings.builder().accessTokenTimeToLive(Duration.ofHours(1)).build())
+      .scope(OidcScopes.OPENID)
+      .scope(OidcScopes.PROFILE)
+      .scope("read")
+      .scope("write")
+      .clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).build())
+      .build();
+
     RegisteredClient spaClient = RegisteredClient.withId(UUID.randomUUID().toString())
       .clientId("maintenance-spa")
       .clientAuthenticationMethod(ClientAuthenticationMethod.NONE)
@@ -136,7 +153,7 @@ public class SecurityConfig {
         .build())
       .build();
 
-    return new InMemoryRegisteredClientRepository(maintenanceClient, spaClient);
+    return new InMemoryRegisteredClientRepository(maintenanceClient, orderClient, spaClient);
   }
 
   @Bean
