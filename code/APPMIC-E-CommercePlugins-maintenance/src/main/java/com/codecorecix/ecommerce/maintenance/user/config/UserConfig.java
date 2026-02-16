@@ -1,4 +1,4 @@
-package com.codecorecix.ecommerce.maintenance.user.utils;
+package com.codecorecix.ecommerce.maintenance.user.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,49 @@
+server:
+  port: ${PORT:9091}
+spring:
+  application:
+    name: appmic-e-commerceplugins-orders
+  datasource:
+    url: "jdbc:mysql://${DB_HOST:127.0.0.1:3306}/${DB_DATABASE:orders_service}?createDatabaseIfNotExist=true"
+    username: "${DB_USERNAME:root}"
+    password: "${DB_PASSWORD:root_password}"
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  cloud:
+    kubernetes:
+      secrets:
+        enable-api: true
+      discovery:
+        all-namespaces: true
+  profiles:
+    default: ${SPRING_PROFILES_ACTIVE:dev}
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${LB_AUTH_ISSUER_URI:http://127.0.0.1:9001}
+resilience4j:
+  circuitbreaker:
+    instances:
+      maintenanceService:
+        register-health-indicator: true
+        sliding-window-size: 10
+        failure-rate-threshold: 50
+        wait-duration-in-open-state:
+          seconds: 10
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${LB_AUTH_ISSUER_URI:http://127.0.0.1:9001}
 # Configuration for dev profile
+---
 spring:
   config:
     activate:
