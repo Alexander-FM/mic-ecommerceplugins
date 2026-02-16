@@ -1,5 +1,6 @@
 package com.codecorecix.ecommerce.utils;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -14,25 +15,77 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
 
+  // Inyección de todos los endpoints desde application.yml
+  @Value("${app.endpoints.customer}")
+  private String customerPath;
+
+  @Value("${app.endpoints.employee}")
+  private String employeePath;
+
+  @Value("${app.endpoints.role}")
+  private String rolePath;
+
+  @Value("${app.endpoints.user}")
+  private String userPath;
+
+  @Value("${app.endpoints.brand}")
+  private String brandPath;
+
+  @Value("${app.endpoints.category}")
+  private String categoryPath;
+
+  @Value("${app.endpoints.product}")
+  private String productPath;
+
+  @Value("${app.endpoints.product-detail}")
+  private String productDetailPath;
+
+  @Value("${app.endpoints.product-image}")
+  private String productImagePath;
+
+  @Value("${app.endpoints.google-drive}")
+  private String googleDrivePath;
+
   private static final String ROLE_ADMIN = "ROLE_ADMIN";
 
   private static final String ROLE_USER = "ROLE_USER";
 
-  private static final String[] COMMON_PATHS = {"/", "/{id}"};
+  private final CustomAccessDeniedHandler accessDeniedHandler;
 
-  public static final String ROOT_PATH = "/";
+  private final CustomAuthenticationEntryPoint authenticationEntryPoint;
+
+  public SecurityConfig(CustomAccessDeniedHandler accessDeniedHandler,
+    CustomAuthenticationEntryPoint authenticationEntryPoint) {
+    this.accessDeniedHandler = accessDeniedHandler;
+    this.authenticationEntryPoint = authenticationEntryPoint;
+  }
 
   @Bean
   SecurityFilterChain securityFilterChain(final HttpSecurity http) throws Exception {
+    // Creamos un array con todas las rutas protegidas para no repetir código
+    final String[] allMaintenancePaths = {
+      customerPath + "/**", employeePath + "/**", rolePath + "/**",
+      userPath + "/**", brandPath + "/**", categoryPath + "/**",
+      productPath + "/**", productDetailPath + "/**",
+      productImagePath + "/**", googleDrivePath + "/**"
+    };
     http.authorizeHttpRequests(authorizeRequests -> authorizeRequests
-        .requestMatchers("/api/maintenance/users/authorized", "/api/maintenance/users/login", "/api/maintenance/users", "api/maintenance/products/active", "api/maintenance/brands/active",
+        //1. Rutas públicas (sin autenticación) para login y consultas de datos activos
+        .requestMatchers("/api/maintenance/users/authorized", "/api/maintenance/users/login", "/api/maintenance/users",
+          "api/maintenance/products/active", "api/maintenance/brands/active",
           "api/maintenance/categories/active").permitAll()
-        .requestMatchers(HttpMethod.GET, COMMON_PATHS).hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
-        .requestMatchers(HttpMethod.POST, ROOT_PATH).hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
-        .requestMatchers(HttpMethod.PUT, COMMON_PATHS).hasAuthority(ROLE_ADMIN)
-        .requestMatchers(HttpMethod.DELETE, COMMON_PATHS).hasAuthority(ROLE_ADMIN)
-        .requestMatchers(HttpMethod.PATCH, COMMON_PATHS).hasAuthority(ROLE_ADMIN)
+        // 2. Operaciones permitidas para ADMIN y USER (GET y POST)
+        .requestMatchers(HttpMethod.GET, allMaintenancePaths).hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
+        .requestMatchers(HttpMethod.POST, allMaintenancePaths).hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
+        // 3. Operaciones exclusivas para ADMIN (PUT, PATCH, DELETE)
+        .requestMatchers(HttpMethod.PUT, allMaintenancePaths).hasAuthority(ROLE_ADMIN)
+        .requestMatchers(HttpMethod.PATCH, allMaintenancePaths).hasAuthority(ROLE_ADMIN)
+        .requestMatchers(HttpMethod.DELETE, allMaintenancePaths).hasAuthority(ROLE_ADMIN)
         .anyRequest().authenticated()
+      )
+      .exceptionHandling(exceptions -> exceptions
+        .accessDeniedHandler(accessDeniedHandler)     // Para el 403
+        .authenticationEntryPoint(authenticationEntryPoint) // Para el 401
       )
       .csrf(AbstractHttpConfigurer::disable)
       .cors(Customizer.withDefaults())

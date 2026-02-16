@@ -222,15 +222,13 @@ public class SecurityConfig {
   public OAuth2TokenCustomizer<JwtEncodingContext> tokenCustomizer() {
     return context -> {
       if (OAuth2TokenType.ACCESS_TOKEN.equals(context.getTokenType())) {
-        // El 'principal' contiene al usuario autenticado (con los roles de UserResponseDTO)
         Authentication principal = context.getPrincipal();
 
-        // Extraemos los roles (ej.: ROLE_ADMIN, ROLE_USER)
+        // Recolectamos las autoridades (ROLE_ADMIN, ROLE_USER, etc.)
         Set<String> authorities = principal.getAuthorities().stream()
           .map(GrantedAuthority::getAuthority)
           .collect(Collectors.toSet());
 
-        // Los guardamos en una nueva "claim" llamada 'roles'
         context.getClaims().claim("roles", authorities);
       }
     };
