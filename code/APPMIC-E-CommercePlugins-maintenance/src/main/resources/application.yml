@@ -1,3 +1,5 @@
+server:
+  port: ${PORT:9090}
 spring:
   security:
     oauth2:
@@ -16,14 +18,55 @@ spring:
             #- openid
             #- profile
             #- read
-            #- write
-            #client-name: maintenance-client
-            #provider:
+          #- write
+          #client-name: maintenance-client
+          #provider:
           #spring:
           #issuer-uri: ${LB_AUTH_ISSUER_URI:http://127.0.0.1:9001}
-# Configuration by default
-config:
-  texto: Configurando ambiente por defecto
+  application:
+    name: appmic-e-commerceplugins-maintenance
+  profiles:
+    active: prod
+  datasource:
+    url: "jdbc:mysql://${DB_HOST:127.0.0.1:3306}/${DB_DATABASE:maintenance_service}?createDatabaseIfNotExist=true"
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:root_password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  cloud:
+    kubernetes:
+      secrets:
+        enable-api: true
+      discovery:
+        all-namespaces: true
+maintenance:
+  drive:
+    credentials: /credentials.json
+logging:
+  level:
+    "org.springframework.security": DEBUG
+    "org.springframework.security.oauth2": DEBUG
+    "org.springframework.security.oauth2.server.authorization": DEBUG
+app:
+  endpoints:
+    customer: "/api/maintenance/customers"
+    employee: "/api/maintenance/employees"
+    role: "/api/maintenance/roles"
+    user: "/api/maintenance/users"
+    brand: "/api/maintenance/brands"
+    category: "/api/maintenance/categories"
+    product: "/api/maintenance/products"
+    product-detail: "/api/maintenance/products/details"
+    product-image: "/api/maintenance/products/images"
+    google-drive: "/api/maintenance/google-drive/images"
+
+# Configuration Dev
 ---
 spring:
   config:
@@ -31,6 +74,7 @@ spring:
       on-profile: dev
 config:
   texto: Configurando ambiente de desarrollo
+# Configuration Prod
 ---
 spring:
   config:

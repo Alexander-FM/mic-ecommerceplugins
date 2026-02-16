@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/orders/details")
+@RequestMapping("${app.endpoints.order-info}/details")
 @RequiredArgsConstructor
 public class OrderDetailController {
 

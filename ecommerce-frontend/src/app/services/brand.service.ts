@@ -7,7 +7,7 @@ import { Brand, GenericResponse } from '../models/ecommerce.models';
   providedIn: 'root'
 })
 export class BrandService {
-  private baseEndpoint = '/api/brands';
+  private baseEndpoint = '/api/maintenance/brands';
 
   constructor(private apiService: ApiService) {}
 

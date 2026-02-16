@@ -37,6 +37,11 @@ resilience4j:
         failure-rate-threshold: 50
         wait-duration-in-open-state:
           seconds: 10
+app:
+  endpoints:
+    order-info: "/api/orders"
+    order-status: "/api/orders/status"
+
 # Configuration for dev profile
 ---
 spring:

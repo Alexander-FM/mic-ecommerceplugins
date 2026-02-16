@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/customers")
+@RequestMapping("${app.endpoints.customer}")
 public class CustomerController {
 
   private final CustomerService service;

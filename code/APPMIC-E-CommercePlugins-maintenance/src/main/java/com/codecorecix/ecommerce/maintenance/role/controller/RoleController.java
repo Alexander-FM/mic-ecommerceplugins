@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/roles")
+@RequestMapping("${app.endpoints.role}")
 public class RoleController {
 
   private final RoleService service;

@@ -1,6 +1,6 @@
 package com.codecorecix.ecommerce.services;
 
-import java.util.Collections;
+import java.util.List;
 
 import com.codecorecix.ecommerce.event.models.UserResponseDto;
 import com.codecorecix.ecommerce.utils.GenericResponse;
@@ -40,16 +40,19 @@ public class UserService implements UserDetailsService {
   public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
     try {
       final WebClient client = getWebClient();
-      final String uri = env.getProperty("MS_MAINTENANCE_NAME", "http://127.0.0.1:9090/api/users/login");
+      final String uri = env.getProperty("MS_MAINTENANCE_NAME", "http://127.0.0.1:9090/api/maintenance/users/login");
       final GenericResponse<UserResponseDto> userResponseDto = client.get()
-          .uri(uri, uriBuilder -> uriBuilder.queryParam("username", username).build())
-          .accept(MediaType.APPLICATION_JSON)
-          .retrieve()
-          .bodyToMono(new ParameterizedTypeReference<GenericResponse<UserResponseDto>>() {
-          })
-          .block();
-      return new User(username, userResponseDto.getBody().getPassword(), true, true, true, true,
-          Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")));
+        .uri(uri, uriBuilder -> uriBuilder.queryParam("username", username).build())
+        .accept(MediaType.APPLICATION_JSON)
+        .retrieve()
+        .bodyToMono(new ParameterizedTypeReference<GenericResponse<UserResponseDto>>() {
+        })
+        .block();
+      assert userResponseDto != null;
+      List<SimpleGrantedAuthority> authorities = userResponseDto.getBody().getRoles().stream()
+        .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getDescription()))
+        .toList();
+      return new User(username, userResponseDto.getBody().getPassword(), true, true, true, true, authorities);
     } catch (final RuntimeException e) {
       throw new UsernameNotFoundException(StringUtils.join("Error in the login, no exist the user ", e.getMessage()));
     }

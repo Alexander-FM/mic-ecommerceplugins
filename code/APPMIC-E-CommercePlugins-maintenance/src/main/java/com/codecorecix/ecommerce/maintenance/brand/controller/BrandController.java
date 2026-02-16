@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/brands")
+@RequestMapping("${app.endpoints.brand}")
 public class BrandController {
 
   private final BrandService service;
