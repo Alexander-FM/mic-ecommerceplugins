@@ -1,6 +1,7 @@
 package com.codecorecix.ecommerce.maintenance.product.info.api.dto.request;
 
 import java.io.Serializable;
+import java.util.List;
 
 import com.codecorecix.ecommerce.event.entities.Brand;
 import com.codecorecix.ecommerce.event.entities.Category;
@@ -51,4 +52,10 @@ public class ProductRequestDto implements Serializable {
 
   @NotNull(message = "The field is recommended is null, please fill.")
   private Boolean isRecommended;
+
+  @NotNull(message = "The field mainImageUrl is null, please fill.")
+  private String mainImageUrl;
+
+  @NotEmpty(message = "The product must have at least one attribute, please fill.")
+  private List<ProductAttributeRequestDto> attributes;
 }

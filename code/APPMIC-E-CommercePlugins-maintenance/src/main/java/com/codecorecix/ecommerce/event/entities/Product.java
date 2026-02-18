@@ -1,7 +1,11 @@
 package com.codecorecix.ecommerce.event.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ForeignKey;
@@ -10,6 +14,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -56,4 +61,15 @@ public class Product implements Serializable {
 
   @Column
   private Boolean isRecommended;
+
+  @Column
+  private String mainImageUrl;
+
+  @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+  @JsonManagedReference // Indica que este es el lado que sí se debe serializar
+  private List<ProductAttribute> attributes = new ArrayList<>();
+
+  @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+  @JsonManagedReference // Indica que este es el lado que sí se debe serializar
+  private List<ProductImage> images = new ArrayList<>();
 }

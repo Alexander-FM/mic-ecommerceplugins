@@ -1,6 +1,7 @@
 package com.codecorecix.ecommerce.maintenance.product.info.api.dto.response;
 
 import java.io.Serializable;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,4 +31,8 @@ public class ProductResponseDto implements Serializable {
   private String brandName;
 
   private Boolean isRecommended;
+
+  private String mainImageUrl;
+
+  private List<ProductAttributeResponseDto> attributes;
 }
