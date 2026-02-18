@@ -14,7 +14,6 @@ import com.codecorecix.ecommerce.maintenance.product.image.api.dto.request.Produ
 import com.codecorecix.ecommerce.maintenance.product.image.api.dto.response.ProductImageResponseDto;
 import com.codecorecix.ecommerce.maintenance.product.image.service.ProductImageService;
 import com.codecorecix.ecommerce.maintenance.product.info.api.dto.response.ProductResponseDto;
-import com.codecorecix.ecommerce.maintenance.product.info.mapper.ProductFieldsMapper;
 import com.codecorecix.ecommerce.maintenance.product.info.service.ProductService;
 import com.codecorecix.ecommerce.utils.GenericResponse;
 import com.codecorecix.ecommerce.utils.GenericResponseConstants;
@@ -45,8 +44,6 @@ public class ProductImageController {
   private final ProductImageService productImageService;
 
   private final ProductService productService;
-
-  private final ProductFieldsMapper productFieldsMapper;
 
   @PostMapping("/bulk-upload")
   public ResponseEntity<GenericResponse<List<ProductImageResponseDto>>> uploadImage(@RequestParam("files") final List<MultipartFile> files,
