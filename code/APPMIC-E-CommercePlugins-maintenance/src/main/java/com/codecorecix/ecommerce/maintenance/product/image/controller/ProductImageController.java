@@ -3,6 +3,8 @@ package com.codecorecix.ecommerce.maintenance.product.image.controller;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import com.codecorecix.ecommerce.exceptions.MaintenanceException;
@@ -18,7 +20,6 @@ import com.codecorecix.ecommerce.utils.GenericResponse;
 import com.codecorecix.ecommerce.utils.GenericResponseConstants;
 import com.codecorecix.ecommerce.utils.GenericUtils;
 import com.codecorecix.ecommerce.utils.MaintenanceErrorMessage;
-import com.codecorecix.ecommerce.utils.MaintenanceUtils;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -47,30 +48,32 @@ public class ProductImageController {
 
   private final ProductFieldsMapper productFieldsMapper;
 
-  @PostMapping
-  public ResponseEntity<GenericResponse<ProductImageResponseDto>> uploadImage(@RequestParam("file") final MultipartFile file,
-      @RequestParam("productId") final Integer productId) {
+  @PostMapping("/bulk-upload")
+  public ResponseEntity<GenericResponse<List<ProductImageResponseDto>>> uploadImage(@RequestParam("files") final List<MultipartFile> files,
+    @RequestParam("productId") final Integer productId) {
     try {
-      final Path tempDir = Files.createTempDirectory(StringUtils.EMPTY);
-      final Path tempFilePath = tempDir.resolve(Objects.requireNonNull(file.getOriginalFilename()));
-      Files.write(tempFilePath, file.getBytes());
+      // Validate if the product exists in the database
       final GenericResponse<ProductResponseDto> productResponse = this.productService.findById(productId);
-      if (Objects.nonNull(productResponse.getBody())) {
-        final GoogleDriveResponse googleDriveResponse = this.googleDriveService.uploadFile(tempFilePath.toFile(), file.getContentType());
-        Files.delete(tempFilePath);
-        Files.delete(tempDir);
-        final ProductImageRequestDto productImageRequestDto = new ProductImageRequestDto(null,
+      List<ProductImageResponseDto> uploadedImages = new ArrayList<>();
+      for (MultipartFile file : files) {
+        final Path tempDir = Files.createTempDirectory(StringUtils.EMPTY);
+        final Path tempFilePath = tempDir.resolve(Objects.requireNonNull(file.getOriginalFilename()));
+        Files.write(tempFilePath, file.getBytes());
+        if (Objects.nonNull(productResponse.getBody())) {
+          final GoogleDriveResponse googleDriveResponse = this.googleDriveService.uploadFile(tempFilePath.toFile(), file.getContentType());
+          Files.delete(tempFilePath);
+          Files.delete(tempDir);
+          final ProductImageRequestDto productImageRequestDto = new ProductImageRequestDto(null,
             StringUtils.join(GenericResponseConstants.ORIGINAL_URL, googleDriveResponse.getUrl(), GenericResponseConstants.VIEW),
             productId);
-        MaintenanceUtils.validRequestDto(productImageRequestDto);
-        final GenericResponse<ProductImageResponseDto> productImageResponseDto =
-            GenericUtils.buildGenericResponseSuccess(null, this.productImageService.saveImage(productImageRequestDto));
-        return ResponseEntity.status(HttpStatus.CREATED).body(productImageResponseDto);
-      } else {
-        Files.delete(tempFilePath);
-        Files.delete(tempDir);
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(GenericUtils.buildGenericResponseError(MESSAGE, null));
+          uploadedImages.add(this.productImageService.saveImage(productImageRequestDto));
+        } else {
+          Files.delete(tempFilePath);
+          Files.delete(tempDir);
+          return ResponseEntity.status(HttpStatus.NOT_FOUND).body(GenericUtils.buildGenericResponseError(MESSAGE, null));
+        }
       }
+      return ResponseEntity.status(HttpStatus.CREATED).body(GenericUtils.buildGenericResponseSuccess(null, uploadedImages));
     } catch (final MaintenanceException e) {
       throw new MaintenanceException(e.getErrorMessage());
     } catch (IOException e) {
@@ -88,7 +91,7 @@ public class ProductImageController {
         return ResponseEntity.status(HttpStatus.OK).body(GenericUtils.buildGenericResponseSuccess(null, null));
       } else {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-            GenericUtils.buildGenericResponseSuccess(null, null));
+          GenericUtils.buildGenericResponseSuccess(null, null));
       }
     } catch (final MaintenanceException e) {
       throw new MaintenanceException(MaintenanceErrorMessage.ERROR_DELETE_IMAGE);
