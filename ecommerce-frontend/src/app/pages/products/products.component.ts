@@ -62,8 +62,12 @@ export class ProductsComponent implements OnInit {
       next: (response) => {
         console.log('✅ Productos recibidos:', response);
         if (response.body) {
-          this.products = response.body;
-          this.filteredProducts = response.body;
+          // Procesar URLs de imágenes (convertir Google Drive links si es necesario)
+          this.products = response.body.map(product => ({
+            ...product,
+            mainImageUrl: this.processImageUrl(product.mainImageUrl)
+          }));
+          this.filteredProducts = this.products;
           console.log('📦 Total productos:', this.products.length);
           this.loading = false;
         }
@@ -149,6 +153,44 @@ export class ProductsComponent implements OnInit {
 
   onImageError(event: Event): void {
     const target = event.target as HTMLImageElement;
-    target.src = 'imagen_not_found_sorry.png';// Ruta a una imagen de "no encontrado"
+    target.src = 'imagen_not_found_sorry.png';
+  }
+
+  /**
+   * Convierte URLs de Google Drive a formato accesible usando proxy
+   * Google Drive: https://drive.google.com/file/d/{FILE_ID}/view
+   * Convertidas a: URL preview o proxy de imágenes si es necesario
+   *
+   * El proxy images.weserv.nl permite acceder a imágenes bloqueadas por CORS
+   */
+  private processImageUrl(url: string | null | undefined): string | undefined {
+    if (!url) {
+      return undefined;
+    }
+
+    console.log('🖼️ Procesando URL:', url);
+
+    // Detectar si es URL de Google Drive
+    if (url.includes('drive.google.com')) {
+      try {
+        // Extraer FILE_ID del URL
+        const fileIdMatch = url.match(/\/d\/([a-zA-Z0-9-_]+)/);
+        if (fileIdMatch && fileIdMatch[1]) {
+          const fileId = fileIdMatch[1];
+          // Convertir a URL preview que funciona mejor
+          const previewUrl = `https://drive.google.com/uc?id=${fileId}&export=view`;
+
+          // Si necesitas usar un proxy para CORS issues, descomenta esto:
+          const proxyUrl = `https://images.weserv.nl/?url=${encodeURIComponent(previewUrl)}&w=400`;
+          return proxyUrl;
+        }
+      } catch (error) {
+        console.error('❌ Error procesando URL de Google Drive:', error);
+      }
+    }
+
+    // Si no es Google Drive o no pudo procesar, retornar URL original
+    console.log('ℹ️ URL original:', url);
+    return url;
   }
 }

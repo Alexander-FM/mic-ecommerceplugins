@@ -76,7 +76,7 @@
         <ng-template pTemplate="header">
           <div class="product-image-container">
             <img
-              [src]="product.imageUrl || 'imagen_not_found_sorry.png'"
+              [src]="product.mainImageUrl || 'imagen_not_found_sorry.png'"
               [alt]="product.name"
               class="product-image"
               (error)="onImageError($event)"
