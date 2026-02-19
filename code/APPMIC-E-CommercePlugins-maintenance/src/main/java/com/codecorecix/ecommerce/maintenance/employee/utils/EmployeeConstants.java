@@ -23,4 +23,9 @@ public class EmployeeConstants {
   public static final String UPDATE_MESSAGE_ERROR = "An error occurred while updating the employee";
 
   public static final String DELETE_MESSAGE_ERROR = "An error occurred while deleting the employee";
+
+  public static final String NOT_EXIST_USER_FOR_EMPLOYEE = "The user associated with the employee does not exist";
+
+  public static final String EMPLOYEE_CONFLICT = "Already exist a employee with the same userId";
+
 }

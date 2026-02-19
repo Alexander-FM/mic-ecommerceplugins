@@ -28,9 +28,9 @@ import org.hibernate.annotations.CreationTimestamp;
 @AllArgsConstructor
 @Entity
 @Table(name = "Employees", uniqueConstraints = {
-    @UniqueConstraint(columnNames = "registrationDate", name = "UK_Customers_registrationDate"),
-    @UniqueConstraint(columnNames = "email", name = "UK_Customers_email"),
-    @UniqueConstraint(columnNames = "phoneNumber", name = "UK_Customers_phoneNumber")
+  @UniqueConstraint(columnNames = "registrationDate", name = "UK_Customers_registrationDate"),
+  @UniqueConstraint(columnNames = "email", name = "UK_Customers_email"),
+  @UniqueConstraint(columnNames = "phoneNumber", name = "UK_Customers_phoneNumber")
 })
 public class Employee extends Person implements Serializable {
 
@@ -63,4 +63,7 @@ public class Employee extends Person implements Serializable {
 
   @Column
   private LocalDateTime modificationDate;
+
+  @Column(nullable = false)
+  private Integer userId;
 }

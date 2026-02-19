@@ -1,5 +1,7 @@
 package com.codecorecix.ecommerce.maintenance.role.dto.response;
 
+import java.io.Serializable;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -9,7 +11,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoleResponseDto {
+public class RoleResponseDto implements Serializable {
 
   private Integer id;
 

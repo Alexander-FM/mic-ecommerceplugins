@@ -9,4 +9,5 @@ public class UserConstants {
   public static final String NO_EXIST = "The user no exist in BD";
 
   public static final String UNPROCESSABLE_ENTITY_EXCEPTION = "The request is incorrectly formatted";
+
 }

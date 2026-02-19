@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+import com.codecorecix.ecommerce.maintenance.user.api.dto.response.UserResponseDto;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -40,4 +42,6 @@ public class EmployeeResponseDto implements Serializable {
   private String userModification;
 
   private LocalDateTime modificationDate;
+
+  private UserResponseDto userResponseDto;
 }

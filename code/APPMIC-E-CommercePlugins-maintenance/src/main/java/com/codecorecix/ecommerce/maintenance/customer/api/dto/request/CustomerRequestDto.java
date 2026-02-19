@@ -37,4 +37,7 @@ public class CustomerRequestDto implements Serializable {
   private Address address;
 
   private Boolean isActive;
+
+  private Integer userId;
+
 }
