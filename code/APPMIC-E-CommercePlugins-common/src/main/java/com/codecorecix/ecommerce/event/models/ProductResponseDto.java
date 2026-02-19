@@ -1,8 +1,8 @@
 package com.codecorecix.ecommerce.event.models;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,7 +33,9 @@ public class ProductResponseDto implements Serializable {
 
   private Boolean isRecommended;
 
-  private List<ProductImageResponseDto> images = new ArrayList<>();
+  private String mainImageUrl;
 
-  private List<ProductDetailResponseDto> details = new ArrayList<>();
+  private Set<ProductAttributeResponseDto> attributes = new HashSet<>();
+
+  private Set<ProductImageResponseDto> images = new HashSet<>();
 }

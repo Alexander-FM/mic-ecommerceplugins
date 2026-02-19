@@ -1,8 +1,8 @@
 package com.codecorecix.ecommerce.event.entities;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
@@ -67,9 +67,9 @@ public class Product implements Serializable {
 
   @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
   @JsonManagedReference // Indica que este es el lado que sí se debe serializar
-  private List<ProductAttribute> attributes = new ArrayList<>();
+  private Set<ProductAttribute> attributes = new HashSet<>();
 
   @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
   @JsonManagedReference // Indica que este es el lado que sí se debe serializar
-  private List<ProductImage> images = new ArrayList<>();
+  private Set<ProductImage> images = new HashSet<>();
 }

@@ -1,4 +1,4 @@
-package com.codecorecix.ecommerce.maintenance.product.info.api.dto.response;
+package com.codecorecix.ecommerce.event.models;
 
 import java.io.Serializable;
 

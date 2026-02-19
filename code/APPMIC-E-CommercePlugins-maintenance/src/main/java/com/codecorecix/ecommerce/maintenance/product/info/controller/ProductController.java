@@ -5,8 +5,6 @@ import java.util.Objects;
 
 import com.codecorecix.ecommerce.event.models.ProductInfo;
 import com.codecorecix.ecommerce.exception.GenericUnprocessableEntityException;
-import com.codecorecix.ecommerce.maintenance.product.detail.service.ProductDetailService;
-import com.codecorecix.ecommerce.maintenance.product.image.service.ProductImageService;
 import com.codecorecix.ecommerce.maintenance.product.info.api.dto.request.ProductRequestDto;
 import com.codecorecix.ecommerce.maintenance.product.info.api.dto.response.ProductResponseDto;
 import com.codecorecix.ecommerce.maintenance.product.info.service.ProductService;
@@ -36,17 +34,13 @@ public class ProductController {
 
   private final ProductService service;
 
-  private final ProductImageService productImageService;
-
-  private final ProductDetailService productDetailService;
-
   @GetMapping
-  public ResponseEntity<GenericResponse<List<ProductResponseDto>>> getAllProducts() {
+  public ResponseEntity<GenericResponse<List<ProductInfo>>> getAllProducts() {
     return ResponseEntity.status(HttpStatus.OK).body(this.service.getAllProducts());
   }
 
   @GetMapping("/active")
-  public ResponseEntity<GenericResponse<List<ProductResponseDto>>> getAllActiveProducts() {
+  public ResponseEntity<GenericResponse<List<ProductInfo>>> getAllActiveProducts() {
     return ResponseEntity.status(HttpStatus.OK).body(this.service.getActiveProducts());
   }
 
@@ -82,7 +76,7 @@ public class ProductController {
 
   @PutMapping("/{id}")
   public ResponseEntity<GenericResponse<ProductResponseDto>> updateProduct(@PathVariable(value = "id") final Integer id,
-      @RequestBody final ProductRequestDto productRequestDto) {
+    @RequestBody final ProductRequestDto productRequestDto) {
     final GenericResponse<ProductResponseDto> response = this.service.findById(id);
     if (ObjectUtils.isNotEmpty(response.getBody())) {
       productRequestDto.setId(response.getBody().getId());
@@ -95,7 +89,7 @@ public class ProductController {
 
   @PatchMapping("/{id}/status")
   public ResponseEntity<GenericResponse<ProductResponseDto>> updateProductStatus(@PathVariable(value = "id") final Integer id,
-      @RequestParam(value = "isActive") final Boolean isActive) {
+    @RequestParam(value = "isActive") final Boolean isActive) {
     final GenericResponse<ProductResponseDto> response = this.service.findById(id);
     if (ObjectUtils.isNotEmpty(response.getBody())) {
       return ResponseEntity.status(HttpStatus.OK).body(this.service.updateProductStatus(isActive, id));

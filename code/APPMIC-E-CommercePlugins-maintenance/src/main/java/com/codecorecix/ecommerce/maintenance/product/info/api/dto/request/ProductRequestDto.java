@@ -1,10 +1,11 @@
 package com.codecorecix.ecommerce.maintenance.product.info.api.dto.request;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Set;
 
 import com.codecorecix.ecommerce.event.entities.Brand;
 import com.codecorecix.ecommerce.event.entities.Category;
+import com.codecorecix.ecommerce.maintenance.product.image.api.dto.request.ProductImageRequestDto;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -57,5 +58,7 @@ public class ProductRequestDto implements Serializable {
   private String mainImageUrl;
 
   @NotEmpty(message = "The product must have at least one attribute, please fill.")
-  private List<ProductAttributeRequestDto> attributes;
+  private Set<ProductAttributeRequestDto> attributes;
+
+  private Set<ProductImageRequestDto> images;
 }

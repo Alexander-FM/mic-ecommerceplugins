@@ -14,14 +14,14 @@ public interface ProductService {
    *
    * @return List of ProductResponseDto.
    */
-  GenericResponse<List<ProductResponseDto>> getAllProducts();
+  GenericResponse<List<ProductInfo>> getAllProducts();
 
   /**
    * Method used to list all active products.
    *
    * @return List of ProductResponseDto.
    */
-  GenericResponse<List<ProductResponseDto>> getActiveProducts();
+  GenericResponse<List<ProductInfo>> getActiveProducts();
 
   /**
    * Method used to save the product.

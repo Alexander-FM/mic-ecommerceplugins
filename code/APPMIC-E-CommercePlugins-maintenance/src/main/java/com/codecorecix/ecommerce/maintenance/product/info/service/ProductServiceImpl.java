@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import com.codecorecix.ecommerce.event.entities.Product;
 import com.codecorecix.ecommerce.event.models.ProductInfo;
-import com.codecorecix.ecommerce.maintenance.product.detail.service.ProductDetailService;
 import com.codecorecix.ecommerce.maintenance.product.image.service.ProductImageService;
 import com.codecorecix.ecommerce.maintenance.product.info.api.dto.request.ProductRequestDto;
 import com.codecorecix.ecommerce.maintenance.product.info.api.dto.response.ProductResponseDto;
@@ -25,8 +24,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
-  private final ProductDetailService productDetailService;
-
   private final ProductImageService productImageService;
 
   private final ProductRepository productRepository;
@@ -34,15 +31,15 @@ public class ProductServiceImpl implements ProductService {
   private final ProductFieldsMapper mapper;
 
   @Override
-  public GenericResponse<List<ProductResponseDto>> getAllProducts() {
+  public GenericResponse<List<ProductInfo>> getAllProducts() {
     return new GenericResponse<>(GenericResponseConstants.RPTA_OK, GenericResponseConstants.CORRECT_OPERATION,
-        this.mapper.toDto(this.productRepository.findAll()));
+      this.mapper.toListDtoList(this.productRepository.findAll()));
   }
 
   @Override
-  public GenericResponse<List<ProductResponseDto>> getActiveProducts() {
+  public GenericResponse<List<ProductInfo>> getActiveProducts() {
     return new GenericResponse<>(GenericResponseConstants.RPTA_OK, GenericResponseConstants.CORRECT_OPERATION,
-        this.mapper.toDto(this.productRepository.findByIsActiveIsTrue()));
+      this.mapper.toListDtoList(this.productRepository.findByIsActiveIsTrue()));
   }
 
   @Override
@@ -51,7 +48,7 @@ public class ProductServiceImpl implements ProductService {
     final Product productInfo = this.mapper.sourceToDestination(productRequestDto);
     final Product product = this.productRepository.save(productInfo);
     return new GenericResponse<>(GenericResponseConstants.RPTA_OK, GenericResponseConstants.CORRECT_OPERATION,
-        this.mapper.destinationToSource(product));
+      this.mapper.destinationToSource(product));
   }
 
   @Override
@@ -59,15 +56,14 @@ public class ProductServiceImpl implements ProductService {
   public GenericResponse<ProductResponseDto> deleteProductById(final Integer id) {
     final Optional<Product> product = this.productRepository.findById(id);
     if (product.isPresent()) {
-      this.productDetailService.deleteAllDetailsByProductId(id);
       this.productImageService.deleteAllImagesByProductId(id);
       this.productRepository.deleteById(id);
       return new GenericResponse<>(GenericResponseConstants.RPTA_OK, GenericResponseConstants.CORRECT_OPERATION, null);
     } else {
       return new GenericResponse<>(GenericResponseConstants.RPTA_ERROR,
-          StringUtils.joinWith(GenericResponseConstants.DASH, GenericResponseConstants.INCORRECT_OPERATION,
-              ProductConstants.FIND_MESSAGE_ERROR),
-          null);
+        StringUtils.joinWith(GenericResponseConstants.DASH, GenericResponseConstants.INCORRECT_OPERATION,
+          ProductConstants.FIND_MESSAGE_ERROR),
+        null);
     }
   }
 
@@ -80,23 +76,23 @@ public class ProductServiceImpl implements ProductService {
       return new GenericResponse<>(GenericResponseConstants.RPTA_OK, GenericResponseConstants.CORRECT_OPERATION, null);
     } else {
       return new GenericResponse<>(GenericResponseConstants.RPTA_ERROR,
-          StringUtils.joinWith(GenericResponseConstants.DASH, GenericResponseConstants.INCORRECT_OPERATION,
-              ProductConstants.FIND_MESSAGE_ERROR),
-          null);
+        StringUtils.joinWith(GenericResponseConstants.DASH, GenericResponseConstants.INCORRECT_OPERATION,
+          ProductConstants.FIND_MESSAGE_ERROR),
+        null);
     }
   }
 
   @Override
   public GenericResponse<ProductResponseDto> findById(final Integer id) {
-    final Optional<Product> product = this.productRepository.findById(id);
+    final Optional<Product> product = this.productRepository.findByIdFull(id);
     return product.map(
-            value -> GenericUtils.buildGenericResponseSuccess(ProductConstants.FIND_MESSAGE, this.mapper.destinationToSource(value)))
-        .orElseGet(() -> GenericUtils.buildGenericResponseError(ProductConstants.FIND_MESSAGE_ERROR, null));
+        value -> GenericUtils.buildGenericResponseSuccess(ProductConstants.FIND_MESSAGE, this.mapper.destinationToSource(value)))
+      .orElseGet(() -> GenericUtils.buildGenericResponseError(ProductConstants.FIND_MESSAGE_ERROR, null));
   }
 
   @Override
   public GenericResponse<List<ProductInfo>> findByIds(final List<Integer> ids) {
     return new GenericResponse<>(GenericResponseConstants.RPTA_OK, GenericResponseConstants.CORRECT_OPERATION,
-        this.productRepository.findByProductsByIds(ids));
+      this.mapper.toListDtoList(this.productRepository.findAllById(ids)));
   }
 }

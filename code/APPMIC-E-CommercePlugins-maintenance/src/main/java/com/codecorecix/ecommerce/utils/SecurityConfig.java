@@ -37,9 +37,6 @@ public class SecurityConfig {
   @Value("${app.endpoints.product}")
   private String productPath;
 
-  @Value("${app.endpoints.product-detail}")
-  private String productDetailPath;
-
   @Value("${app.endpoints.product-image}")
   private String productImagePath;
 
@@ -66,8 +63,7 @@ public class SecurityConfig {
     final String[] allMaintenancePaths = {
       customerPath + "/**", employeePath + "/**", rolePath + "/**",
       userPath + "/**", brandPath + "/**", categoryPath + "/**",
-      productPath + "/**", productDetailPath + "/**",
-      productImagePath + "/**", googleDrivePath + "/**"
+      productPath + "/**", productImagePath + "/**", googleDrivePath + "/**"
     };
     http.authorizeHttpRequests(authorizeRequests -> authorizeRequests
         //1. Rutas públicas (sin autenticación) para login y consultas de datos activos

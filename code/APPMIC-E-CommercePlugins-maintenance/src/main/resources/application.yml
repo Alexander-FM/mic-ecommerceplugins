@@ -62,7 +62,6 @@ app:
     brand: "/api/maintenance/brands"
     category: "/api/maintenance/categories"
     product: "/api/maintenance/products"
-    product-detail: "/api/maintenance/products/details"
     product-attribute: "/api/maintenance/products/attributes"
     product-image: "/api/maintenance/products/images"
     google-drive: "/api/maintenance/google-drive/images"
