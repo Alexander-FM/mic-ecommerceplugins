@@ -9,6 +9,20 @@ export interface Product {
   brandName?: string;
   isRecommended?: boolean;
   mainImageUrl?: string;
+  attributes?: ProductAttribute[];
+  images?: ProductImage[];
+}
+
+export interface ProductAttribute {
+  attributeId: number;
+  name: string;
+  value: string;
+}
+
+export interface ProductImage {
+  id: number;
+  imageUrl: string;
+  productId: number;
 }
 
 export interface Category {

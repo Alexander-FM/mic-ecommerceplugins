@@ -143,6 +143,14 @@ export class ProductsComponent implements OnInit {
     this.router.navigate(['/cart']);
   }
 
+  goToProductDetail(product: Product): void {
+    if (!product.id) {
+      return;
+    }
+
+    this.router.navigate(['/products', product.id]);
+  }
+
   resetFilters(): void {
     this.searchText = '';
     this.selectedBrand = null;

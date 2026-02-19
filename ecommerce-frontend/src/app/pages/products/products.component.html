@@ -74,7 +74,7 @@
     <div class="products-grid" *ngIf="!loading">
       <p-card *ngFor="let product of filteredProducts" class="product-card">
         <ng-template pTemplate="header">
-          <div class="product-image-container">
+          <div class="product-image-container" (click)="goToProductDetail(product)">
             <img
               [src]="product.mainImageUrl || 'imagen_not_found_sorry.png'"
               [alt]="product.name"
@@ -85,7 +85,7 @@
         </ng-template>
 
         <div class="product-info">
-          <h3 class="product-name">{{ product.name }}</h3>
+          <h3 class="product-name" (click)="goToProductDetail(product)">{{ product.name }}</h3>
           <p class="product-description">{{ product.description || 'Sin descripción' }}</p>
 
           <div class="product-details">
@@ -122,6 +122,12 @@
 
         <ng-template pTemplate="footer">
           <div class="product-actions">
+            <p-button
+              label="Detalle"
+              icon="pi pi-eye"
+              [outlined]="true"
+              (onClick)="goToProductDetail(product)"
+            ></p-button>
             <p-button
               label="Agregar"
               icon="pi pi-shopping-cart"

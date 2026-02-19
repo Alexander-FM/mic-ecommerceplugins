@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { ProductsComponent } from './pages/products/products.component';
+import { ProductDetailComponent } from './pages/product-detail/product-detail.component';
 import { CartComponent } from './pages/cart/cart.component';
 import { LoginComponent } from './pages/login/login.component';
 import { AuthCallbackComponent } from './pages/auth-callback/auth-callback.component';
@@ -10,6 +11,7 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'auth/callback', component: AuthCallbackComponent },
   { path: 'products', component: ProductsComponent, canActivate: [AuthGuard] },
+  { path: 'products/:id', component: ProductDetailComponent, canActivate: [AuthGuard] },
   { path: 'cart', component: CartComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: '/products' }
 ];
