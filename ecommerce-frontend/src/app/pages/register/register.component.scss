@@ -1,0 +1,71 @@
+.register-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  background: linear-gradient(135deg, #eef2ff 0%, #f8fafc 100%);
+}
+
+.register-card {
+  width: min(1100px, 100%);
+  padding: 1.5rem;
+}
+
+.text-center {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  margin: 0;
+  font-size: 2rem;
+  color: #1e293b;
+}
+
+.subtitle {
+  margin: 0.5rem 0 0;
+  color: #64748b;
+}
+
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  input,
+  p-select {
+    width: 100%;
+  }
+
+  h3 {
+    margin: 0 0 0.25rem;
+    color: #334155;
+  }
+
+  label {
+    font-size: 0.85rem;
+    color: #475569;
+  }
+
+}
+
+.register-tabs {
+  margin-top: 1rem;
+
+  :host ::ng-deep .p-tabview-panels {
+    padding: 1.5rem 0 0;
+  }
+
+  :host ::ng-deep .p-tabview-nav {
+    justify-content: space-between;
+  }
+}
+
+.actions {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}

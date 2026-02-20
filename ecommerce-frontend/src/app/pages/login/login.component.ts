@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { MessageModule } from 'primeng/message';
@@ -11,7 +11,7 @@ import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ButtonModule, CardModule, MessageModule, ToastModule],
+  imports: [CommonModule, RouterLink, ButtonModule, CardModule, MessageModule, ToastModule],
   providers: [MessageService],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']

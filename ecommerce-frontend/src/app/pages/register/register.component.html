@@ -1,0 +1,104 @@
+<div class="register-container">
+  <p-toast></p-toast>
+
+  <p-card class="register-card">
+    <div class="text-center">
+      <h1 class="title">Crear cuenta</h1>
+      <p class="subtitle">Completa tus datos para registrarte</p>
+    </div>
+
+    <p-tabView class="register-tabs">
+      <p-tabPanel header="Credenciales">
+        <div class="form-section">
+          <label>Usuario *</label>
+          <input pInputText [(ngModel)]="form.username" placeholder="Usuario" />
+
+          <label>Contrasena *</label>
+          <input pInputText type="password" [(ngModel)]="form.password" placeholder="Contrasena" />
+        </div>
+      </p-tabPanel>
+
+      <p-tabPanel header="Datos personales">
+        <div class="form-section">
+          <label>Nombres *</label>
+          <input pInputText [(ngModel)]="form.name" placeholder="Nombres" />
+
+          <label>Apellidos *</label>
+          <input pInputText [(ngModel)]="form.lastName" placeholder="Apellidos" />
+
+          <label>Genero</label>
+          <p-select
+            [options]="genderOptions"
+            [(ngModel)]="form.gender"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Selecciona genero"
+          ></p-select>
+
+          <label>Fecha de nacimiento</label>
+          <input pInputText type="date" [(ngModel)]="form.birthdate" />
+
+          <label>Email *</label>
+          <input pInputText type="email" [(ngModel)]="form.email" placeholder="email@dominio.com" />
+        </div>
+      </p-tabPanel>
+
+      <p-tabPanel header="Contacto">
+        <div class="form-section">
+          <label>Telefono principal</label>
+          <input pInputText [(ngModel)]="form.phoneNumberOne" placeholder="Telefono" />
+
+          <label>Telefono secundario</label>
+          <input pInputText [(ngModel)]="form.phoneNumberTwo" placeholder="Telefono" />
+
+          <label>Telefono alterno</label>
+          <input pInputText [(ngModel)]="form.phoneNumberThree" placeholder="Telefono" />
+        </div>
+      </p-tabPanel>
+
+      <p-tabPanel header="Direccion">
+        <div class="form-section">
+          <label>Tipo</label>
+          <input pInputText [(ngModel)]="form.addressType" placeholder="Home" />
+
+          <label>Direccion</label>
+          <input pInputText [(ngModel)]="form.addressName" placeholder="Calle" />
+
+          <label>Numero</label>
+          <input pInputText [(ngModel)]="form.residenceNumber" placeholder="Numero" />
+
+          <label>Departamento</label>
+          <input pInputText [(ngModel)]="form.department" placeholder="Departamento" />
+
+          <label>Provincia</label>
+          <input pInputText [(ngModel)]="form.province" placeholder="Provincia" />
+
+          <label>Distrito</label>
+          <input pInputText [(ngModel)]="form.district" placeholder="Distrito" />
+
+          <label>Referencia</label>
+          <input pInputText [(ngModel)]="form.placeReference" placeholder="Referencia" />
+
+          <label>Codigo postal</label>
+          <input pInputText [(ngModel)]="form.postalCode" placeholder="Codigo postal" />
+        </div>
+      </p-tabPanel>
+    </p-tabView>
+
+    <div class="actions">
+      <p-button
+        label="Registrar"
+        icon="pi pi-user-plus"
+        [loading]="isLoading"
+        [disabled]="isLoading"
+        (onClick)="submit()"
+      ></p-button>
+      <p-button
+        label="Cancelar"
+        severity="secondary"
+        [outlined]="true"
+        (onClick)="cancel()"
+      ></p-button>
+    </div>
+  </p-card>
+</div>

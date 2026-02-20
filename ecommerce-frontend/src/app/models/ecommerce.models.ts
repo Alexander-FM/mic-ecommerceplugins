@@ -25,6 +25,48 @@ export interface ProductImage {
   productId: number;
 }
 
+export interface Role {
+  id: number;
+  description: string;
+  isActive: boolean;
+}
+
+export interface UserRequest {
+  username: string;
+  password: string;
+  isActive: boolean;
+  roles: Role[];
+}
+
+export interface UserResponse {
+  id: number;
+}
+
+export interface AddressRequest {
+  type: string | null;
+  addressName: string | null;
+  residenceNumber: string | null;
+  department: string | null;
+  province: string | null;
+  district: string | null;
+  placeReference: string | null;
+  postalCode: string | null;
+}
+
+export interface CustomerRequest {
+  name: string;
+  lastName: string;
+  gender: string;
+  birthdate: string | null;
+  email: string;
+  phoneNumberOne: string | null;
+  phoneNumberTwo: string | null;
+  phoneNumberThree: string | null;
+  address: AddressRequest;
+  isActive: boolean;
+  userId: number;
+}
+
 export interface Category {
   id?: number;
   description: string;

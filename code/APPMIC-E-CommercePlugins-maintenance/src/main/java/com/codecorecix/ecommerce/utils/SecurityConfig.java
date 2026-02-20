@@ -67,9 +67,11 @@ public class SecurityConfig {
     };
     http.authorizeHttpRequests(authorizeRequests -> authorizeRequests
         //1. Rutas públicas (sin autenticación) para login y consultas de datos activos
-        .requestMatchers("/api/maintenance/users/authorized", "/api/maintenance/users/login", "/api/maintenance/users",
-          "api/maintenance/products/active", "api/maintenance/brands/active",
-          "api/maintenance/categories/active").permitAll()
+        .requestMatchers("/api/maintenance/users/authorized", "/api/maintenance/users/login", "/api/maintenance/products/active",
+          "/api/maintenance/brands/active", "/api/maintenance/categories/active").permitAll()
+        .requestMatchers(HttpMethod.GET, "/api/maintenance/roles").permitAll()
+        .requestMatchers(HttpMethod.POST, "/api/maintenance/customers").permitAll()
+        .requestMatchers(HttpMethod.POST, "/api/maintenance/users").permitAll()
         // 2. Operaciones permitidas para ADMIN y USER (GET y POST)
         .requestMatchers(HttpMethod.GET, allMaintenancePaths).hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
         .requestMatchers(HttpMethod.POST, allMaintenancePaths).hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
