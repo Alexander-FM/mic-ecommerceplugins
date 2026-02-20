@@ -11,6 +11,7 @@ import com.codecorecix.ecommerce.utils.GenericResponse;
 import com.codecorecix.ecommerce.utils.GenericResponseConstants;
 import com.codecorecix.ecommerce.utils.MaintenanceUtils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("${app.endpoints.customer}")
+@Slf4j
 public class CustomerController {
 
   private final CustomerService service;
@@ -56,11 +58,12 @@ public class CustomerController {
       throw new GenericUnprocessableEntityException(GenericResponseConstants.UNPROCESSABLE_ENTITY_EXCEPTION);
     } else {
       MaintenanceUtils.validRequestDto(customerRequestDto);
-      GenericResponse<CustomerResponseDto> customerResponseDtoGenericResponse = this.service.save(customerRequestDto, false);
-      if (customerResponseDtoGenericResponse.getRpta().equals(GenericResponseConstants.RPTA_WARNING)) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(customerResponseDtoGenericResponse);
+      GenericResponse<CustomerResponseDto> response = this.service.save(customerRequestDto, false);
+      if (response.getRpta().equals(GenericResponseConstants.RPTA_WARNING)) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
       }
-      return ResponseEntity.status(HttpStatus.CREATED).body(this.service.save(customerRequestDto, false));
+      log.info("Customer created successfully with id: {}", response.getBody().getId());
+      return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
   }
 

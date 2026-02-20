@@ -103,7 +103,7 @@ export interface CartItem {
 }
 
 export interface GenericResponse<T> {
-  code: number;
+  rpta?: number;
   message: string;
   body: T;
 }

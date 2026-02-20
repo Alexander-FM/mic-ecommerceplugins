@@ -54,11 +54,11 @@ public class EmployeeController {
       throw new GenericUnprocessableEntityException(GenericResponseConstants.UNPROCESSABLE_ENTITY_EXCEPTION);
     } else {
       MaintenanceUtils.validRequestDto(employeeRequestDto);
-      GenericResponse<EmployeeResponseDto> employeeResponseDtoGenericResponse = this.service.save(employeeRequestDto, false);
-      if (employeeResponseDtoGenericResponse.getRpta().equals(GenericResponseConstants.RPTA_WARNING)) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(employeeResponseDtoGenericResponse);
+      GenericResponse<EmployeeResponseDto> response = this.service.save(employeeRequestDto, false);
+      if (response.getRpta().equals(GenericResponseConstants.RPTA_WARNING)) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
       }
-      return ResponseEntity.status(HttpStatus.CREATED).body(this.service.save(employeeRequestDto, false));
+      return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
   }
 

@@ -10,7 +10,7 @@ import { ToastModule } from 'primeng/toast';
 import { SelectModule } from 'primeng/select';
 import { TabViewModule } from 'primeng/tabview';
 import { RegistrationService } from '../../services/registration.service';
-import { Role, UserRequest, CustomerRequest } from '../../models/ecommerce.models';
+import { Role, UserRequest, CustomerRequest, GenericResponse } from '../../models/ecommerce.models';
 import { catchError, map, of, switchMap } from 'rxjs';
 
 @Component({
@@ -69,8 +69,15 @@ export class RegisterComponent {
     this.isLoading = true;
 
     this.registrationService.getRoles().pipe(
-      map(response => this.findUserRole(response.body)),
+      map(response => {
+        const validated = this.validateResponse(response, 'No se pudo obtener los roles');
+        return validated ? this.findUserRole(validated.body) : null;
+      }),
       switchMap(role => {
+        if (!role) {
+          return of(null);
+        }
+
         if (!role) {
           throw new Error('No se encontró el rol USER');
         }
@@ -82,9 +89,15 @@ export class RegisterComponent {
           roles: [role]
         };
 
-        return this.registrationService.createUser(userPayload);
+        return this.registrationService.createUser(userPayload).pipe(
+          map(response => this.validateResponse(response, 'No se pudo crear el usuario'))
+        );
       }),
       switchMap(userResponse => {
+        if (!userResponse) {
+          return of(null);
+        }
+
         if (!userResponse.body || !userResponse.body.id) {
           throw new Error('No se pudo crear el usuario');
         }
@@ -116,7 +129,9 @@ export class RegisterComponent {
           userId: userResponse.body.id
         };
 
-        return this.registrationService.createCustomer(customerPayload);
+        return this.registrationService.createCustomer(customerPayload).pipe(
+          map(response => this.validateResponse(response, 'No se pudo crear el cliente'))
+        );
       }),
       catchError(error => {
         this.isLoading = false;
@@ -157,6 +172,33 @@ export class RegisterComponent {
     }
 
     return roles.find(role => role.description === 'USER') || null;
+  }
+
+  private validateResponse<T>(
+    response: GenericResponse<T>,
+    fallbackMessage: string
+  ): GenericResponse<T> | null {
+    const status = this.getResponseStatus(response);
+
+    if (status === 1) {
+      return response;
+    }
+
+    if (status === 0) {
+      this.isLoading = false;
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Advertencia',
+        detail: response?.message || 'La operacion devolvio una advertencia'
+      });
+      return null;
+    }
+
+    throw new Error(response?.message || fallbackMessage);
+  }
+
+  private getResponseStatus<T>(response: GenericResponse<T>): number {
+    return typeof response?.rpta === 'number' ? response.rpta : -1;
   }
 
   private toNull(value: string): string | null {
