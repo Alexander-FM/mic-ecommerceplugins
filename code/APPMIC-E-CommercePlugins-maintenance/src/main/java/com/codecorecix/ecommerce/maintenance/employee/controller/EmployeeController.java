@@ -54,13 +54,17 @@ public class EmployeeController {
       throw new GenericUnprocessableEntityException(GenericResponseConstants.UNPROCESSABLE_ENTITY_EXCEPTION);
     } else {
       MaintenanceUtils.validRequestDto(employeeRequestDto);
+      GenericResponse<EmployeeResponseDto> employeeResponseDtoGenericResponse = this.service.save(employeeRequestDto, false);
+      if (employeeResponseDtoGenericResponse.getRpta().equals(GenericResponseConstants.RPTA_WARNING)) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(employeeResponseDtoGenericResponse);
+      }
       return ResponseEntity.status(HttpStatus.CREATED).body(this.service.save(employeeRequestDto, false));
     }
   }
 
   @PutMapping("/{id}")
   public ResponseEntity<GenericResponse<EmployeeResponseDto>> updateEmployee(@PathVariable(value = "id") final Integer id,
-      @RequestBody final EmployeeRequestDto employeeRequestDto) {
+    @RequestBody final EmployeeRequestDto employeeRequestDto) {
     final GenericResponse<EmployeeResponseDto> response = this.service.findById(id);
     if (ObjectUtils.isNotEmpty(response.getBody())) {
       employeeRequestDto.setId(id);
@@ -73,7 +77,7 @@ public class EmployeeController {
 
   @PatchMapping("/{id}/status")
   public ResponseEntity<GenericResponse<EmployeeResponseDto>> updateEmployeeStatus(@PathVariable(value = "id") final Integer id,
-      @RequestParam(value = "isActive") final Boolean isActive) {
+    @RequestParam(value = "isActive") final Boolean isActive) {
     final GenericResponse<EmployeeResponseDto> response = this.service.findById(id);
     if (ObjectUtils.isNotEmpty(response.getBody())) {
       return ResponseEntity.status(HttpStatus.OK).body(this.service.updateEmployeeStatus(isActive, id));

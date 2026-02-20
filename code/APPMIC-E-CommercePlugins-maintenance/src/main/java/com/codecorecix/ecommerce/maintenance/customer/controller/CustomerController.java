@@ -56,13 +56,17 @@ public class CustomerController {
       throw new GenericUnprocessableEntityException(GenericResponseConstants.UNPROCESSABLE_ENTITY_EXCEPTION);
     } else {
       MaintenanceUtils.validRequestDto(customerRequestDto);
+      GenericResponse<CustomerResponseDto> customerResponseDtoGenericResponse = this.service.save(customerRequestDto, false);
+      if (customerResponseDtoGenericResponse.getRpta().equals(GenericResponseConstants.RPTA_WARNING)) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(customerResponseDtoGenericResponse);
+      }
       return ResponseEntity.status(HttpStatus.CREATED).body(this.service.save(customerRequestDto, false));
     }
   }
 
   @PutMapping("/{id}")
   public ResponseEntity<GenericResponse<CustomerResponseDto>> updateCustomer(@PathVariable(value = "id") final Integer id,
-      @RequestBody final CustomerRequestDto customerRequestDto) {
+    @RequestBody final CustomerRequestDto customerRequestDto) {
     final GenericResponse<CustomerResponseDto> response = this.service.findById(id);
     if (ObjectUtils.isNotEmpty(response.getBody())) {
       customerRequestDto.setId(response.getBody().getId());
@@ -75,7 +79,7 @@ public class CustomerController {
 
   @PatchMapping("/{id}/status")
   public ResponseEntity<GenericResponse<CustomerResponseDto>> updateCustomerStatus(@PathVariable(value = "id") final Integer id,
-      @RequestParam(value = "isActive") final Boolean isActive) {
+    @RequestParam(value = "isActive") final Boolean isActive) {
     final GenericResponse<CustomerResponseDto> response = this.service.findById(id);
     if (ObjectUtils.isNotEmpty(response.getBody())) {
       return ResponseEntity.status(HttpStatus.OK).body(this.service.updateCustomerStatus(isActive, id));

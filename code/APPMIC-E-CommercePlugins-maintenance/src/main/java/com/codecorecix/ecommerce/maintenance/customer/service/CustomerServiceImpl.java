@@ -15,7 +15,6 @@ import com.codecorecix.ecommerce.maintenance.customer.repository.CustomerReposit
 import com.codecorecix.ecommerce.maintenance.customer.utils.CustomerConstants;
 import com.codecorecix.ecommerce.maintenance.user.mapper.UserFieldsMapper;
 import com.codecorecix.ecommerce.maintenance.user.repository.UserRepository;
-import com.codecorecix.ecommerce.maintenance.user.utils.UserConstants;
 import com.codecorecix.ecommerce.utils.GenericResponse;
 import com.codecorecix.ecommerce.utils.GenericUtils;
 
@@ -55,11 +54,11 @@ public class CustomerServiceImpl implements CustomerService {
   public GenericResponse<CustomerResponseDto> save(final CustomerRequestDto customerRequestDto, final boolean isUpdated) {
     final Optional<User> user = this.userRepository.findById(customerRequestDto.getUserId());
     if (user.isEmpty()) {
-      return GenericUtils.buildGenericResponseError(CustomerConstants.NOT_EXIST_USER_FOR_CUSTOMER, null);
+      return GenericUtils.buildGenericResponseWarning(CustomerConstants.NOT_EXIST_USER_FOR_CUSTOMER, null);
     }
-    if (this.repository.existByUserIdAndIdNot(customerRequestDto.getUserId(),
+    if (this.repository.existsByUserIdAndIdNot(customerRequestDto.getUserId(),
       customerRequestDto.getId() != null ? customerRequestDto.getId() : 0)) {
-      return GenericUtils.buildGenericResponseError(CustomerConstants.EMPLOYEE_CONFLICT, null);
+      return GenericUtils.buildGenericResponseWarning(CustomerConstants.EMPLOYEE_CONFLICT, null);
     }
     customerRequestDto.setUserId(user.get().getId());
     final Customer customerMapped = this.mapper.sourceToDestination(customerRequestDto);
@@ -99,11 +98,11 @@ public class CustomerServiceImpl implements CustomerService {
   @Override
   public GenericResponse<CustomerResponseDto> findById(final Integer id) {
     final Optional<Customer> customer = this.repository.findById(id);
-    if(customer.isEmpty()) {
+    if (customer.isEmpty()) {
       return GenericUtils.buildGenericResponseError(CustomerConstants.FIND_MESSAGE_ERROR, null);
     }
     Optional<User> user = this.userRepository.findById(customer.get().getUserId());
-    if(user.isEmpty()) {
+    if (user.isEmpty()) {
       return GenericUtils.buildGenericResponseError(CustomerConstants.NOT_EXIST_USER_FOR_CUSTOMER, null);
     }
     final CustomerResponseDto responseDto = this.mapper.destinationToSource(customer.get());

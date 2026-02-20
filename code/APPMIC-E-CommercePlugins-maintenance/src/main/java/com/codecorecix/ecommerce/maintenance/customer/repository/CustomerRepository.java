@@ -20,5 +20,5 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
    * @param id id del cliente a excluir de la búsqueda
    * @return true si existe otro cliente con el mismo userId, false en caso contrario
    */
-  boolean existByUserIdAndIdNot(Integer userId, int id);
+  boolean existsByUserIdAndIdNot(Integer userId, int id);
 }

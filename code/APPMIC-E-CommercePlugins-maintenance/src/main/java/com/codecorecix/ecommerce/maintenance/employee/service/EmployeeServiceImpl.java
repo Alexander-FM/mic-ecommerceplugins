@@ -54,11 +54,11 @@ public class EmployeeServiceImpl implements EmployeeService {
   public GenericResponse<EmployeeResponseDto> save(final EmployeeRequestDto employeeRequestDto, final boolean isUpdated) {
     final Optional<User> user = this.userRepository.findById(employeeRequestDto.getUserId());
     if (user.isEmpty()) {
-      return GenericUtils.buildGenericResponseError(EmployeeConstants.NOT_EXIST_USER_FOR_EMPLOYEE, null);
+      return GenericUtils.buildGenericResponseWarning(EmployeeConstants.NOT_EXIST_USER_FOR_EMPLOYEE, null);
     }
-    if (this.repository.existByUserIdAndIdNot(employeeRequestDto.getUserId(),
+    if (this.repository.existsByUserIdAndIdNot(employeeRequestDto.getUserId(),
       employeeRequestDto.getId() != null ? employeeRequestDto.getId() : 0)) {
-      return GenericUtils.buildGenericResponseError(EmployeeConstants.EMPLOYEE_CONFLICT, null);
+      return GenericUtils.buildGenericResponseWarning(EmployeeConstants.EMPLOYEE_CONFLICT, null);
     }
     employeeRequestDto.setUserId(user.get().getId());
     final Employee employeeMapped = this.mapper.sourceToDestination(employeeRequestDto);

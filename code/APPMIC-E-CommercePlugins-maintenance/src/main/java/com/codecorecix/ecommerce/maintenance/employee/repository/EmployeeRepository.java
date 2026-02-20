@@ -21,5 +21,5 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
    * @param id id del empleado a excluir de la búsqueda
    * @return true si existe otro empleado con el mismo userId, false en caso contrario
    */
-  boolean existByUserIdAndIdNot(Integer userId, int id);
+  boolean existsByUserIdAndIdNot(Integer userId, int id);
 }
