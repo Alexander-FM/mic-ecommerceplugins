@@ -8,9 +8,15 @@ export interface Product {
   categoryName?: string;
   brandName?: string;
   isRecommended?: boolean;
+  isActive?: boolean;
   mainImageUrl?: string;
   attributes?: ProductAttribute[];
   images?: ProductImage[];
+}
+
+export interface Attribute {
+  id?: number;
+  name: string;
 }
 
 export interface ProductAttribute {

@@ -18,6 +18,7 @@ export interface TokenResponse {
 export interface AuthUser {
   sub: string;
   email?: string;
+  roles?: string[];
   [key: string]: any;
 }
 

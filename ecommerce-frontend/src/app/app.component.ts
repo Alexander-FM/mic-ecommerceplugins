@@ -33,6 +33,7 @@ export class AppComponent implements OnInit {
   title = 'ecommerce-frontend';
   showMenu = true;
   username = 'Usuario';
+  isAdmin = false;
   cartItemCount = 0;
   menuItems: MenuItem[] = [];
 
@@ -50,7 +51,10 @@ export class AppComponent implements OnInit {
       if (authState.isAuthenticated) {
         console.log('✅ Usuario autenticado, cargando menú...');
         this.showMenu = true;
-        this.username = authState.user?.['preferred_username'] || 'Usuario';
+        this.username = authState.user?.sub || 'Usuario';
+        const roles = authState.user?.roles || [];
+        this.isAdmin = roles.includes('ROLE_ADMIN');
+        console.log('🔐 isAdmin:', this.isAdmin);
         this.loadCategories();
         this.loadCartCount();
       } else {
@@ -58,6 +62,7 @@ export class AppComponent implements OnInit {
         this.showMenu = false;
         this.menuItems = [];
         this.cartItemCount = 0;
+        this.isAdmin = false;
       }
     });
   }
@@ -108,6 +113,16 @@ export class AppComponent implements OnInit {
         badge: this.cartItemCount > 0 ? this.cartItemCount.toString() : undefined
       }
     ];
+
+    // Agregar botón admin si el usuario es ROLE_ADMIN
+    if (this.isAdmin) {
+      this.menuItems.push({
+        label: '📦 Registrar Producto',
+        icon: 'pi pi-plus',
+        routerLink: '/admin/products/add',
+        styleClass: 'admin-menu-item'
+      });
+    }
   }
 
   buildDefaultMenu(): void {

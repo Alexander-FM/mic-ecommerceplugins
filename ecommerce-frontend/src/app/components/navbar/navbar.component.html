@@ -6,6 +6,16 @@
     </div>
 
     <div class="p-toolbar-group-right">
+      <div class="admin-section" *ngIf="isAdmin">
+        <p-button
+          label="📦 Registrar Producto"
+          icon="pi pi-plus"
+          (onClick)="navigateToAddProduct()"
+          styleClass="p-button-warning"
+          [text]="false"
+        ></p-button>
+      </div>
+
       <div class="user-section">
         <span class="user-name">{{ userName }}</span>
         <p-menu [model]="items" [popup]="true" #menu></p-menu>

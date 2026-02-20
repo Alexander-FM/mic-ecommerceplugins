@@ -108,11 +108,15 @@ export class AuthService {
    * Procesa la respuesta del token y actualiza el estado
    */
   processTokenResponse(response: TokenResponse): void {
+    console.log('🔄 Procesando token response...');
+
     // Guardar tokens en localStorage
     localStorage.setItem(this.STORAGE_KEY_TOKEN, response.access_token);
     localStorage.setItem(this.STORAGE_KEY_REFRESH, response.refresh_token);
     localStorage.setItem(this.STORAGE_KEY_ID, response.id_token);
     localStorage.setItem(this.STORAGE_KEY_EXPIRES, response.expires_in.toString());
+
+    console.log('💾 Tokens guardados en localStorage');
 
     // Extraer información del token
     const user = this.decodeToken(response.access_token);
@@ -127,20 +131,32 @@ export class AuthService {
       user: user
     };
 
+    console.log('📊 Nuevo estado:', newState);
     this.authStateSubject.next(newState);
+    console.log('✅ Estado actualizado en authStateSubject');
   }
 
   /**
    * Restaura el estado de autenticación desde localStorage
    */
   private restoreAuthState(): void {
+    console.log('🔄 Restaurando estado de autenticación desde localStorage...');
+
     const token = localStorage.getItem(this.STORAGE_KEY_TOKEN);
     const refreshToken = localStorage.getItem(this.STORAGE_KEY_REFRESH);
     const idToken = localStorage.getItem(this.STORAGE_KEY_ID);
     const expiresIn = localStorage.getItem(this.STORAGE_KEY_EXPIRES);
 
+    if (token) {
+      console.log('✅ Token encontrado en localStorage');
+    } else {
+      console.log('⚠️  No hay token en localStorage');
+    }
+
     if (token && this.isTokenValid(token, expiresIn)) {
       const user = this.decodeToken(token);
+      console.log('📝 Usuario desde token restaurado:', user);
+
       const state: AuthState = {
         isAuthenticated: true,
         token,
@@ -149,8 +165,11 @@ export class AuthService {
         expiresIn: expiresIn ? parseInt(expiresIn, 10) : null,
         user
       };
+
       this.authStateSubject.next(state);
+      console.log('✅ Estado de autenticación restaurado correctamente');
     } else {
+      console.log('❌ Token inválido o no encontrado, limpiando estado');
       this.logout();
     }
   }
@@ -175,13 +194,17 @@ export class AuthService {
     try {
       const parts = token.split('.');
       if (parts.length !== 3) {
+        console.error('❌ Token format invalid: expected 3 parts, got', parts.length);
         return null;
       }
 
       const decoded = JSON.parse(atob(parts[1]));
+      console.log('✅ Token decodificado correctamente:', decoded);
+      console.log('ℹ️  Roles encontrados:', decoded.roles);
+      console.log('ℹ️  Usuario (sub):', decoded.sub);
       return decoded;
     } catch (error) {
-      console.error('Error decoding token:', error);
+      console.error('❌ Error decoding token:', error);
       return null;
     }
   }
