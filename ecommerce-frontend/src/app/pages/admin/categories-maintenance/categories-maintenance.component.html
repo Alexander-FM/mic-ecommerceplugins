@@ -1,0 +1,129 @@
+<div class="maintenance-container">
+  <p-toast></p-toast>
+  <p-confirmDialog></p-confirmDialog>
+
+  <div class="maintenance-header">
+    <h2>Gestión de Categorías</h2>
+    <p>Registra, edita, activa/inactiva y elimina categorías</p>
+  </div>
+
+  <div class="maintenance-form-card">
+    <h3>{{ isEditMode ? 'Editar categoría' : 'Registrar categoría' }}</h3>
+
+    <form [formGroup]="categoryForm" class="category-form" (ngSubmit)="onSubmit()">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="description">Descripción *</label>
+          <input
+            id="description"
+            pInputText
+            formControlName="description"
+            placeholder="Ej: Vinos y Espumantes"
+          />
+          <small class="text-danger" *ngIf="categoryForm.get('description')?.invalid && categoryForm.get('description')?.touched">
+            Debe tener entre 2 y 50 caracteres
+          </small>
+        </div>
+
+        <div class="form-group">
+          <label for="parentCategory">Categoría padre</label>
+          <p-dropdown
+            id="parentCategory"
+            formControlName="parentCategory"
+            [options]="parentOptions"
+            optionLabel="label"
+            optionValue="value"
+            [filter]="true"
+            filterBy="label"
+            [showClear]="true"
+            placeholder="Sin categoría padre"
+          ></p-dropdown>
+          <small>
+            Si seleccionas una categoría padre, se enviará su ID en <strong>parentCategory</strong>.
+          </small>
+        </div>
+      </div>
+
+      <div class="form-row actions-row">
+        <div class="form-group checkbox-group">
+          <p-checkbox formControlName="isActive" [binary]="true" label="Activa"></p-checkbox>
+        </div>
+
+        <div class="button-group">
+          <p-button
+            type="submit"
+            [label]="isEditMode ? 'Actualizar' : 'Registrar'"
+            icon="pi pi-save"
+            [loading]="isSubmitting"
+          ></p-button>
+
+          <p-button
+            *ngIf="isEditMode"
+            type="button"
+            label="Cancelar"
+            icon="pi pi-times"
+            severity="secondary"
+            (onClick)="onCancelEdit()"
+          ></p-button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="maintenance-table-card">
+    <h3>Listado de categorías</h3>
+
+    <p-table [value]="categories" [loading]="isLoading" [paginator]="true" [rows]="10" responsiveLayout="scroll">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>ID</th>
+          <th>Descripción</th>
+          <th>Categoría padre</th>
+          <th>Estado</th>
+          <th style="width: 230px">Acciones</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-category>
+        <tr>
+          <td>{{ category.id }}</td>
+          <td>{{ category.description }}</td>
+          <td>{{ category.parentDescription || '-' }}</td>
+          <td>
+            <p-tag [value]="category.isActive ? 'Activa' : 'Inactiva'" [severity]="category.isActive ? 'success' : 'danger'"></p-tag>
+          </td>
+          <td>
+            <div class="table-actions">
+              <p-button
+                icon="pi pi-pencil"
+                severity="info"
+                [text]="true"
+                pTooltip="Editar"
+                tooltipPosition="top"
+                (onClick)="onEdit(category)"
+              ></p-button>
+
+              <p-button
+                [icon]="category.isActive ? 'pi pi-eye-slash' : 'pi pi-eye'"
+                severity="warn"
+                [text]="true"
+                [pTooltip]="category.isActive ? 'Inactivar' : 'Activar'"
+                tooltipPosition="top"
+                (onClick)="onToggleStatus(category)"
+              ></p-button>
+
+              <p-button
+                icon="pi pi-trash"
+                severity="danger"
+                [text]="true"
+                pTooltip="Eliminar"
+                tooltipPosition="top"
+                (onClick)="onDelete(category)"
+              ></p-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>

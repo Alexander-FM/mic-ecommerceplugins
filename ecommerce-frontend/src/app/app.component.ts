@@ -114,15 +114,7 @@ export class AppComponent implements OnInit {
       }
     ];
 
-    // Agregar botón admin si el usuario es ROLE_ADMIN
-    if (this.isAdmin) {
-      this.menuItems.push({
-        label: '📦 Registrar Producto',
-        icon: 'pi pi-plus',
-        routerLink: '/admin/products/add',
-        styleClass: 'admin-menu-item'
-      });
-    }
+    this.appendAdminMaintenanceMenu();
   }
 
   buildDefaultMenu(): void {
@@ -139,6 +131,36 @@ export class AppComponent implements OnInit {
         badge: this.cartItemCount > 0 ? this.cartItemCount.toString() : undefined
       }
     ];
+
+    this.appendAdminMaintenanceMenu();
+  }
+
+  private appendAdminMaintenanceMenu(): void {
+    if (!this.isAdmin) {
+      return;
+    }
+
+    this.menuItems.push({
+      label: 'Mantenimiento',
+      icon: 'pi pi-cog',
+      items: [
+        {
+          label: 'Productos',
+          icon: 'pi pi-box',
+          routerLink: '/admin/maintenance/products'
+        },
+        {
+          label: 'Categorías',
+          icon: 'pi pi-tags',
+          routerLink: '/admin/maintenance/categories'
+        },
+        {
+          label: 'Marcas',
+          icon: 'pi pi-bookmark',
+          routerLink: '/admin/maintenance/brands'
+        }
+      ]
+    });
   }
 
   buildCategoryMenuItems(categories: Category[]): MenuItem[] {

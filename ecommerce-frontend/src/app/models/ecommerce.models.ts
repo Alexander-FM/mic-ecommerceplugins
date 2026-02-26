@@ -77,6 +77,7 @@ export interface Category {
   id?: number;
   description: string;
   isActive?: boolean;
+  parentCategory?: number | null;
   subCategories?: Category[];
 }
 
