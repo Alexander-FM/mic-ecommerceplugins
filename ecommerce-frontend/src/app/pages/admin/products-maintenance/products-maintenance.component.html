@@ -1,16 +1,111 @@
-<div class="maintenance-page">
-  <p-card header="Mantenimiento de Productos" subheader="Gestión administrativa de productos">
-    <p>
-      Desde esta pantalla puedes registrar nuevos productos y, en próximos requisitos,
-      administrar su edición y eliminación.
-    </p>
+<div class="maintenance-container">
+  <p-toast></p-toast>
+  <p-confirmDialog></p-confirmDialog>
 
-    <div class="actions">
-      <p-button
-        label="Registrar producto"
-        icon="pi pi-plus"
-        (onClick)="goToAddProduct()"
-      ></p-button>
+  <div class="maintenance-header">
+    <h2>Gestión de Productos</h2>
+    <p>Lista, edita, activa/inactiva o elimina productos</p>
+  </div>
+
+  <div class="actions">
+    <p-button
+      label="Registrar producto"
+      icon="pi pi-plus"
+      (onClick)="goToAddProduct()"
+    ></p-button>
+  </div>
+
+  <div class="filters-row">
+    <div class="search-box">
+      <i class="pi pi-search"></i>
+      <input
+        pInputText
+        type="text"
+        [(ngModel)]="searchText"
+        placeholder="Buscar por código, nombre, categoría o marca"
+      />
     </div>
-  </p-card>
+
+    <p-dropdown
+      [(ngModel)]="statusFilter"
+      [options]="statusOptions"
+      optionLabel="label"
+      optionValue="value"
+      placeholder="Estado"
+      class="status-dropdown"
+    ></p-dropdown>
+
+    <p-button
+      label="Limpiar"
+      icon="pi pi-filter-slash"
+      severity="secondary"
+      (onClick)="clearFilters()"
+    ></p-button>
+  </div>
+
+  <div class="maintenance-table-card">
+    <p-table [value]="filteredProducts" [loading]="isLoading" [paginator]="true" [rows]="10" responsiveLayout="scroll">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>ID</th>
+          <th>Código</th>
+          <th>Producto</th>
+          <th>Categoría</th>
+          <th>Marca</th>
+          <th>Precio</th>
+          <th>Stock</th>
+          <th>Estado</th>
+          <th style="width: 220px">Acciones</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-product>
+        <tr>
+          <td>{{ product.id }}</td>
+          <td>{{ product.barCode }}</td>
+          <td>{{ product.name }}</td>
+          <td>{{ product.categoryName || '-' }}</td>
+          <td>{{ product.brandName || '-' }}</td>
+          <td>S/ {{ product.price | number:'1.2-2' }}</td>
+          <td>{{ product.stock }}</td>
+          <td>
+            <p-tag
+              [value]="product.isActive ? 'Activo' : 'Inactivo'"
+              [severity]="product.isActive ? 'success' : 'danger'"
+            ></p-tag>
+          </td>
+          <td>
+            <div class="table-actions">
+              <p-button
+                icon="pi pi-pencil"
+                severity="info"
+                [text]="true"
+                pTooltip="Editar"
+                tooltipPosition="top"
+                (onClick)="onEdit(product)"
+              ></p-button>
+
+              <p-button
+                [icon]="product.isActive ? 'pi pi-eye-slash' : 'pi pi-eye'"
+                severity="warn"
+                [text]="true"
+                [pTooltip]="product.isActive ? 'Desactivar' : 'Activar'"
+                tooltipPosition="top"
+                (onClick)="onToggleStatus(product)"
+              ></p-button>
+
+              <p-button
+                icon="pi pi-trash"
+                severity="danger"
+                [text]="true"
+                pTooltip="Eliminar"
+                tooltipPosition="top"
+                (onClick)="onDelete(product)"
+              ></p-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
 </div>

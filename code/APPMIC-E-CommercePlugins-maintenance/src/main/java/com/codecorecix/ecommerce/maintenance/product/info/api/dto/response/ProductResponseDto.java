@@ -33,6 +33,8 @@ public class ProductResponseDto implements Serializable {
 
   private String brandName;
 
+  private Boolean isActive;
+
   private Boolean isRecommended;
 
   private String mainImageUrl;

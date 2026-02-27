@@ -5,25 +5,30 @@ import { MessageService } from 'primeng/api';
 import { TabViewModule } from 'primeng/tabview';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { CheckboxModule } from 'primeng/checkbox';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { FileUploadModule } from 'primeng/fileupload';
 import { GalleriaModule } from 'primeng/galleria';
 import { ToastModule } from 'primeng/toast';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 
 import { AdminService } from '../../../services/admin.service';
 import { CategoryService } from '../../../services/category.service';
 import { BrandService } from '../../../services/brand.service';
-import { GenericResponse, Product, Attribute, ProductAttribute } from '../../../models/ecommerce.models';
+import { GenericResponse, Product, Attribute, ProductAttribute, ProductImage } from '../../../models/ecommerce.models';
 
 interface ImageUpload {
   name: string;
   size: number;
   base64?: string;
   file?: File;
+}
+
+interface ExistingProductImageView extends ProductImage {
+  previewUrl: string;
 }
 
 @Component({
@@ -36,7 +41,7 @@ interface ImageUpload {
     TabViewModule,
     InputTextModule,
     InputNumberModule,
-    DropdownModule,
+    SelectModule,
     CheckboxModule,
     TableModule,
     ButtonModule,
@@ -60,9 +65,14 @@ export class AddProductComponent implements OnInit {
 
   mainImagePreview: string | null = null;
   mainImageFile: File | null = null;
+  originalMainImageUrl: string | null = null;
+  existingProductImages: ExistingProductImageView[] = [];
 
   isLoadingAttributes = false;
+  isLoadingData = false;
   isSubmitting = false;
+  isEditMode = false;
+  currentProductId: number | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -70,14 +80,17 @@ export class AddProductComponent implements OnInit {
     private categoryService: CategoryService,
     private brandService: BrandService,
     private messageService: MessageService,
+    private route: ActivatedRoute,
     private router: Router
   ) {}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.initializeForm();
-    this.loadCategories();
-    this.loadBrands();
-    this.loadAttributes();
+    const idParam = this.route.snapshot.paramMap.get('id');
+    this.currentProductId = idParam ? Number(idParam) : null;
+    this.isEditMode = !!this.currentProductId;
+
+    await this.loadInitialData();
   }
 
   private initializeForm(): void {
@@ -94,43 +107,118 @@ export class AddProductComponent implements OnInit {
     });
   }
 
-  private loadCategories(): void {
-    this.categoryService.getAllCategories().subscribe({
-      next: (response: GenericResponse<any[]>) => {
-        this.categories = response.body || [];
-      },
-      error: (err: any) => {
-        console.error('Error loading categories:', err);
-        this.showError('No se pudieron cargar las categorías');
-      }
-    });
-  }
-
-  private loadBrands(): void {
-    this.brandService.getAllBrands().subscribe({
-      next: (response: GenericResponse<any[]>) => {
-        this.brands = response.body || [];
-      },
-      error: (err: any) => {
-        console.error('Error loading brands:', err);
-        this.showError('No se pudieron cargar las marcas');
-      }
-    });
-  }
-
-  private loadAttributes(): void {
+  private async loadInitialData(): Promise<void> {
+    this.isLoadingData = true;
     this.isLoadingAttributes = true;
-    this.adminService.getAttributes().subscribe({
-      next: (response: GenericResponse<Attribute[]>) => {
-        this.attributes = response.body || [];
-        this.isLoadingAttributes = false;
-      },
-      error: (err: any) => {
-        console.error('Error loading attributes:', err);
-        this.showError('No se pudieron cargar los atributos');
-        this.isLoadingAttributes = false;
+
+    try {
+      const [categoriesResponse, brandsResponse, attributesResponse] =
+        await Promise.all([
+          firstValueFrom(this.categoryService.getAllCategories()),
+          firstValueFrom(this.brandService.getAllBrands()),
+          firstValueFrom(this.adminService.getAttributes())
+        ]);
+
+      this.categories = this.flattenCategoryOptions(categoriesResponse.body || []);
+      this.brands = brandsResponse.body || [];
+      this.attributes = attributesResponse.body || [];
+
+      if (this.isEditMode && this.currentProductId) {
+        await this.loadProductForEdit(this.currentProductId);
       }
+    } catch (error: any) {
+      console.error('Error loading initial product data:', error);
+      this.showError(error?.message || 'No se pudo cargar la información inicial');
+    } finally {
+      this.isLoadingAttributes = false;
+      this.isLoadingData = false;
+    }
+  }
+
+  private async loadProductForEdit(productId: number): Promise<void> {
+    const response = await firstValueFrom(this.adminService.getProductById(productId));
+
+    if (!response?.body) {
+      throw new Error('No se pudo obtener el producto a editar');
+    }
+
+    const product = response.body;
+    const selectedCategory = this.categories.find(
+      (category) =>
+        category.rawDescription === product.categoryName ||
+        category.description === product.categoryName
+    );
+    const selectedBrand = this.brands.find(
+      (brand) => brand.description === product.brandName
+    );
+
+    this.productForm.patchValue({
+      barCode: product.barCode,
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      stock: product.stock,
+      categoryId: selectedCategory?.id || null,
+      brandId: selectedBrand?.id || null,
+      isActive: product.isActive ?? true,
+      isRecommended: product.isRecommended ?? false
     });
+
+    this.originalMainImageUrl = product.mainImageUrl || null;
+    this.mainImagePreview = this.normalizeImageUrl(product.mainImageUrl) || null;
+    this.mainImageFile = null;
+    this.attributesTable = (product.attributes || []).map((attribute) => ({
+      attributeId: attribute.attributeId,
+      name: attribute.name,
+      value: attribute.value
+    }));
+    this.existingProductImages = (product.images || []).map((image) => ({
+      ...image,
+      previewUrl: this.normalizeImageUrl(image.imageUrl)
+    }));
+  }
+
+  private flattenCategoryOptions(categories: any[], ancestors: string[] = []): any[] {
+    const options: any[] = [];
+
+    for (const category of categories) {
+      const fullPath = [...ancestors, category.description].join(' > ');
+
+      options.push({
+        id: category.id,
+        description: category.description,
+        fullPath,
+        rawDescription: category.description
+      });
+
+      if (category.subCategories?.length) {
+        options.push(...this.flattenCategoryOptions(category.subCategories, [...ancestors, category.description]));
+      }
+    }
+
+    return options;
+  }
+
+  private normalizeImageUrl(url?: string | null): string {
+    if (!url) {
+      return '';
+    }
+
+    if (!url.includes('drive.google.com')) {
+      return url;
+    }
+
+    const drivePathMatch = url.match(/\/file\/d\/([a-zA-Z0-9-_]+)/);
+    const driveOpenMatch = url.match(/\/open\?id=([a-zA-Z0-9-_]+)/);
+    const driveQueryMatch = url.match(/[?&]id=([a-zA-Z0-9-_]+)/);
+    const fileId = drivePathMatch?.[1] || driveOpenMatch?.[1] || driveQueryMatch?.[1];
+
+    if (fileId) {
+      const previewUrl = `https://drive.google.com/uc?id=${fileId}&export=view`;
+      return `https://images.weserv.nl/?url=${encodeURIComponent(previewUrl)}&w=800`;
+    }
+
+    return url;
   }
 
   // ============= TAB 1: MAIN IMAGE UPLOAD =============
@@ -168,6 +256,7 @@ export class AddProductComponent implements OnInit {
   clearMainImage(): void {
     this.mainImageFile = null;
     this.mainImagePreview = null;
+    this.originalMainImageUrl = null;
   }
 
   // ============= TAB 2: ATTRIBUTES =============
@@ -217,7 +306,8 @@ export class AddProductComponent implements OnInit {
     const files = event.files;
     if (!files) return;
 
-    const totalImages = this.productImages.length + files.length;
+    const totalImages =
+      this.existingProductImages.length + this.productImages.length + files.length;
     if (totalImages > 4) {
       this.showError('No se pueden subir más de 4 imágenes');
       return;
@@ -264,41 +354,51 @@ export class AddProductComponent implements OnInit {
 
   async onSubmit(): Promise<void> {
     if (!this.productForm.valid) {
+      this.productForm.markAllAsTouched();
       this.showError('Completa todos los campos requeridos');
       return;
     }
 
-    if (!this.mainImageFile) {
-      this.showError('Debes subir una imagen principal');
+    if (!this.mainImageFile && !this.mainImagePreview) {
+      this.showError('Debes subir o conservar una imagen principal');
       return;
     }
 
     this.isSubmitting = true;
 
     try {
-      // Step 1: Subir imagen principal
-      this.messageService.add({
-        severity: 'info',
-        summary: 'Procesando',
-        detail: 'Subiendo imagen principal...',
-        life: 3000
-      });
+      let mainImageUrl = this.originalMainImageUrl || '';
 
-      const imageResponse = await this.adminService
-        .uploadMainImage(this.mainImageFile)
-        .toPromise();
+      // Step 1: Subir imagen principal (solo si fue cambiada)
+      if (this.mainImageFile) {
+        this.messageService.add({
+          severity: 'info',
+          summary: 'Procesando',
+          detail: 'Subiendo imagen principal...',
+          life: 3000
+        });
 
-      if (!imageResponse || imageResponse.rpta !== 1) {
-        throw new Error(imageResponse?.message || 'Error subiendo imagen');
+        const imageResponse = await firstValueFrom(
+          this.adminService.uploadMainImage(this.mainImageFile)
+        );
+
+        if (!imageResponse || imageResponse.rpta !== 1) {
+          throw new Error(imageResponse?.message || 'Error subiendo imagen');
+        }
+
+        mainImageUrl = imageResponse.body.customUrl;
+        this.originalMainImageUrl = mainImageUrl;
       }
 
-      const mainImageUrl = imageResponse.body.customUrl;
+      if (!mainImageUrl) {
+        throw new Error('La imagen principal es obligatoria');
+      }
 
-      // Step 2: Crear producto
+      // Step 2: Crear/Actualizar producto
       this.messageService.add({
         severity: 'info',
         summary: 'Procesando',
-        detail: 'Creando producto...',
+        detail: this.isEditMode ? 'Actualizando producto...' : 'Creando producto...',
         life: 3000
       });
 
@@ -318,21 +418,47 @@ export class AddProductComponent implements OnInit {
         isActive: formValue.isActive,
         isRecommended: formValue.isRecommended,
         mainImageUrl: mainImageUrl,
-        attributes: this.attributesTable
+        attributes: this.attributesTable.map((attribute) => ({
+          attributeId: attribute.attributeId,
+          value: attribute.value
+        })),
+        images: this.existingProductImages.map((image) => ({
+          id: image.id,
+          imageUrl: image.imageUrl,
+          productId: image.productId
+        }))
       };
 
-      const productResponse = await this.adminService
-        .createProduct(productData)
-        .toPromise();
+      let productId = this.currentProductId;
 
-      if (!productResponse || productResponse.rpta !== 1) {
-        throw new Error(productResponse?.message || 'Error creando producto');
+      if (this.isEditMode && this.currentProductId) {
+        const updateResponse = await firstValueFrom(
+          this.adminService.updateProduct(this.currentProductId, productData)
+        );
+
+        if (!updateResponse || updateResponse.rpta !== 1) {
+          throw new Error(updateResponse?.message || 'Error actualizando producto');
+        }
+
+        productId = this.currentProductId;
+      } else {
+        const productResponse = await firstValueFrom(
+          this.adminService.createProduct(productData)
+        );
+
+        if (!productResponse || productResponse.rpta !== 1) {
+          throw new Error(productResponse?.message || 'Error creando producto');
+        }
+
+        productId = productResponse.body.id;
       }
 
-      const productId = productResponse.body.id;
-
       // Step 3: Subir imágenes del producto (si existen)
-      if (this.productImages.length > 0) {
+      const filesToUpload = this.productImages
+        .filter((img) => !!img.file)
+        .map((img) => img.file!);
+
+      if (filesToUpload.length > 0 && productId) {
         this.messageService.add({
           severity: 'info',
           summary: 'Procesando',
@@ -340,10 +466,9 @@ export class AddProductComponent implements OnInit {
           life: 3000
         });
 
-        const files = this.productImages.map((img) => img.file!);
-        const imgResponse = await this.adminService
-          .uploadProductImages(productId, files)
-          .toPromise();
+        const imgResponse = await firstValueFrom(
+          this.adminService.uploadProductImages(productId, filesToUpload)
+        );
 
         if (!imgResponse || imgResponse.rpta !== 1) {
           console.warn('Advertencia subiendo imágenes:', imgResponse?.message);
@@ -351,14 +476,12 @@ export class AddProductComponent implements OnInit {
       }
 
       this.showSuccess(
-        `✅ Producto "${productData.name}" registrado exitosamente`
+        this.isEditMode
+          ? `✅ Producto "${productData.name}" actualizado exitosamente`
+          : `✅ Producto "${productData.name}" registrado exitosamente`
       );
       this.isSubmitting = false;
-
-      // Redirigir a productos
-      setTimeout(() => {
-        this.router.navigate(['/products']);
-      }, 1500);
+      await this.router.navigate(['/admin/maintenance/products']);
     } catch (error: any) {
       this.isSubmitting = false;
       console.error('❌ Error:', error);
@@ -367,7 +490,7 @@ export class AddProductComponent implements OnInit {
   }
 
   onCancel(): void {
-    this.router.navigate(['/products']);
+    this.router.navigate(['/admin/maintenance/products']);
   }
 
   // ============= MESSAGES =============

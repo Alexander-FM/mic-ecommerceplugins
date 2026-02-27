@@ -24,5 +24,6 @@ export const routes: Routes = [
   { path: 'admin/maintenance/categories', component: CategoriesMaintenanceComponent, canActivate: [AuthGuard, AdminGuard] },
   { path: 'admin/maintenance/brands', component: BrandsMaintenanceComponent, canActivate: [AuthGuard, AdminGuard] },
   { path: 'admin/products/add', component: AddProductComponent, canActivate: [AuthGuard, AdminGuard] },
+  { path: 'admin/products/edit/:id', component: AddProductComponent, canActivate: [AuthGuard, AdminGuard] },
   { path: '**', redirectTo: '/products' }
 ];

@@ -28,4 +28,8 @@ public class ProductInfo implements Serializable {
   private String brandName;
 
   private String mainImageUrl;
+
+  private Boolean isActive;
+
+  private Boolean isRecommended;
 }

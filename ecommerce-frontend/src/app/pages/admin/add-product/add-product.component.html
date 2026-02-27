@@ -1,7 +1,21 @@
-<div class="admin-container">
+<div class="admin-container" [class.is-submitting]="isSubmitting">
+  <div class="saving-overlay" *ngIf="isSubmitting">
+    <div class="saving-box">
+      <div class="saving-spinner"></div>
+      <h3>Guardando Cambios...</h3>
+      <p>Estamos procesando tu solicitud, por favor espera.</p>
+    </div>
+  </div>
+
   <div class="admin-header">
-    <h1>📦 Registro de Producto</h1>
-    <p>Completa los 3 pasos para registrar un nuevo producto</p>
+    <h1>{{ isEditMode ? '✏️ Edición de Producto' : '📦 Registro de Producto' }}</h1>
+    <p>
+      {{
+        isEditMode
+          ? 'Actualiza la información del producto en los 3 pasos'
+          : 'Completa los 3 pasos para registrar un nuevo producto'
+      }}
+    </p>
   </div>
 
   <p-tabView class="admin-tabview">
@@ -39,7 +53,7 @@
         </div>
 
         <div class="form-row">
-          <div class="form-group">
+          <div class="form-group full-width">
             <label for="description">Descripción</label>
             <textarea
               id="description"
@@ -56,7 +70,7 @@
           <div class="form-group">
             <label for="price">Precio *</label>
             <p-inputNumber
-              id="price"
+              inputId="price"
               formControlName="price"
               [minFractionDigits]="2"
               [maxFractionDigits]="2"
@@ -74,7 +88,7 @@
           <div class="form-group">
             <label for="stock">Stock *</label>
             <p-inputNumber
-              id="stock"
+              inputId="stock"
               formControlName="stock"
               [min]="0"
               placeholder="0"
@@ -88,34 +102,38 @@
 
         <div class="form-row">
           <div class="form-group">
-            <label for="categoryName">Categoría *</label>
-            <p-dropdown
-              id="categoryName"
+            <label for="categoryId">Categoría *</label>
+            <p-select
+              inputId="categoryId"
               formControlName="categoryId"
               [options]="categories"
-              optionLabel="description"
+              optionLabel="fullPath"
               optionValue="id"
+              [filter]="true"
+              filterBy="fullPath"
               placeholder="Selecciona categoría"
               [showClear]="true"
               class="w-100"
-            ></p-dropdown>
+            ></p-select>
             <small class="text-danger" *ngIf="productForm.get('categoryId')?.invalid && productForm.get('categoryId')?.touched">
               Campo requerido
             </small>
           </div>
 
           <div class="form-group">
-            <label for="brandName">Marca *</label>
-            <p-dropdown
-              id="brandName"
+            <label for="brandId">Marca *</label>
+            <p-select
+              inputId="brandId"
               formControlName="brandId"
               [options]="brands"
               optionLabel="description"
               optionValue="id"
+              [filter]="true"
+              filterBy="description"
               placeholder="Selecciona marca"
               [showClear]="true"
               class="w-100"
-            ></p-dropdown>
+            ></p-select>
             <small class="text-danger" *ngIf="productForm.get('brandId')?.invalid && productForm.get('brandId')?.touched">
               Campo requerido
             </small>
@@ -125,18 +143,20 @@
         <div class="form-row">
           <div class="form-group checkbox">
             <p-checkbox
+              inputId="isActive"
               formControlName="isActive"
               [binary]="true"
-              label="Activo"
             ></p-checkbox>
+            <label class="checkbox-label" for="isActive">Activo</label>
           </div>
 
           <div class="form-group checkbox">
             <p-checkbox
+              inputId="isRecommended"
               formControlName="isRecommended"
               [binary]="true"
-              label="Recomendado"
             ></p-checkbox>
+            <label class="checkbox-label" for="isRecommended">Recomendado</label>
           </div>
         </div>
 
@@ -168,7 +188,7 @@
             ></button>
           </div>
 
-          <div *ngIf="!mainImageFile" class="alert alert-warning">
+          <div *ngIf="!mainImagePreview" class="alert alert-warning">
             ⚠️ Debes subir una imagen principal para continuar
           </div>
         </div>
@@ -188,13 +208,16 @@
           <div class="form-row">
             <div class="form-group">
               <label for="attributeSelect">Selecciona Atributo</label>
-              <p-dropdown
+              <p-select
+                inputId="attributeSelect"
                 [(ngModel)]="selectedAttribute"
                 [options]="attributes"
                 optionLabel="name"
+                [filter]="true"
+                filterBy="name"
                 placeholder="Ej: Color, Talla, etc."
                 class="w-100"
-              ></p-dropdown>
+              ></p-select>
             </div>
 
             <div class="form-group">
@@ -277,6 +300,16 @@
         ></p-fileUpload>
 
         <!-- Images Preview Gallery -->
+        <div *ngIf="existingProductImages.length > 0" class="images-gallery">
+          <h5>Imágenes actuales ({{ existingProductImages.length }})</h5>
+          <div class="gallery-grid">
+            <div *ngFor="let img of existingProductImages" class="gallery-item">
+              <img [src]="img.previewUrl" [alt]="'Imagen ' + img.id" />
+              <small>Actual #{{ img.id }}</small>
+            </div>
+          </div>
+        </div>
+
         <div *ngIf="productImages.length > 0" class="images-gallery">
           <h5>Imágenes Cargadas ({{ productImages.length }}/4)</h5>
           <div class="gallery-grid">
@@ -318,7 +351,7 @@
     <button
       pButton
       type="button"
-      label="Registrar Producto"
+      [label]="isEditMode ? 'Actualizar Producto' : 'Registrar Producto'"
       icon="pi pi-check"
       class="p-button-success"
       (click)="onSubmit()"
