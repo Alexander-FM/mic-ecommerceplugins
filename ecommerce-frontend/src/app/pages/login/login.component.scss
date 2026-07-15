@@ -1,81 +1,611 @@
-.login-container {
+/* ============================================
+   Variables de Color & Theme
+   ============================================ */
+:host {
+  --bg-1: #071a4b;
+  --bg-2: #0c2d6b;
+  --bg-3: #0a1f3a;
+  --bg-4: #0d2555;
+  --text-primary: #ffffff;
+  --text-secondary: #c5d3e0;
+  --text-muted: #8fa3b8;
+  --accent: #3b82f6;
+  --accent-light: #60a5fa;
+  --accent-dark: #1e40af;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-light: rgba(255, 255, 255, 0.12);
+  --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 10px 25px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.3);
+}
+
+/* ============================================
+   Estilos Globales
+   ============================================ */
+:host {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Inter',
+    sans-serif;
+}
+
+/* ============================================
+   Shell Principal
+   ============================================ */
+.login-shell {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(
+    135deg,
+    var(--bg-1) 0%,
+    var(--bg-2) 25%,
+    var(--bg-3) 75%,
+    var(--bg-4) 100%
+  );
   padding: 1rem;
+  position: relative;
+  overflow: hidden;
 
-  .login-card {
+  /* Efecto de luz de fondo sutil */
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.1), transparent);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -20%;
+    left: -5%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(147, 51, 234, 0.05), transparent);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+}
+
+/* ============================================
+   Tarjeta Principal (Grid Layout)
+   ============================================ */
+.login-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  max-width: 960px;
+  height: auto;
+  min-height: 600px;
+  background: rgba(13, 37, 85, 0.4);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  z-index: 1;
+  animation: slideUp 0.6s ease-out;
+
+  @media (max-width: 960px) {
+    max-width: none;
+    min-height: auto;
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   Panel de Marca (Izquierda)
+   ============================================ */
+.brand-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 3rem 2.5rem;
+  background: linear-gradient(135deg, var(--bg-1) 0%, #0f1f48 100%);
+  overflow: hidden;
+
+  @media (max-width: 768px) {
+    padding: 2rem;
+    min-height: 300px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  @media (max-width: 480px) {
+    padding: 1.5rem;
+  }
+}
+
+.brand-content {
+  position: relative;
+  z-index: 2;
+}
+
+.eyebrow {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-light);
+  margin-bottom: 1rem;
+  opacity: 0.9;
+}
+
+.brand-copy {
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.2;
+  margin: 0 0 1rem 0;
+  letter-spacing: -0.5px;
+
+  @media (max-width: 768px) {
+    font-size: 2rem;
+    margin: 0 0 0.75rem 0;
+  }
+}
+
+.brand-description {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 0 0 2rem 0;
+  opacity: 0.95;
+
+  @media (max-width: 768px) {
+    font-size: 0.9rem;
+    margin: 0 0 1.5rem 0;
+  }
+}
+
+/* Características */
+.features {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+
+    .feature-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 24px;
+      width: 24px;
+      height: 24px;
+      color: var(--accent-light);
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+  }
+
+  @media (max-width: 768px) {
+    gap: 0.75rem;
+
+    li {
+      font-size: 0.85rem;
+    }
+  }
+}
+
+/* ============================================
+   Decoraciones (Ilustraciones)
+   ============================================ */
+.decoration {
+  position: absolute;
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+.orb {
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.3), transparent);
+  filter: blur(40px);
+
+  &.orb-1 {
+    width: 300px;
+    height: 300px;
+    top: -100px;
+    right: -100px;
+    animation: float 6s ease-in-out infinite;
+  }
+
+  &.orb-2 {
+    width: 200px;
+    height: 200px;
+    bottom: -80px;
+    left: -60px;
+    animation: float 8s ease-in-out infinite reverse;
+  }
+}
+
+.bag {
+  width: 60px;
+  height: 60px;
+  opacity: 0.05;
+
+  &.bag-1 {
+    top: 50%;
+    right: 80px;
+    animation: drift 4s ease-in-out infinite;
+  }
+}
+
+.card {
+  width: 80px;
+  height: 50px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  opacity: 0.06;
+
+  &.card-1 {
+    top: 20%;
+    left: 50px;
+    animation: drift 5s ease-in-out infinite;
+    transform: rotate(-15deg);
+  }
+
+  &.card-2 {
+    bottom: 30%;
+    right: 60px;
+    animation: drift 6s ease-in-out infinite reverse;
+    transform: rotate(20deg);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(30px);
+  }
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(10px, -15px) rotate(5deg);
+  }
+}
+
+/* ============================================
+   Panel de Formulario (Derecha)
+   ============================================ */
+.form-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 3rem 2.5rem;
+  background: linear-gradient(to bottom, rgba(13, 37, 85, 0.6), rgba(13, 37, 85, 0.4));
+  border-left: 1px solid var(--border);
+
+  @media (max-width: 768px) {
+    border-left: none;
+    border-top: 1px solid var(--border);
+    padding: 2rem;
+    min-height: auto;
+  }
+
+  @media (max-width: 480px) {
+    padding: 1.5rem;
+  }
+}
+
+.form-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.form-title {
+  font-size: clamp(1.6rem, 3vw, 2rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.25rem 0;
+  letter-spacing: -0.5px;
+
+  @media (max-width: 768px) {
+    font-size: 1.8rem;
+  }
+}
+
+.form-subtitle {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin: 0 0 2rem 0;
+  opacity: 0.85;
+}
+
+/* Contenedor de error */
+.error-container {
+  margin-bottom: 1.5rem;
+
+  ::ng-deep .p-message {
+    background: rgba(239, 68, 68, 0.15) !important;
+    border: 1px solid rgba(239, 68, 68, 0.3) !important;
+    border-radius: 8px !important;
+
+    .p-message-text {
+      color: #fca5a5;
+      font-size: 0.9rem;
+    }
+  }
+}
+
+/* Grupos de botones */
+.button-group {
+  margin-bottom: 1rem;
+  display: flex;
+
+  &:last-of-type {
+    margin-bottom: 2rem;
+  }
+
+  p-button {
     width: 100%;
-    max-width: 400px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-    border-radius: 8px;
 
-    .title {
-      font-size: 2rem;
-      font-weight: 700;
-      color: #333;
-      margin: 1rem 0 0.5rem 0;
-    }
+    ::ng-deep .p-button {
+      width: 100%;
+      padding: 0.875rem 1.5rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      border-radius: 10px;
+      letter-spacing: 0.3px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border: none;
 
-    .subtitle {
-      font-size: 1rem;
-      color: #666;
-      margin-bottom: 2rem;
-    }
+      &.p-button-primary {
+        background: linear-gradient(135deg, var(--accent), var(--accent-light));
+        color: white;
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
 
-    .error-container {
-      margin-bottom: 1.5rem;
-    }
+        &:hover:not(:disabled) {
+          background: linear-gradient(135deg, var(--accent-light), #93c5fd);
+          box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
+          transform: translateY(-2px);
+        }
 
-    .button-container {
-      margin: 2rem 0;
-      display: flex;
-      gap: 1rem;
-      flex-direction: column;
+        &:active:not(:disabled) {
+          transform: translateY(0);
+          box-shadow: 0 2px 10px rgba(59, 130, 246, 0.4);
+        }
 
-      ::ng-deep {
-        .p-button {
-          padding: 0.75rem 1.5rem;
-          font-size: 1rem;
-          font-weight: 600;
-
-          &:disabled {
-            opacity: 0.6;
-          }
+        &:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
         }
       }
-    }
 
-    .button-container.secondary {
-      margin-top: 0.5rem;
-      margin-bottom: 0;
-    }
+      &.p-button-secondary {
+        background: transparent;
+        color: var(--accent-light);
+        border: 1.5px solid var(--accent-light) !important;
 
-    .info-text {
-      text-align: center;
-      color: #999;
-      font-size: 0.875rem;
-      margin-top: 1.5rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid #eee;
+        &:hover:not(:disabled) {
+          background: rgba(96, 165, 250, 0.1);
+          box-shadow: 0 4px 15px rgba(96, 165, 250, 0.2);
+          transform: translateY(-2px);
+        }
 
-      p {
-        margin: 0;
+        &:active:not(:disabled) {
+          transform: translateY(0);
+        }
+
+        &:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+      }
+
+      .p-button-icon {
+        margin-right: 0.5rem;
       }
     }
   }
 }
 
-@media (max-width: 480px) {
-  .login-container {
-    .login-card {
-      max-width: 100%;
+/* Pie informativo */
+.info-footer {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 1rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
 
-      .title {
-        font-size: 1.5rem;
-      }
+  p {
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 0.75rem;
+  }
+}
+
+/* ============================================
+   Media Queries Responsivas
+   ============================================ */
+
+/* Tablet grande a desktop normal */
+@media (max-width: 960px) {
+  .login-card {
+    grid-template-columns: 1fr;
+  }
+
+  .brand-panel {
+    min-height: 280px;
+    padding: 2.5rem 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .form-panel {
+    border-left: none;
+    border-top: none;
+  }
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+  .login-shell {
+    padding: 1rem;
+  }
+
+  .login-card {
+    min-height: auto;
+    box-shadow: var(--shadow-md);
+  }
+
+  .brand-panel {
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1.5rem;
+    min-height: 320px;
+  }
+
+  .form-panel {
+    padding: 2rem 1.5rem;
+    border-left: none;
+    border-top: 1px solid var(--border);
+  }
+
+  .brand-copy {
+    font-size: 1.75rem;
+  }
+
+  .form-title {
+    font-size: 1.5rem;
+  }
+}
+
+/* Móvil pequeño */
+@media (max-width: 480px) {
+  .login-shell {
+    padding: 0.75rem;
+
+    &::before {
+      width: 500px;
+      height: 500px;
+      top: -30%;
+      right: -20%;
     }
+
+    &::after {
+      width: 400px;
+      height: 400px;
+      bottom: -15%;
+      left: -15%;
+    }
+  }
+
+  .login-card {
+    border-radius: 16px;
+    min-height: auto;
+  }
+
+  .brand-panel {
+    padding: 1.5rem 1rem;
+    min-height: 280px;
+  }
+
+  .form-panel {
+    padding: 1.5rem 1rem;
+  }
+
+  .brand-copy {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .brand-description {
+    font-size: 0.85rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .form-title {
+    font-size: 1.25rem;
+  }
+
+  .form-subtitle {
+    margin-bottom: 1.5rem;
+  }
+
+  .button-group {
+    margin-bottom: 0.75rem;
+
+    p-button ::ng-deep .p-button {
+      padding: 0.75rem 1rem;
+      font-size: 0.9rem;
+    }
+  }
+
+  .features li {
+    font-size: 0.8rem;
+  }
+}
+
+/* Ultra móvil */
+@media (max-width: 360px) {
+  .login-card {
+    border-radius: 12px;
+  }
+
+  .brand-panel {
+    padding: 1rem 0.75rem;
+  }
+
+  .form-panel {
+    padding: 1rem 0.75rem;
+  }
+
+  .brand-copy {
+    font-size: 1.25rem;
+  }
+
+  .form-title {
+    font-size: 1.1rem;
+  }
+
+  .eyebrow {
+    font-size: 0.7rem;
   }
 }

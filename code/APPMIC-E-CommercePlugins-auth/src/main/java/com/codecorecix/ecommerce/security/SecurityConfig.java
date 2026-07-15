@@ -58,6 +58,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 public class SecurityConfig {
 
+  private static final String LOGIN_URL = "/login";
+  private static final String WRITE_SCOPE = "write";
+
   private final Environment environment;
 
   private final UserDetailsService userDetailsService;
@@ -83,7 +86,7 @@ public class SecurityConfig {
     http
       .exceptionHandling(exceptions -> exceptions
         .defaultAuthenticationEntryPointFor(
-          new LoginUrlAuthenticationEntryPoint("/login"),
+          new LoginUrlAuthenticationEntryPoint(LOGIN_URL),
           new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
         ))
       .oauth2ResourceServer(resources -> resources.jwt(Customizer.withDefaults()));
@@ -95,8 +98,11 @@ public class SecurityConfig {
   public SecurityFilterChain defaultSecurityFilterChain(final HttpSecurity http)
     throws Exception {
     http
-      .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated())
-      .formLogin(withDefaults()).csrf(AbstractHttpConfigurer::disable);
+      .authorizeHttpRequests(authorize -> authorize
+        .requestMatchers(LOGIN_URL, "/css/**", "/images/**", "/js/**").permitAll()
+        .anyRequest().authenticated())
+      .formLogin(form -> form.loginPage(LOGIN_URL).permitAll())
+      .csrf(AbstractHttpConfigurer::disable);
     return http.build();
   }
 
@@ -122,7 +128,7 @@ public class SecurityConfig {
       .scope(OidcScopes.OPENID)
       .scope(OidcScopes.PROFILE)
       .scope("read")
-      .scope("write")
+      .scope(WRITE_SCOPE)
       .clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).build())
       .build();
 
@@ -139,7 +145,7 @@ public class SecurityConfig {
       .scope(OidcScopes.OPENID)
       .scope(OidcScopes.PROFILE)
       .scope("read")
-      .scope("write")
+      .scope(WRITE_SCOPE)
       .clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).build())
       .build();
 
@@ -153,7 +159,7 @@ public class SecurityConfig {
       .scope(OidcScopes.OPENID)
       .scope(OidcScopes.PROFILE)
       .scope("read")
-      .scope("write")
+      .scope(WRITE_SCOPE)
       .clientSettings(ClientSettings.builder()
         .requireAuthorizationConsent(false)
         .requireProofKey(true)

@@ -1,42 +1,87 @@
-<div class="login-container">
+<div class="login-shell">
   <p-toast></p-toast>
 
-  <p-card class="login-card">
-    <div class="text-center">
-      <h1 class="title">E-Commerce</h1>
-      <p class="subtitle">Inicia sesión para continuar</p>
+  <!-- Tarjeta de doble panel -->
+  <div class="login-card">
+
+    <!-- Panel de Marca (Izquierda) -->
+    <div class="brand-panel">
+      <!-- Decoraciones de fondo -->
+      <div class="decoration orb orb-1"></div>
+      <div class="decoration orb orb-2"></div>
+      <div class="decoration bag bag-1"></div>
+      <div class="decoration card card-1"></div>
+      <div class="decoration card card-2"></div>
+
+      <!-- Contenido de marca -->
+      <div class="brand-content">
+        <span class="eyebrow">E-Commerce</span>
+
+        <h1 class="brand-copy">Bienvenido a tu tienda en línea</h1>
+
+        <p class="brand-description">
+          Inicia sesión para explorar nuestros productos, revisar tu carrito o gestionar la plataforma.
+        </p>
+
+        <!-- Características -->
+        <ul class="features">
+          <li>
+            <span class="feature-icon">✧</span>
+            <span>Productos premium seleccionados</span>
+          </li>
+          <li>
+            <span class="feature-icon">⟡</span>
+            <span>Compras seguras y rápidas</span>
+          </li>
+          <li>
+            <span class="feature-icon">⌁</span>
+            <span>Panel de gestión avanzado</span>
+          </li>
+        </ul>
+      </div>
     </div>
 
-    <div *ngIf="errorMessage" class="error-container">
-      <p-message severity="error" [text]="errorMessage" styleClass="w-full"></p-message>
-    </div>
+    <!-- Panel de Formulario (Derecha) -->
+    <div class="form-panel">
+      <div class="form-content">
+        <h2 class="form-title">Iniciar sesión</h2>
+        <p class="form-subtitle">Accede a tu cuenta</p>
 
-    <div class="button-container">
-      <p-button
-        label="Iniciar sesión con OAuth"
-        icon="pi pi-google"
-        (onClick)="initiateLogin()"
-        [loading]="isLoading"
-        [disabled]="isLoading"
-        iconPos="left"
-        class="w-full"
-        severity="primary"
-      ></p-button>
-    </div>
+        <!-- Mensajes de error -->
+        <div *ngIf="errorMessage" class="error-container">
+          <p-message severity="error" [text]="errorMessage" styleClass="w-full"></p-message>
+        </div>
 
-    <div class="button-container secondary">
-      <p-button
-        label="Crear cuenta"
-        icon="pi pi-user-plus"
-        severity="secondary"
-        [outlined]="true"
-        routerLink="/register"
-        class="w-full"
-      ></p-button>
-    </div>
+        <!-- Botones de login -->
+        <div class="button-group">
+          <p-button
+            label="Iniciar sesión con OAuth"
+            icon="pi pi-google"
+            (onClick)="initiateLogin()"
+            [loading]="isLoading"
+            [disabled]="isLoading"
+            iconPos="left"
+            class="login-btn w-full"
+            severity="primary"
+          ></p-button>
+        </div>
 
-    <div class="info-text">
-      <p>Se redirigirá a la página de autenticación segura.</p>
+        <div class="button-group">
+          <p-button
+            label="Crear cuenta"
+            icon="pi pi-user-plus"
+            severity="secondary"
+            [outlined]="true"
+            routerLink="/register"
+            class="register-btn w-full"
+          ></p-button>
+        </div>
+
+        <!-- Texto informativo -->
+        <div class="info-footer">
+          <p>Se redirigirá a la página de autenticación segura.</p>
+        </div>
+      </div>
     </div>
-  </p-card>
+  </div>
 </div>
