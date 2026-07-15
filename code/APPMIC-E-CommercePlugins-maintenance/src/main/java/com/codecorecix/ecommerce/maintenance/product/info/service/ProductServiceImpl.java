@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import com.codecorecix.ecommerce.event.entities.Product;
 import com.codecorecix.ecommerce.event.models.ProductInfo;
-import com.codecorecix.ecommerce.maintenance.product.image.service.ProductImageService;
+import com.codecorecix.ecommerce.maintenance.drive.service.GoogleDriveService;
 import com.codecorecix.ecommerce.maintenance.product.info.api.dto.request.ProductRequestDto;
 import com.codecorecix.ecommerce.maintenance.product.info.api.dto.response.ProductResponseDto;
 import com.codecorecix.ecommerce.maintenance.product.info.mapper.ProductFieldsMapper;
@@ -17,14 +17,16 @@ import com.codecorecix.ecommerce.utils.GenericUtils;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ProductServiceImpl implements ProductService {
 
-  private final ProductImageService productImageService;
+  private final GoogleDriveService googleDriveService;
 
   private final ProductRepository productRepository;
 
@@ -55,16 +57,60 @@ public class ProductServiceImpl implements ProductService {
   @Transactional
   public GenericResponse<ProductResponseDto> deleteProductById(final Integer id) {
     final Optional<Product> product = this.productRepository.findById(id);
-    if (product.isPresent()) {
-      this.productImageService.deleteAllImagesByProductId(id);
-      this.productRepository.deleteById(id);
-      return new GenericResponse<>(GenericResponseConstants.RPTA_OK, GenericResponseConstants.CORRECT_OPERATION, null);
-    } else {
+    if (product.isEmpty()) {
       return new GenericResponse<>(GenericResponseConstants.RPTA_ERROR,
         StringUtils.joinWith(GenericResponseConstants.DASH, GenericResponseConstants.INCORRECT_OPERATION,
           ProductConstants.FIND_MESSAGE_ERROR),
         null);
     }
+
+    try {
+      final Product productEntity = product.get();
+      deleteProductImagesFromDrive(productEntity);
+      this.productRepository.deleteById(id);
+      return new GenericResponse<>(GenericResponseConstants.RPTA_OK, GenericResponseConstants.CORRECT_OPERATION, null);
+    } catch (Exception e) {
+      log.error("Error eliminando producto: {}", e.getMessage());
+      return new GenericResponse<>(GenericResponseConstants.RPTA_ERROR,
+        StringUtils.joinWith(GenericResponseConstants.DASH, GenericResponseConstants.INCORRECT_OPERATION, e.getMessage()),
+        null);
+    }
+  }
+
+  private void deleteProductImagesFromDrive(final Product productEntity) {
+    if (productEntity.getImages() == null || productEntity.getImages().isEmpty()) {
+      return;
+    }
+
+    productEntity.getImages().forEach(image -> {
+      try {
+        final String fileId = extractFileIdFromGoogleDriveUrl(image.getImageUrl());
+        if (StringUtils.isNotBlank(fileId)) {
+          this.googleDriveService.deleteFile(fileId);
+          log.info("Imagen eliminada de Google Drive: {}", fileId);
+        }
+      } catch (Exception e) {
+        log.warn("Error eliminando imagen de Google Drive: {}", e.getMessage());
+      }
+    });
+  }
+
+  private String extractFileIdFromGoogleDriveUrl(final String imageUrl) {
+    if (StringUtils.isBlank(imageUrl)) {
+      return StringUtils.EMPTY;
+    }
+
+    final String fileIdFromViewUrl = StringUtils.substringBetween(imageUrl, "/file/d/", "/view");
+    if (StringUtils.isNotBlank(fileIdFromViewUrl)) {
+      return fileIdFromViewUrl;
+    }
+
+    final String idValue = StringUtils.substringAfter(imageUrl, "id=");
+    if (StringUtils.isNotBlank(idValue) && !StringUtils.equals(idValue, imageUrl)) {
+      return StringUtils.substringBefore(idValue, "&");
+    }
+
+    return StringUtils.EMPTY;
   }
 
   @Override
