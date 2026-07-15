@@ -1,9 +1,15 @@
 .products-container {
   display: flex;
   gap: 2rem;
-  padding: 2rem;
-  max-width: 1400px;
+  padding: 1.5rem;
+  max-width: 1800px;
   margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+
+  @media (max-width: 1200px) {
+    padding: 1.5rem;
+  }
 
   @media (max-width: 768px) {
     flex-direction: column;
@@ -68,18 +74,31 @@
 
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1.5rem;
 
+  /* Desktop Grande (≥1400px): 4 columnas */
+  grid-template-columns: repeat(4, 1fr);
+
+  /* Desktop Normal (1200px-1399px): 3 columnas */
+  @media (max-width: 1399px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* Tablet (768px-1199px): 2 columnas */
+  @media (max-width: 1199px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Móvil (<768px): 1 columna */
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
   }
 }
 
 .product-card {
-  height: 100%;
   display: flex;
   flex-direction: column;
+  height: 100%;
   transition: transform 0.2s, box-shadow 0.2s;
 
   &:hover {
@@ -87,6 +106,7 @@
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
   }
 
+  /* Imagen: tamaño fijo, no se encoge */
   .product-image-container {
     width: 100%;
     height: 200px;
@@ -96,6 +116,7 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    flex-shrink: 0;
 
     .product-image {
       width: 100%;
@@ -105,12 +126,22 @@
     }
   }
 
+  /* Body: expande para llenar espacio disponible entre imagen y footer */
+  ::ng-deep .p-card-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    padding: 0.75rem 1rem;
+    box-sizing: border-box;
+  }
+
   .product-info {
-    flex: 1;
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
+    flex: 1;
 
+    /* Título: 2 líneas máx con line-clamp y min-height */
     .product-name {
       font-size: 1.1rem;
       font-weight: 600;
@@ -118,8 +149,15 @@
       margin: 0;
       line-height: 1.3;
       cursor: pointer;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-height: 2.6rem; /* ~2 líneas */
     }
 
+    /* Descripción: 2 líneas máx con line-clamp y min-height */
     .product-description {
       color: #666;
       font-size: 0.9rem;
@@ -129,15 +167,19 @@
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
+      text-overflow: ellipsis;
+      min-height: 2.8rem; /* ~2 líneas */
     }
 
+    /* Badges: sin altura fija, sin overflow hidden para permitir wrap */
     .product-details {
       display: flex;
       flex-wrap: wrap;
       gap: 0.5rem;
-      margin: 0.5rem 0;
+      align-items: flex-start;
     }
 
+    /* Estado de stock: altura automática */
     .product-stock {
       font-size: 0.9rem;
 
@@ -160,6 +202,7 @@
       }
     }
 
+    /* Precio: ÚNICO elemento con margin-top:auto para empujar botones al fondo */
     .product-price {
       display: flex;
       align-items: baseline;
@@ -181,8 +224,10 @@
     }
   }
 
+  /* Footer con botones: no se encoge, siempre al final */
   ::ng-deep .p-card-footer {
-    padding-top: 1rem;
+    padding: 0.75rem 1rem;
+    flex-shrink: 0;
   }
 
   .product-actions {
@@ -191,12 +236,21 @@
     flex-wrap: wrap;
 
     p-button {
-      flex: 1;
-      min-width: 120px;
+      flex: 1 1 0;
+      min-width: 0;
 
       ::ng-deep button {
         width: 100%;
       }
+    }
+  }
+
+  /* Dos botones: una sola línea en desktop/tablet, wrap en móvil */
+  .product-actions.two-buttons {
+    flex-wrap: nowrap;
+
+    @media (max-width: 480px) {
+      flex-wrap: wrap;
     }
   }
 }
