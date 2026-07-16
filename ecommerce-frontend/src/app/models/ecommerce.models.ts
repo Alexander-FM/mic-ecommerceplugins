@@ -114,3 +114,30 @@ export interface GenericResponse<T> {
   message: string;
   body: T;
 }
+
+export interface OrderRequest {
+  customerId: number;
+  employeeId: number | null;
+  orderStatus: {
+    id: number;
+  };
+  totalAmount: number;
+  orderNotes: string;
+  orderDetails: OrderDetailRequest[];
+}
+
+export interface OrderDetailRequest {
+  productId: number;
+  quantity: number;
+  unitPrice: number;
+}
+
+export interface OrderResponse {
+  id: number;
+  orderDate: string;
+  customerId: number;
+  employeeId: number | null;
+  orderStatusName: string;
+  totalAmount: number;
+  orderNotes: string;
+}

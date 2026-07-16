@@ -117,6 +117,8 @@
               icon="pi pi-check"
               severity="success"
               (onClick)="checkout()"
+              [loading]="isProcessing"
+              [disabled]="isProcessing"
             ></p-button>
           </div>
         </ng-template>
