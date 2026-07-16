@@ -27,9 +27,13 @@ public class OrderDetailController {
       @PathVariable(value = "orderId") final Integer orderId) {
     final GenericResponse<List<OrderDetailResponseDto>> response = this.service.getDetailsByOrderId(orderId);
     if (ObjectUtils.isNotEmpty(response.getBody())) {
-      return ResponseEntity.status(HttpStatus.OK).body(response);
+      return ResponseEntity
+          .status(HttpStatus.OK)
+          .body(response);
     } else {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+      return ResponseEntity
+          .status(HttpStatus.NOT_FOUND)
+          .body(response);
     }
   }
 }

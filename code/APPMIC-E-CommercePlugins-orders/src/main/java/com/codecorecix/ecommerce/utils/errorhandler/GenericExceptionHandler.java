@@ -60,6 +60,7 @@ public class GenericExceptionHandler {
       case SERVICE_PRODUCTS_FORBIDDEN -> HttpStatus.FORBIDDEN;
       case SERVICE_PRODUCTS_NOT_AUTHORIZED, INVALID_TOKEN -> HttpStatus.UNAUTHORIZED;
       case ERROR_INTERNAL, SERVICE_PRODUCTS_ENDPOINT_ERROR -> HttpStatus.INTERNAL_SERVER_ERROR;
+      case INCONSISTENT_PRODUCT_DATA, PRODUCTS_OUT_OF_STOCK -> HttpStatus.BAD_REQUEST;
     };
     return new ResponseEntity<>(new GenericResponse<>(GenericResponseConstants.RPTA_ERROR, GenericResponseConstants.WRONG_OPERATION,
         new ErrorResponse(ex.getErrorCode(), errorMessage.getErrorMessage())), status);

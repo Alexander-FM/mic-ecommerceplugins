@@ -14,7 +14,9 @@ public enum OrderErrorMessage {
   SERVICE_PRODUCTS_NOT_AUTHORIZED(401, "The request to the product service is not authorized, verify the token"),
   SERVICE_PRODUCTS_FORBIDDEN(403, "Access to the product service is forbidden, verify the token"),
   SERVICE_PRODUCTS_NOT_FOUND(404, "Requested products were not found"),
-  SERVICE_PRODUCTS_ENDPOINT_ERROR(500, "Invalid product service endpoint configuration");
+  SERVICE_PRODUCTS_ENDPOINT_ERROR(500, "Invalid product service endpoint configuration"),
+  INCONSISTENT_PRODUCT_DATA(400, "Some products in the request do not exist."),
+  PRODUCTS_OUT_OF_STOCK(400, "The following products are out of stock: %s");
 
   private final Integer errorCode;
 
