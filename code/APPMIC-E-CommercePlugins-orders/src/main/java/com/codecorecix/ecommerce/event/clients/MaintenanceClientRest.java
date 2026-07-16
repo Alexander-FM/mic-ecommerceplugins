@@ -11,18 +11,16 @@ import feign.FeignException;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(name = "${app.external.maintenance-service-url}", url = "${app.external.maintenance-service-url}")
 public interface MaintenanceClientRest {
 
-  @GetMapping("/api/products/checkProducts")
+  @GetMapping("/api/maintenance/products/checkProducts")
   @CircuitBreaker(name = "maintenanceService", fallbackMethod = "fallbackCheckProducts")
-  GenericResponse<List<ProductInfo>> checkProducts(@RequestParam final List<Integer> ids,
-    @RequestHeader(value = "Authorization") final String token);
+  GenericResponse<List<ProductInfo>> checkProducts(@RequestParam final List<Integer> ids);
 
-  default GenericResponse<List<ProductInfo>> fallbackCheckProducts(List<Integer> ids, Throwable throwable) {
+  default GenericResponse<List<ProductInfo>> fallbackCheckProducts(final List<Integer> ids, final Throwable throwable) {
     if (throwable instanceof feign.FeignException.NotFound notFound) {
       throw notFound;
     }
@@ -32,7 +30,10 @@ public interface MaintenanceClientRest {
     if (throwable instanceof FeignException.Unauthorized unauthorized) {
       throw unauthorized;
     }
+    if (throwable instanceof FeignException.InternalServerError internalServerError) {
+      throw internalServerError;
+    }
     return new GenericResponse<>(GenericResponseConstants.RPTA_ERROR, GenericResponseConstants.UNAVAILABLE_SERVICE,
-      Collections.emptyList());
+        Collections.emptyList());
   }
 }

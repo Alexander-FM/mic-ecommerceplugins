@@ -12,7 +12,9 @@ public enum OrderErrorMessage {
   ERROR_INTERNAL(500, "Internal Server Error"),
   SERVICE_PRODUCTS_NOT_AVAILABLE(503, "The product stock could not be verified, the service is not available"),
   SERVICE_PRODUCTS_NOT_AUTHORIZED(401, "The request to the product service is not authorized, verify the token"),
-  SERVICE_PRODUCTS_FORBIDDEN(403, "Access to the product service is forbidden, verify the token");
+  SERVICE_PRODUCTS_FORBIDDEN(403, "Access to the product service is forbidden, verify the token"),
+  SERVICE_PRODUCTS_NOT_FOUND(404, "Requested products were not found"),
+  SERVICE_PRODUCTS_ENDPOINT_ERROR(500, "Invalid product service endpoint configuration");
 
   private final Integer errorCode;
 

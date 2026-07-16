@@ -12,10 +12,9 @@ public interface OrderService {
    * Method used to save the order.
    *
    * @param orderRequestDto the order request dto.
-   * @param token the token
    * @return the OrderResponseDto.
    */
-  GenericResponse<OrderResponseDto> saveOrder(final OrderRequestDto orderRequestDto, final String token);
+  GenericResponse<OrderResponseDto> saveOrder(final OrderRequestDto orderRequestDto);
 
   /**
    * Method used to get all orders.

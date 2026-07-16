@@ -57,7 +57,7 @@ public class ProductController {
   @GetMapping("/checkProducts")
   public ResponseEntity<GenericResponse<List<ProductInfo>>> checkProducts(@RequestParam final List<Integer> ids) {
     final GenericResponse<List<ProductInfo>> response = this.service.findByIds(ids);
-    if (Objects.nonNull(response.getBody())) {
+    if (Objects.nonNull(response.getBody()) && !response.getBody().isEmpty()) {
       return ResponseEntity.status(HttpStatus.OK).body(response);
     } else {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);

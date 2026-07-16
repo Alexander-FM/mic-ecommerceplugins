@@ -12,7 +12,7 @@ public interface OrderDetailService {
   /**
    * Method used to save the order details.
    */
-  void saveOrderDetails(final List<OrderDetailRequestDto> orderDetailRequestDto, final Integer orderId, final String token);
+  void saveOrderDetails(final List<OrderDetailRequestDto> orderDetailRequestDto, final Integer orderId);
 
   /**
    * Method used to get details by orderId.

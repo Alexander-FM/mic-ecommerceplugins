@@ -34,12 +34,17 @@ public class OrderDetailServiceImpl implements OrderDetailService {
   private final MaintenanceClientRest maintenanceClientRest;
 
   @Override
-  public void saveOrderDetails(final List<OrderDetailRequestDto> orderDetailRequestDto, final Integer orderId, final String token) {
+  public void saveOrderDetails(final List<OrderDetailRequestDto> orderDetailRequestDto, final Integer orderId) {
     try {
       OrdersUtils.validRequestDto(orderDetailRequestDto);
       GenericResponse<List<ProductInfo>> response = this.maintenanceClientRest.checkProducts(
-          orderDetailRequestDto.stream().map(OrderDetailRequestDto::getProductId).toList(), token);
-      if (response.getBody().isEmpty()) {
+          orderDetailRequestDto
+              .stream()
+              .map(OrderDetailRequestDto::getProductId)
+              .toList());
+      if (response
+          .getBody()
+          .isEmpty()) {
         throw new OrderException(OrderErrorMessage.SERVICE_PRODUCTS_NOT_AVAILABLE);
       }
       final List<OrderDetail> orderDetails = new ArrayList<>();

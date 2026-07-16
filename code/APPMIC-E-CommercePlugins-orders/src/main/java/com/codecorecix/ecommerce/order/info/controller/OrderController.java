@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,30 +35,37 @@ public class OrderController {
   private final Environment environment;
 
   @PostMapping
-  public ResponseEntity<GenericResponse<OrderResponseDto>> saveOrder(@RequestBody final OrderRequestDto orderRequestDto,
-      @RequestHeader(value = "Token-External") final String token) {
+  public ResponseEntity<GenericResponse<OrderResponseDto>> saveOrder(@RequestBody final OrderRequestDto orderRequestDto) {
     log.info("You are using the value: {}", environment.getProperty("app.external.maintenance-service-url"));
     if (ObjectUtils.isNotEmpty(orderRequestDto.getId())) {
       throw new GenericUnprocessableEntityException(OrderConstants.UNPROCESSABLE_ENTITY_EXCEPTION);
     } else {
       OrdersUtils.validRequestDto(orderRequestDto);
       OrdersUtils.validRequestDto(orderRequestDto.getOrderDetails());
-      return ResponseEntity.status(HttpStatus.CREATED).body(this.service.saveOrder(orderRequestDto, token));
+      return ResponseEntity
+          .status(HttpStatus.CREATED)
+          .body(this.service.saveOrder(orderRequestDto));
     }
   }
 
   @GetMapping
   public ResponseEntity<GenericResponse<List<OrderResponseDto>>> getAllOrders() {
-    return ResponseEntity.status(HttpStatus.OK).body(this.service.getAllOrders());
+    return ResponseEntity
+        .status(HttpStatus.OK)
+        .body(this.service.getAllOrders());
   }
 
   @GetMapping("/{id}")
   public ResponseEntity<GenericResponse<OrderResponseDto>> getOrderById(@PathVariable(value = "id") final Long id) {
     final GenericResponse<OrderResponseDto> response = this.service.getOrderById(id);
     if (Objects.nonNull(response.getBody())) {
-      return ResponseEntity.status(HttpStatus.OK).body(response);
+      return ResponseEntity
+          .status(HttpStatus.OK)
+          .body(response);
     } else {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+      return ResponseEntity
+          .status(HttpStatus.NOT_FOUND)
+          .body(response);
     }
   }
 }

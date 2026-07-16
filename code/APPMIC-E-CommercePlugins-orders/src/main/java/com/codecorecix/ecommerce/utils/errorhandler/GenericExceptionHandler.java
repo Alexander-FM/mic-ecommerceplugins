@@ -43,7 +43,8 @@ public class GenericExceptionHandler {
   @ResponseStatus(code = HttpStatus.BAD_REQUEST)
   public GenericResponse<Object> constraintValidations(final ConstraintViolationException ex) {
     final Set<ConstraintViolation<?>> violations = ex.getConstraintViolations();
-    final List<String> errorMessages = violations.stream()
+    final List<String> errorMessages = violations
+        .stream()
         .map(ConstraintViolation::getMessage)
         .toList();
     final Map<String, List<String>> listHashMap = Collections.singletonMap("violations", errorMessages);
@@ -54,12 +55,11 @@ public class GenericExceptionHandler {
   public ResponseEntity<GenericResponse<Object>> handleOrderException(final OrderException ex) {
     OrderErrorMessage errorMessage = ex.getErrorMessage();
     HttpStatus status = switch (errorMessage) {
-      case ERROR_RESOURCE_STATUS_NOT_AVAILABLE, ERROR_RESOURCE_ORDER_NOT_AVAILABLE -> HttpStatus.NOT_FOUND;
+      case ERROR_RESOURCE_STATUS_NOT_AVAILABLE, ERROR_RESOURCE_ORDER_NOT_AVAILABLE, SERVICE_PRODUCTS_NOT_FOUND -> HttpStatus.NOT_FOUND;
       case SERVICE_PRODUCTS_NOT_AVAILABLE -> HttpStatus.SERVICE_UNAVAILABLE;
       case SERVICE_PRODUCTS_FORBIDDEN -> HttpStatus.FORBIDDEN;
-      case SERVICE_PRODUCTS_NOT_AUTHORIZED -> HttpStatus.UNAUTHORIZED;
-      case ERROR_INTERNAL -> HttpStatus.INTERNAL_SERVER_ERROR;
-      case INVALID_TOKEN -> HttpStatus.UNAUTHORIZED;
+      case SERVICE_PRODUCTS_NOT_AUTHORIZED, INVALID_TOKEN -> HttpStatus.UNAUTHORIZED;
+      case ERROR_INTERNAL, SERVICE_PRODUCTS_ENDPOINT_ERROR -> HttpStatus.INTERNAL_SERVER_ERROR;
     };
     return new ResponseEntity<>(new GenericResponse<>(GenericResponseConstants.RPTA_ERROR, GenericResponseConstants.WRONG_OPERATION,
         new ErrorResponse(ex.getErrorCode(), errorMessage.getErrorMessage())), status);

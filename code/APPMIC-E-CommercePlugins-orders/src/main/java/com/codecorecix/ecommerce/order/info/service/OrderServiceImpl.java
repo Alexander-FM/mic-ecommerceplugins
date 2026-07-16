@@ -1,6 +1,7 @@
 package com.codecorecix.ecommerce.order.info.service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,23 +40,31 @@ public class OrderServiceImpl implements OrderService {
 
   @Override
   @Transactional
-  public GenericResponse<OrderResponseDto> saveOrder(final OrderRequestDto orderRequestDto, final String token) {
+  public GenericResponse<OrderResponseDto> saveOrder(final OrderRequestDto orderRequestDto) {
     try {
       final Order orderInfo = this.orderFieldsMapper.sourceToDestination(orderRequestDto);
-      orderInfo.setOrderDate(LocalDateTime.now());
+      orderInfo.setOrderDate(LocalDateTime.now(ZoneId.systemDefault()));
       final GenericResponse<OrderStatusResponseDto> findStatusById =
-          this.orderStatusService.findById(orderRequestDto.getOrderStatus().getId());
-      if (findStatusById.getRpta().equals(-1)) {
+          this.orderStatusService.findById(orderRequestDto
+              .getOrderStatus()
+              .getId());
+      if (findStatusById
+          .getRpta()
+          .equals(-1)) {
         throw new OrderException(OrderErrorMessage.ERROR_RESOURCE_STATUS_NOT_AVAILABLE);
       }
       final Order orderBD = this.orderRepository.save(orderInfo);
-      this.orderDetailService.saveOrderDetails(orderRequestDto.getOrderDetails(), orderBD.getId(), token);
+      this.orderDetailService.saveOrderDetails(orderRequestDto.getOrderDetails(), orderBD.getId());
       final OrderResponseDto orderResponseDto = this.orderFieldsMapper.destinationToSource(orderBD);
       return new GenericResponse<>(GenericResponseConstants.RPTA_OK, GenericResponseConstants.CORRECT_OPERATION, orderResponseDto);
     } catch (final FeignException.Unauthorized ex1) {
       throw new OrderException(OrderErrorMessage.SERVICE_PRODUCTS_NOT_AUTHORIZED);
     } catch (final FeignException.Forbidden ex2) {
       throw new OrderException(OrderErrorMessage.SERVICE_PRODUCTS_FORBIDDEN);
+    } catch (final FeignException.NotFound notFound) {
+      throw new OrderException(OrderErrorMessage.SERVICE_PRODUCTS_NOT_FOUND);
+    } catch (final FeignException.InternalServerError internalServerError) {
+      throw new OrderException(OrderErrorMessage.SERVICE_PRODUCTS_ENDPOINT_ERROR);
     } catch (final FeignException e) {
       throw new OrderException(OrderErrorMessage.SERVICE_PRODUCTS_NOT_AVAILABLE);
     } catch (final OrderException ex) {
@@ -71,7 +80,8 @@ public class OrderServiceImpl implements OrderService {
 
   public GenericResponse<OrderResponseDto> getOrderById(final Long orderId) {
     final Optional<Order> order = this.orderRepository.findById(Math.toIntExact(orderId));
-    return order.map(
+    return order
+        .map(
             value -> GenericUtils.buildGenericResponseSuccess(StringUtils.EMPTY, this.orderFieldsMapper.destinationToSource(value)))
         .orElseGet(() -> GenericUtils.buildGenericResponseError(StringUtils.EMPTY, null));
   }
