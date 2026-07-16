@@ -55,6 +55,16 @@ public class OrderServiceImpl implements OrderService {
       }
       final Order orderBD = this.orderRepository.save(orderInfo);
       this.orderDetailService.saveOrderDetails(orderRequestDto.getOrderDetails(), orderBD.getId());
+      orderBD
+          .getOrderStatus()
+          .setStatusName(findStatusById
+              .getBody()
+              .getStatusName());
+      orderBD
+          .getOrderStatus()
+          .setIsActive(findStatusById
+              .getBody()
+              .getIsActive());
       final OrderResponseDto orderResponseDto = this.orderFieldsMapper.destinationToSource(orderBD);
       return new GenericResponse<>(GenericResponseConstants.RPTA_OK, GenericResponseConstants.CORRECT_OPERATION, orderResponseDto);
     } catch (final FeignException.Unauthorized ex1) {
