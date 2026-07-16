@@ -36,7 +36,17 @@
 
       <ng-template pTemplate="end">
         <div class="flex align-items-center gap-2">
-          <span class="text-sm font-semibold text-color-secondary mr-2">{{ username }}</span>
+          <p-button
+            label="Mis Compras"
+            icon="pi pi-shopping-bag"
+            [text]="true"
+            routerLink="/my-orders"
+            severity="secondary"
+            [badge]="ordersCount > 0 ? ordersCount.toString() : undefined"
+            badgeClass="p-badge-info"
+          ></p-button>
+
+          <span class="text-sm font-semibold text-color-secondary mx-2">{{ username }}</span>
           <p-button
             icon="pi pi-sign-out"
             [rounded]="true"

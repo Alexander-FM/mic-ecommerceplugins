@@ -9,13 +9,8 @@
         <ng-template pTemplate="header">
           <div class="cart-header">
             <h3>Productos</h3>
-            <p-button
-              label="Vaciar carrito"
-              icon="pi pi-trash"
-              severity="danger"
-              [outlined]="true"
-              (onClick)="clearCart()"
-            ></p-button>
+            <p-button label="Vaciar carrito" icon="pi pi-trash" severity="danger" [outlined]="true"
+              (onClick)="clearCart()"></p-button>
           </div>
         </ng-template>
 
@@ -48,32 +43,17 @@
                 <span class="price">${{ item.product.price | number:'1.2-2' }}</span>
               </td>
               <td class="quantity-cell" style="width: 130px;">
-                <p-inputNumber
-                  styleClass="cart-qty-input"
-                  inputStyleClass="cart-qty-input-field"
-                  [(ngModel)]="item.quantity"
-                  [showButtons]="true"
-                  buttonLayout="horizontal"
-                  [min]="1"
-                  [max]="item.product.stock"
-                  (onInput)="updateQuantity(item.product.id, item.quantity)"
-                  incrementButtonIcon="pi pi-plus"
-                  decrementButtonIcon="pi pi-minus"
-                ></p-inputNumber>
+                <p-inputNumber styleClass="cart-qty-input" inputStyleClass="cart-qty-input-field"
+                  [(ngModel)]="item.quantity" [showButtons]="true" buttonLayout="horizontal" [min]="1"
+                  [max]="item.product.stock" (onInput)="updateQuantity(item.product.id, item.quantity)"
+                  incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"></p-inputNumber>
               </td>
               <td class="total-cell" style="width: 140px;">
                 <span class="item-total">${{ getItemTotal(item) | number:'1.2-2' }}</span>
               </td>
               <td>
-                <p-button
-                  icon="pi pi-trash"
-                  severity="danger"
-                  [text]="true"
-                  [rounded]="true"
-                  (onClick)="removeItem(item.product.id)"
-                  pTooltip="Eliminar"
-                  tooltipPosition="top"
-                ></p-button>
+                <p-button icon="pi pi-trash" severity="danger" [text]="true" [rounded]="true"
+                  (onClick)="removeItem(item.product.id)" pTooltip="Eliminar" tooltipPosition="top"></p-button>
               </td>
             </tr>
           </ng-template>
@@ -106,20 +86,10 @@
 
         <ng-template pTemplate="footer">
           <div class="summary-actions">
-            <p-button
-              label="Continuar comprando"
-              icon="pi pi-arrow-left"
-              [outlined]="true"
-              (onClick)="continueShopping()"
-            ></p-button>
-            <p-button
-              label="Proceder al pago"
-              icon="pi pi-check"
-              severity="success"
-              (onClick)="checkout()"
-              [loading]="isProcessing"
-              [disabled]="isProcessing"
-            ></p-button>
+            <p-button label="Continuar comprando" icon="pi pi-arrow-left" [outlined]="true"
+              (onClick)="continueShopping()"></p-button>
+            <p-button label="Procesar compra" icon="pi pi-check" severity="success" (onClick)="checkout()"
+              [loading]="isProcessing" [disabled]="isProcessing"></p-button>
           </div>
         </ng-template>
       </p-card>
@@ -132,11 +102,7 @@
         <i class="pi pi-shopping-cart" style="font-size: 5rem; color: #ccc;"></i>
         <h3>Tu carrito está vacío</h3>
         <p>Agrega productos a tu carrito para continuar con tu compra</p>
-        <p-button
-          label="Ir a productos"
-          icon="pi pi-shopping-bag"
-          (onClick)="continueShopping()"
-        ></p-button>
+        <p-button label="Ir a productos" icon="pi pi-shopping-bag" (onClick)="continueShopping()"></p-button>
       </div>
     </p-card>
   </div>

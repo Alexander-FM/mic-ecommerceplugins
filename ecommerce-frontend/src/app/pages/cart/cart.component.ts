@@ -147,6 +147,7 @@ export class CartComponent implements OnInit {
             summary: 'Compra exitosa',
             detail: response.message || 'La orden se ha creado correctamente'
           });
+          this.orderService.notifyOrderCreated();
           this.cartService.clearCart();
           this.router.navigate([`/orders/${response.body.id}`]);
         } else {

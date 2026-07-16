@@ -10,6 +10,7 @@ import { MenuItem, MessageService } from 'primeng/api';
 import { CategoryService } from './services/category.service';
 import { CartService } from './services/cart.service';
 import { AuthService } from './services/auth.service';
+import { OrderService } from './services/order.service';
 import { Category } from './models/ecommerce.models';
 
 @Component({
@@ -35,6 +36,7 @@ export class AppComponent implements OnInit {
   username = 'Usuario';
   isAdmin = false;
   cartItemCount = 0;
+  ordersCount = 0;
   menuItems: MenuItem[] = [];
 
   constructor(
@@ -42,7 +44,8 @@ export class AppComponent implements OnInit {
     private cartService: CartService,
     private authService: AuthService,
     private router: Router,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private orderService: OrderService
   ) {}
 
   ngOnInit(): void {
@@ -57,13 +60,39 @@ export class AppComponent implements OnInit {
         console.log('🔐 isAdmin:', this.isAdmin);
         this.loadCategories();
         this.loadCartCount();
+        this.loadOrdersCount();
       } else {
         console.log('❌ Usuario no autenticado, ocultando menú...');
         this.showMenu = false;
         this.menuItems = [];
         this.cartItemCount = 0;
+        this.ordersCount = 0;
         this.isAdmin = false;
       }
+    });
+  }
+
+  loadOrdersCount(): void {
+    const authState = this.authService.getAuthState();
+    if (!authState.isAuthenticated || !authState.user) return;
+    
+    const customerId = Number(authState.user['id'] || authState.user['userId'] || authState.user.sub) || 1;
+    
+    const fetchOrders = () => {
+      this.orderService.getOrdersByCustomer(customerId).subscribe({
+        next: (response) => {
+          if (response.rpta === 1 && response.body) {
+            this.ordersCount = response.body.length;
+          }
+        },
+        error: (err) => console.error('Error loading orders count', err)
+      });
+    };
+
+    fetchOrders();
+
+    this.orderService.ordersUpdated$.subscribe(() => {
+      fetchOrders();
     });
   }
 
