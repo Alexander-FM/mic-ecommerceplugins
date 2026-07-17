@@ -1,0 +1,52 @@
+package com.codecorecix.ecommerce.maintenance.customer.api.dto.response;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.Date;
+
+import com.codecorecix.ecommerce.maintenance.user.api.dto.response.UserResponseDto;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+@EqualsAndHashCode(callSuper = false)
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class CustomerResponseDto implements Serializable {
+
+  private Integer id;
+
+  private String name;
+
+  private String lastName;
+
+  private String gender;
+
+  private Date birthdate;
+
+  private String email;
+
+  private String phoneNumberOne;
+
+  private String phoneNumberTwo;
+
+  private String phoneNumberThree;
+
+  private String addressName;
+
+  private Boolean isActive;
+
+  private String userRegistration;
+
+  private LocalDateTime registrationDate;
+
+  private String userModification;
+
+  private LocalDateTime modificationDate;
+
+  private UserResponseDto userResponseDto;
+
+}
