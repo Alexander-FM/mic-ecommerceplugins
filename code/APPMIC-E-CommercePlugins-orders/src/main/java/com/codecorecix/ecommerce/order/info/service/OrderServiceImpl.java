@@ -1,21 +1,14 @@
 package com.codecorecix.ecommerce.order.info.service;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 import com.codecorecix.ecommerce.event.clients.MaintenanceClientRest;
 import com.codecorecix.ecommerce.event.entities.Order;
 import com.codecorecix.ecommerce.event.entities.OrderDetail;
+import com.codecorecix.ecommerce.event.entities.OrderStatus;
 import com.codecorecix.ecommerce.event.models.ProductInfo;
 import com.codecorecix.ecommerce.exceptions.OrderException;
 import com.codecorecix.ecommerce.order.info.api.dto.request.OrderDetailRequestDto;
 import com.codecorecix.ecommerce.order.info.api.dto.request.OrderRequestDto;
+import com.codecorecix.ecommerce.order.info.api.dto.request.OrderStatusUpdateRequestDto;
 import com.codecorecix.ecommerce.order.info.api.dto.response.OrderResponseDto;
 import com.codecorecix.ecommerce.order.info.mapper.OrderDetailFieldsMapper;
 import com.codecorecix.ecommerce.order.info.mapper.OrderFieldsMapper;
@@ -27,12 +20,17 @@ import com.codecorecix.ecommerce.utils.GenericResponse;
 import com.codecorecix.ecommerce.utils.GenericResponseConstants;
 import com.codecorecix.ecommerce.utils.GenericUtils;
 import com.codecorecix.ecommerce.utils.OrderErrorMessage;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -40,43 +38,42 @@ import org.springframework.transaction.annotation.Transactional;
 public class OrderServiceImpl implements OrderService {
 
   private final OrderRepository orderRepository;
-
   private final OrderFieldsMapper orderFieldsMapper;
-
   private final OrderStatusService orderStatusService;
-
   private final MaintenanceClientRest maintenanceClientRest;
-
   private final OrderDetailRepository orderDetailRepository;
-
   private final OrderDetailFieldsMapper orderDetailFieldsMapper;
+
+  private static final Map<Integer, Set<Integer>> validTransitions = new HashMap<>();
+
+  static {
+    validTransitions.put(1, Set.of(2, 6)); // Pendiente -> Recepcionado, Cancelado
+    validTransitions.put(2, Set.of(3, 6)); // Recepcionado -> Preparando pedido, Cancelado
+    validTransitions.put(3, Set.of(4, 6)); // Preparando pedido -> En camino, Cancelado
+    validTransitions.put(4, Set.of(5));    // En camino -> Entregado
+    validTransitions.put(5, Collections.emptySet()); // Entregado -> (Estado final)
+    validTransitions.put(6, Collections.emptySet()); // Cancelado -> (Estado final)
+  }
 
   @Override
   @Transactional
   public GenericResponse<OrderResponseDto> saveOrder(final OrderRequestDto orderRequestDto) {
-    List<Integer> productIds = orderRequestDto
-        .getOrderDetails()
+    List<Integer> productIds = orderRequestDto.getOrderDetails()
         .stream()
         .map(OrderDetailRequestDto::getProductId)
         .toList();
 
     GenericResponse<List<ProductInfo>> response = this.maintenanceClientRest.checkProducts(productIds);
 
-    if (response.getBody() == null || response
-        .getBody()
-        .isEmpty()) {
+    if (response.getBody() == null || response.getBody().isEmpty()) {
       throw new OrderException(OrderErrorMessage.SERVICE_PRODUCTS_NOT_AVAILABLE);
     }
 
-    if (response
-        .getBody()
-        .size() != productIds.size()) {
+    if (response.getBody().size() != productIds.size()) {
       throw new OrderException(OrderErrorMessage.INCONSISTENT_PRODUCT_DATA);
     }
 
-    String productsOutOfStock = response
-        .getBody()
-        .stream()
+    String productsOutOfStock = response.getBody().stream()
         .filter(p -> p.getStock() <= 0)
         .map(ProductInfo::getName)
         .collect(Collectors.joining(", "));
@@ -85,32 +82,24 @@ public class OrderServiceImpl implements OrderService {
       throw new OrderException(OrderErrorMessage.PRODUCTS_OUT_OF_STOCK, productsOutOfStock);
     }
 
-    final Map<Integer, ProductInfo> productInfoMap = response
-        .getBody()
-        .stream()
+    Map<Integer, ProductInfo> productInfoMap = response.getBody().stream()
         .collect(Collectors.toMap(ProductInfo::getId, Function.identity()));
 
-    orderRequestDto
-        .getOrderDetails()
-        .forEach(detail -> {
-          ProductInfo productInfo = productInfoMap.get(detail.getProductId());
-          if (productInfo != null) {
-            detail.setProductName(productInfo.getName());
-            detail.setProductImageUrl(productInfo.getMainImageUrl());
-          }
-        });
+    orderRequestDto.getOrderDetails().forEach(detail -> {
+      ProductInfo productInfo = productInfoMap.get(detail.getProductId());
+      if (productInfo != null) {
+        detail.setProductName(productInfo.getName());
+        detail.setProductImageUrl(productInfo.getMainImageUrl());
+      }
+    });
 
     final Order orderInfo = this.orderFieldsMapper.sourceToDestination(orderRequestDto);
     orderInfo.setOrderDate(LocalDateTime.now(ZoneId.systemDefault()));
 
     final GenericResponse<OrderStatusResponseDto> findStatusById =
-        this.orderStatusService.findById(orderRequestDto
-            .getOrderStatus()
-            .getId());
+        this.orderStatusService.findById(orderRequestDto.getOrderStatus().getId());
 
-    if (findStatusById
-        .getRpta()
-        .equals(-1)) {
+    if (findStatusById.getRpta().equals(-1)) {
       throw new OrderException(OrderErrorMessage.ERROR_RESOURCE_STATUS_NOT_AVAILABLE);
     }
 
@@ -123,16 +112,8 @@ public class OrderServiceImpl implements OrderService {
     }
     this.orderDetailRepository.saveAll(orderDetails);
 
-    orderBD
-        .getOrderStatus()
-        .setStatusName(findStatusById
-            .getBody()
-            .getStatusName());
-    orderBD
-        .getOrderStatus()
-        .setIsActive(findStatusById
-            .getBody()
-            .getIsActive());
+    orderBD.getOrderStatus().setStatusName(findStatusById.getBody().getStatusName());
+    orderBD.getOrderStatus().setIsActive(findStatusById.getBody().getIsActive());
 
     final OrderResponseDto orderResponseDto = this.orderFieldsMapper.destinationToSource(orderBD);
     return new GenericResponse<>(GenericResponseConstants.RPTA_OK, GenericResponseConstants.CORRECT_OPERATION, orderResponseDto);
@@ -157,5 +138,32 @@ public class OrderServiceImpl implements OrderService {
     final List<Order> orders = this.orderRepository.findByCustomerId(customerId);
     return new GenericResponse<>(GenericResponseConstants.RPTA_OK, GenericResponseConstants.CORRECT_OPERATION,
         this.orderFieldsMapper.toDto(orders));
+  }
+
+  @Override
+  @Transactional
+  public GenericResponse<OrderResponseDto> updateOrderStatus(Long orderId, OrderStatusUpdateRequestDto requestDto) {
+    Order order = orderRepository.findById(Math.toIntExact(orderId))
+        .orElseThrow(() -> new OrderException(OrderErrorMessage.ERROR_RESOURCE_ORDER_NOT_AVAILABLE));
+
+    Integer currentStatusId = order.getOrderStatus().getId();
+    Integer newStatusId = requestDto.getNewStatusId();
+
+    Set<Integer> allowedNextStates = validTransitions.getOrDefault(currentStatusId, Collections.emptySet());
+
+    if (!allowedNextStates.contains(newStatusId)) {
+      String currentStatusName = orderStatusService.findById(currentStatusId).getBody().getStatusName();
+      String newStatusName = orderStatusService.findById(newStatusId).getBody().getStatusName();
+      throw new OrderException(OrderErrorMessage.INVALID_STATUS_TRANSITION, currentStatusName, newStatusName);
+    }
+
+    OrderStatus newOrderStatus = new OrderStatus();
+    newOrderStatus.setId(newStatusId);
+    order.setOrderStatus(newOrderStatus);
+
+    Order updatedOrder = orderRepository.save(order);
+
+    return new GenericResponse<>(GenericResponseConstants.RPTA_OK, GenericResponseConstants.CORRECT_OPERATION,
+        orderFieldsMapper.destinationToSource(updatedOrder));
   }
 }

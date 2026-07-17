@@ -2,6 +2,7 @@ package com.codecorecix.ecommerce.order.info.controller;
 
 import com.codecorecix.ecommerce.exception.GenericUnprocessableEntityException;
 import com.codecorecix.ecommerce.order.info.api.dto.request.OrderRequestDto;
+import com.codecorecix.ecommerce.order.info.api.dto.request.OrderStatusUpdateRequestDto;
 import com.codecorecix.ecommerce.order.info.api.dto.response.OrderResponseDto;
 import com.codecorecix.ecommerce.order.info.service.OrderService;
 import com.codecorecix.ecommerce.order.info.utils.OrderConstants;
@@ -68,5 +69,12 @@ public class OrderController {
     return ResponseEntity
         .status(HttpStatus.OK)
         .body(this.service.getOrdersByCustomerId(customerId));
+  }
+
+  @PatchMapping("/{orderId}/status")
+  public ResponseEntity<GenericResponse<OrderResponseDto>> updateOrderStatus(@PathVariable final Long orderId, @RequestBody final OrderStatusUpdateRequestDto requestDto) {
+    return ResponseEntity
+        .status(HttpStatus.OK)
+        .body(this.service.updateOrderStatus(orderId, requestDto));
   }
 }

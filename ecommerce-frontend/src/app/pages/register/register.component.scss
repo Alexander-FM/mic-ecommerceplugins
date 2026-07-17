@@ -1,71 +1,471 @@
-.register-container {
+/* ============================================
+   VARIABLES GLOBALES
+   ============================================ */
+:host {
+  --bg-1: #0a0f1c;
+  --bg-2: #121b33;
+  --accent: #2563eb;
+  --accent-light: #3b82f6;
+  --accent-dark: #1d4ed8;
+  --text-primary: #ffffff;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --border: rgba(255, 255, 255, 0.1);
+  --border-light: rgba(255, 255, 255, 0.2);
+  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 20px 40px -5px rgba(0, 0, 0, 0.5);
+}
+
+/* ============================================
+   CONTENEDOR PRINCIPAL
+   ============================================ */
+.register-shell {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem 1rem;
-  background: linear-gradient(135deg, #eef2ff 0%, #f8fafc 100%);
+  padding: 2rem;
+  background: radial-gradient(circle at 15% 50%, rgba(37, 99, 235, 0.08), transparent 25%),
+              radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.08), transparent 25%),
+              linear-gradient(135deg, var(--bg-1), #050811);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: var(--text-primary);
+  overflow-x: hidden;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMDMiLz4KPC9zdmc+') repeat;
+    opacity: 0.4;
+    pointer-events: none;
+    z-index: 0;
+  }
 }
 
 .register-card {
-  width: min(1100px, 100%);
-  padding: 1.5rem;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  width: 100%;
+  max-width: 1100px;
+  min-height: 700px;
+  background: rgba(15, 25, 55, 0.45);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.text-center {
-  text-align: center;
-  margin-bottom: 1.5rem;
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.title {
-  margin: 0;
-  font-size: 2rem;
-  color: #1e293b;
-}
-
-.subtitle {
-  margin: 0.5rem 0 0;
-  color: #64748b;
-}
-
-.form-section {
+/* ============================================
+   PANEL IZQUIERDO (BRANDING)
+   ============================================ */
+.brand-panel {
+  flex: 0 0 42%;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(15, 25, 55, 0.2));
+  border-right: 1px solid var(--border);
+  padding: 3.5rem 3rem;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
 
-  input,
-  p-select {
-    width: 100%;
+  &::before {
+    content: '';
+    position: absolute;
+    top: -20%; left: -20%;
+    width: 60%; height: 60%;
+    background: radial-gradient(circle, rgba(37, 99, 235, 0.2), transparent 70%);
+    filter: blur(60px);
+    z-index: 0;
+  }
+}
+
+.brand-content {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-copy {
+  font-size: 2.8rem;
+  line-height: 1.1;
+  font-weight: 800;
+  margin: 0 0 1rem;
+  background: linear-gradient(to right, #fff, #94a3b8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -1px;
+}
+
+.brand-description {
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+  line-height: 1.5;
+  margin-bottom: 3rem;
+  max-width: 90%;
+}
+
+.feature-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  flex: 1;
+}
+
+.feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+  padding: 1.25rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.1);
+    transform: translateX(5px);
   }
 
-  h3 {
-    margin: 0 0 0.25rem;
-    color: #334155;
+  .feature-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    background: rgba(37, 99, 235, 0.15);
+    border: 1px solid rgba(37, 99, 235, 0.3);
+    border-radius: 12px;
+    color: var(--accent-light);
+    font-size: 1.25rem;
+    flex-shrink: 0;
   }
+
+  .feature-text {
+    h3 {
+      margin: 0 0 0.25rem;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+    }
+    p {
+      margin: 0;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+  }
+}
+
+.legal-box {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-top: 2rem;
+  
+  i {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    
+    a {
+      color: var(--accent-light);
+      text-decoration: none;
+      transition: color 0.2s;
+      
+      &:hover {
+        color: #fff;
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+/* ============================================
+   PANEL DERECHO (FORMULARIO)
+   ============================================ */
+.form-panel {
+  flex: 1;
+  padding: 3.5rem 4rem;
+  display: flex;
+  flex-direction: column;
+  background: rgba(10, 15, 30, 0.3);
+  overflow-y: auto;
+}
+
+.form-content {
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.form-header {
+  margin-bottom: 2.5rem;
+  text-align: center;
+
+  .user-icon-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    background: rgba(37, 99, 235, 0.1);
+    border: 1px solid rgba(37, 99, 235, 0.2);
+    border-radius: 20px;
+    color: var(--accent-light);
+    margin-bottom: 1.25rem;
+    box-shadow: 0 0 20px rgba(37, 99, 235, 0.2);
+  }
+
+  .form-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 0.5rem;
+  }
+
+  .form-subtitle {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin: 0;
+  }
+}
+
+/* ============================================
+   INPUTS Y CAMPOS
+   ============================================ */
+.field {
+  margin-bottom: 1.5rem !important;
 
   label {
+    display: block;
+    color: var(--text-secondary);
     font-size: 0.85rem;
-    color: #475569;
-  }
-
-}
-
-.register-tabs {
-  margin-top: 1rem;
-
-  :host ::ng-deep .p-tabview-panels {
-    padding: 1.5rem 0 0;
-  }
-
-  :host ::ng-deep .p-tabview-nav {
-    justify-content: space-between;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
   }
 }
 
-.actions {
-  margin-top: 1.5rem;
+.input-wrapper {
+  position: relative;
   display: flex;
-  gap: 0.75rem;
-  justify-content: flex-end;
-  flex-wrap: wrap;
+  align-items: center;
+  width: 100%;
+
+  i {
+    position: absolute;
+    left: 1.2rem;
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    z-index: 2;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+  }
+
+  &:focus-within i {
+    opacity: 1;
+    color: var(--accent-light);
+  }
+
+  input, .p-inputtext, .p-calendar {
+    padding-left: 3rem !important;
+  }
+}
+
+.form-actions {
+  display: flex;
+  align-items: center;
+  margin-top: 2.5rem;
+
+  &.single-next {
+    justify-content: flex-end;
+  }
+  
+  &.row-actions {
+    justify-content: space-between;
+    width: 100%;
+  }
+}
+
+/* ============================================
+   SOBRESCRITURAS DE PRIMENG (Globales e Inputs)
+   ============================================ */
+::ng-deep {
+
+  /* Inputs Generales */
+  .p-inputtext,
+  .p-select,
+  .p-calendar .p-inputtext {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.25) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-radius: 12px !important;
+    color: var(--text-primary) !important;
+    padding: 0.85rem 1rem;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    height: 50px;
+    font-size: 0.95rem;
+
+    &:hover {
+      border-color: rgba(255, 255, 255, 0.25) !important;
+      background: rgba(0, 0, 0, 0.3) !important;
+    }
+
+    &:focus,
+    &.p-focus,
+    &:focus-within {
+      background: rgba(0, 0, 0, 0.4) !important;
+      border-color: var(--accent-light) !important;
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25) !important;
+    }
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.35) !important;
+    }
+  }
+
+  /* PrimeNG Select Panel Fixes */
+  .p-select-label {
+    padding: 0 !important;
+    display: flex;
+    align-items: center;
+  }
+  .p-select-dropdown {
+    color: var(--text-muted) !important;
+  }
+  .p-select-panel {
+    background: #0d1e42 !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 12px !important;
+    box-shadow: var(--shadow-lg) !important;
+
+    .p-select-option {
+      color: var(--text-primary) !important;
+      background: transparent !important;
+      padding: 0.75rem 1rem !important;
+
+      &:not(.p-select-option-selected):not(.p-disabled):hover {
+        background: rgba(255, 255, 255, 0.08) !important;
+      }
+
+      &.p-select-option-selected {
+        background: var(--accent) !important;
+      }
+    }
+  }
+
+  /* Botones Generales */
+  .p-button {
+    padding: 0.85rem 1.75rem;
+    font-weight: 600;
+    border-radius: 12px;
+    border: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.95rem;
+  }
+
+  .next-btn .p-button,
+  .register-btn .p-button {
+    background: linear-gradient(135deg, var(--accent), var(--accent-light)) !important;
+    color: white !important;
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+
+    &:hover:not(:disabled) {
+      background: linear-gradient(135deg, var(--accent-light), #60a5fa) !important;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+    }
+  }
+
+  .back-btn .p-button,
+  .cancel-btn .p-button {
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+
+    &:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.1) !important;
+      border-color: rgba(255, 255, 255, 0.3) !important;
+      transform: translateY(-2px);
+    }
+  }
+
+  /* ============================================
+     CSS GRID PARA FORMULARIO
+     ============================================ */
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+    align-items: start;
+    
+    .field {
+      margin-bottom: 0 !important;
+    }
+  }
+
+  .full-width {
+    grid-column: 1 / -1;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateX(15px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media screen and (max-width: 992px) {
+  .brand-panel {
+    display: none;
+  }
+  
+  .register-card {
+    max-width: 550px;
+  }
+  
+  .form-panel {
+    padding: 3rem 2rem;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  ::ng-deep .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .register-shell {
+    padding: 1rem;
+  }
+  
+  .form-panel {
+    padding: 2rem 1.5rem;
+  }
 }

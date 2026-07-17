@@ -1,104 +1,240 @@
-<div class="register-container">
+<div class="register-shell">
   <p-toast></p-toast>
+  <div class="register-card">
 
-  <p-card class="register-card">
-    <div class="text-center">
-      <h1 class="title">Crear cuenta</h1>
-      <p class="subtitle">Completa tus datos para registrarte</p>
+    <!-- PANEL IZQUIERDO: BRANDING -->
+    <div class="brand-panel">
+      <div class="brand-content">
+        <h1 class="brand-copy">Crea tu cuenta<br>en minutos</h1>
+        <p class="brand-description">Únete a nuestra comunidad y disfruta de una experiencia de compra única.</p>
+
+        <div class="feature-cards">
+          <div class="feature-item">
+            <div class="feature-icon"><i class="pi pi-shield"></i></div>
+            <div class="feature-text">
+              <h3>Seguridad garantizada</h3>
+              <p>Tu información está protegida</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon"><i class="pi pi-gift"></i></div>
+            <div class="feature-text">
+              <h3>Beneficios exclusivos</h3>
+              <p>Accede a ofertas y promociones especiales</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon"><i class="pi pi-bolt"></i></div>
+            <div class="feature-text">
+              <h3>Proceso rápido</h3>
+              <p>Registro sencillo y en pocos pasos</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="legal-box">
+          <i class="pi pi-lock"></i>
+          <p>Al registrarte aceptas nuestros <a href="#">términos y políticas</a>.</p>
+        </div>
+      </div>
     </div>
 
-    <p-tabView class="register-tabs">
-      <p-tabPanel header="Credenciales">
-        <div class="form-section">
-          <label>Usuario *</label>
-          <input pInputText [(ngModel)]="form.username" placeholder="Usuario" />
-
-          <label>Contrasena *</label>
-          <input pInputText type="password" [(ngModel)]="form.password" placeholder="Contrasena" />
+    <!-- PANEL DERECHO: FORMULARIO -->
+    <div class="form-panel">
+      <div class="form-content">
+        <div class="form-header">
+          <div class="user-icon-wrapper">
+            <i class="pi pi-user text-2xl"></i>
+          </div>
+          <h2 class="form-title">Crear cuenta</h2>
+          <p class="form-subtitle">Completa tus datos para registrarte</p>
         </div>
-      </p-tabPanel>
 
-      <p-tabPanel header="Datos personales">
-        <div class="form-section">
-          <label>Nombres *</label>
-          <input pInputText [(ngModel)]="form.name" placeholder="Nombres" />
+        <!-- NEW PRIMENG 20 STEPPER -->
+        <p-stepper [(value)]="activeStep" class="modern-stepper">
+          <p-step-list>
+            <p-step [value]="1">Credenciales <i class="pi pi-key ml-2"></i></p-step>
+            <p-step [value]="2">Personales <i class="pi pi-id-card ml-2"></i></p-step>
+            <p-step [value]="3">Contacto <i class="pi pi-phone ml-2"></i></p-step>
+            <p-step [value]="4">Dirección <i class="pi pi-map-marker ml-2"></i></p-step>
+          </p-step-list>
 
-          <label>Apellidos *</label>
-          <input pInputText [(ngModel)]="form.lastName" placeholder="Apellidos" />
+          <p-step-panels>
+            <!-- PASO 1 -->
+            <p-step-panel [value]="1">
+              <ng-template #content>
+                <div class="step-content form-grid">
+                  <div class="field full-width">
+                    <label>Usuario *</label>
+                    <div class="input-wrapper">
+                      <i class="pi pi-user"></i>
+                      <input pInputText [(ngModel)]="form.username" placeholder="Elige un usuario" />
+                    </div>
+                  </div>
+                  <div class="field full-width">
+                    <label>Contraseña *</label>
+                    <div class="input-wrapper">
+                      <i class="pi pi-lock"></i>
+                      <input pInputText type="password" [(ngModel)]="form.password"
+                        placeholder="Tu contraseña segura" />
+                    </div>
+                  </div>
 
-          <label>Genero</label>
-          <p-select
-            [options]="genderOptions"
-            [(ngModel)]="form.gender"
-            optionLabel="label"
-            optionValue="value"
-            placeholder="Selecciona genero"
-          ></p-select>
+                  <div class="form-actions single-next mt-4 full-width">
+                    <p-button label="Siguiente" icon="pi pi-arrow-right" iconPos="right" (onClick)="activeStep = 2"
+                      styleClass="next-btn"></p-button>
+                  </div>
+                </div>
+              </ng-template>
+            </p-step-panel>
 
-          <label>Fecha de nacimiento</label>
-          <input pInputText type="date" [(ngModel)]="form.birthdate" />
+            <!-- PASO 2 -->
+            <p-step-panel [value]="2">
+              <ng-template #content>
+                <div class="step-content form-grid">
+                  <div class="field">
+                    <label>Nombres *</label>
+                    <div class="input-wrapper">
+                      <i class="pi pi-id-card"></i>
+                      <input pInputText [(ngModel)]="form.name" placeholder="Ingresa tus nombres" />
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label>Apellidos *</label>
+                    <div class="input-wrapper">
+                      <i class="pi pi-id-card"></i>
+                      <input pInputText [(ngModel)]="form.lastName" placeholder="Ingresa tus apellidos" />
+                    </div>
+                  </div>
 
-          <label>Email *</label>
-          <input pInputText type="email" [(ngModel)]="form.email" placeholder="email@dominio.com" />
-        </div>
-      </p-tabPanel>
+                  <div class="field">
+                    <label>Género</label>
+                    <p-select [options]="genderOptions" [(ngModel)]="form.gender" optionLabel="label"
+                      optionValue="value" placeholder="Selecciona" styleClass="w-full"></p-select>
+                  </div>
+                  <div class="field">
+                    <label>Fecha de nacimiento</label>
+                    <div class="input-wrapper">
+                      <input pInputText type="date" [(ngModel)]="form.birthdate" class="w-full px-3" />
+                    </div>
+                  </div>
 
-      <p-tabPanel header="Contacto">
-        <div class="form-section">
-          <label>Telefono principal</label>
-          <input pInputText [(ngModel)]="form.phoneNumberOne" placeholder="Telefono" />
+                  <div class="field full-width">
+                    <label>Email *</label>
+                    <div class="input-wrapper">
+                      <i class="pi pi-envelope"></i>
+                      <input pInputText type="email" [(ngModel)]="form.email" placeholder="correo@ejemplo.com" />
+                    </div>
+                  </div>
 
-          <label>Telefono secundario</label>
-          <input pInputText [(ngModel)]="form.phoneNumberTwo" placeholder="Telefono" />
+                  <div class="form-actions row-actions mt-4 full-width">
+                    <p-button label="Anterior" icon="pi pi-arrow-left" (onClick)="activeStep = 1"
+                      styleClass="back-btn p-button-outlined"></p-button>
+                    <p-button label="Siguiente" icon="pi pi-arrow-right" iconPos="right" (onClick)="activeStep = 3"
+                      styleClass="next-btn"></p-button>
+                  </div>
+                </div>
+              </ng-template>
+            </p-step-panel>
 
-          <label>Telefono alterno</label>
-          <input pInputText [(ngModel)]="form.phoneNumberThree" placeholder="Telefono" />
-        </div>
-      </p-tabPanel>
+            <!-- PASO 3 -->
+            <p-step-panel [value]="3">
+              <ng-template #content>
+                <div class="step-content form-grid">
+                  <div class="field">
+                    <label>Teléfono principal</label>
+                    <div class="input-wrapper">
+                      <i class="pi pi-mobile"></i>
+                      <input pInputText [(ngModel)]="form.phoneNumberOne" placeholder="Celular primario" />
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label>Teléfono secundario</label>
+                    <div class="input-wrapper">
+                      <i class="pi pi-phone"></i>
+                      <input pInputText [(ngModel)]="form.phoneNumberTwo" placeholder="Celular o fijo" />
+                    </div>
+                  </div>
+                  <div class="field full-width">
+                    <label>Teléfono alterno</label>
+                    <div class="input-wrapper">
+                      <i class="pi pi-phone"></i>
+                      <input pInputText [(ngModel)]="form.phoneNumberThree" placeholder="Opcional" />
+                    </div>
+                  </div>
 
-      <p-tabPanel header="Direccion">
-        <div class="form-section">
-          <label>Tipo</label>
-          <input pInputText [(ngModel)]="form.addressType" placeholder="Home" />
+                  <div class="form-actions row-actions mt-4 full-width">
+                    <p-button label="Anterior" icon="pi pi-arrow-left" (onClick)="activeStep = 2"
+                      styleClass="back-btn p-button-outlined"></p-button>
+                    <p-button label="Siguiente" icon="pi pi-arrow-right" iconPos="right" (onClick)="activeStep = 4"
+                      styleClass="next-btn"></p-button>
+                  </div>
+                </div>
+              </ng-template>
+            </p-step-panel>
 
-          <label>Direccion</label>
-          <input pInputText [(ngModel)]="form.addressName" placeholder="Calle" />
+            <!-- PASO 4 -->
+            <p-step-panel [value]="4">
+              <ng-template #content>
+                <div class="step-content form-grid">
+                  <div class="field">
+                    <label>Tipo</label>
+                    <input pInputText [(ngModel)]="form.addressType" placeholder="Casa, Trabajo..." class="w-full" />
+                  </div>
+                  <div class="field">
+                    <label>Número</label>
+                    <input pInputText [(ngModel)]="form.residenceNumber" placeholder="123" class="w-full" />
+                  </div>
 
-          <label>Numero</label>
-          <input pInputText [(ngModel)]="form.residenceNumber" placeholder="Numero" />
+                  <div class="field">
+                    <label>Departamento/Region</label>
+                    <input pInputText [(ngModel)]="form.department" placeholder="Lambayeque" class="w-full" />
+                  </div>
+                  <div class="field">
+                    <label>Provincia</label>
+                    <input pInputText [(ngModel)]="form.province" placeholder="Chiclayo" class="w-full" />
+                  </div>
 
-          <label>Departamento</label>
-          <input pInputText [(ngModel)]="form.department" placeholder="Departamento" />
+                  <div class="field">
+                    <label>Distrito</label>
+                    <input pInputText [(ngModel)]="form.district" placeholder="Pimentel" class="w-full" />
+                  </div>
+                  <div class="field">
+                    <label>Código Postal</label>
+                    <input pInputText [(ngModel)]="form.postalCode" placeholder="5001" class="w-full" />
+                  </div>
 
-          <label>Provincia</label>
-          <input pInputText [(ngModel)]="form.province" placeholder="Provincia" />
+                  <div class="field full-width">
+                    <label>Dirección</label>
+                    <div class="input-wrapper">
+                      <i class="pi pi-map"></i>
+                      <input pInputText [(ngModel)]="form.addressName" placeholder="Av. Principal" class="w-full" />
+                    </div>
+                  </div>
+                  <div class="field full-width">
+                    <label>Referencia</label>
+                    <input pInputText [(ngModel)]="form.placeReference" placeholder="Cerca de el colegio San Grabiel..."
+                      class="w-full" />
+                  </div>
 
-          <label>Distrito</label>
-          <input pInputText [(ngModel)]="form.district" placeholder="Distrito" />
+                  <div class="form-actions row-actions mt-4 full-width">
+                    <p-button label="Anterior" icon="pi pi-arrow-left" (onClick)="activeStep = 3"
+                      styleClass="back-btn p-button-outlined"></p-button>
 
-          <label>Referencia</label>
-          <input pInputText [(ngModel)]="form.placeReference" placeholder="Referencia" />
+                    <div class="flex gap-3">
+                      <p-button label="Cancelar" icon="pi pi-times" severity="secondary" [outlined]="true"
+                        (onClick)="cancel()" styleClass="cancel-btn"></p-button>
+                      <p-button label="Registrar" icon="pi pi-user-plus" [loading]="isLoading" [disabled]="isLoading"
+                        (onClick)="submit()" styleClass="register-btn"></p-button>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+            </p-step-panel>
 
-          <label>Codigo postal</label>
-          <input pInputText [(ngModel)]="form.postalCode" placeholder="Codigo postal" />
-        </div>
-      </p-tabPanel>
-    </p-tabView>
-
-    <div class="actions">
-      <p-button
-        label="Registrar"
-        icon="pi pi-user-plus"
-        [loading]="isLoading"
-        [disabled]="isLoading"
-        (onClick)="submit()"
-      ></p-button>
-      <p-button
-        label="Cancelar"
-        severity="secondary"
-        [outlined]="true"
-        (onClick)="cancel()"
-      ></p-button>
+          </p-step-panels>
+        </p-stepper>
+      </div>
     </div>
-  </p-card>
+  </div>
 </div>

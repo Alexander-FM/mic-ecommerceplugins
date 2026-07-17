@@ -8,7 +8,7 @@ import { CardModule } from 'primeng/card';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { SelectModule } from 'primeng/select';
-import { TabViewModule } from 'primeng/tabview';
+import { StepperModule } from 'primeng/stepper';
 import { RegistrationService } from '../../services/registration.service';
 import { Role, UserRequest, CustomerRequest, GenericResponse } from '../../models/ecommerce.models';
 import { catchError, map, of, switchMap } from 'rxjs';
@@ -16,13 +16,14 @@ import { catchError, map, of, switchMap } from 'rxjs';
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, FormsModule, InputTextModule, ButtonModule, CardModule, ToastModule, SelectModule, TabViewModule],
+  imports: [CommonModule, FormsModule, InputTextModule, ButtonModule, CardModule, ToastModule, SelectModule, StepperModule],
   providers: [MessageService],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent {
   isLoading = false;
+  activeStep: number = 1;
 
   form = {
     username: '',

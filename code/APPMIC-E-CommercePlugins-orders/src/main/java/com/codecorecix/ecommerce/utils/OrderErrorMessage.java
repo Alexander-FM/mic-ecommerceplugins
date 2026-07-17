@@ -16,7 +16,8 @@ public enum OrderErrorMessage {
   SERVICE_PRODUCTS_NOT_FOUND(404, "Requested products were not found"),
   SERVICE_PRODUCTS_ENDPOINT_ERROR(500, "Invalid product service endpoint configuration"),
   INCONSISTENT_PRODUCT_DATA(400, "Some products in the request do not exist."),
-  PRODUCTS_OUT_OF_STOCK(400, "The following products are out of stock: %s");
+  PRODUCTS_OUT_OF_STOCK(400, "The following products are out of stock: %s"),
+  INVALID_STATUS_TRANSITION(400, "Invalid status transition from '%s' to '%s'.");
 
   private final Integer errorCode;
 

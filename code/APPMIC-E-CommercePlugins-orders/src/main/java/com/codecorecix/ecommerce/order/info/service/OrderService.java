@@ -1,6 +1,7 @@
 package com.codecorecix.ecommerce.order.info.service;
 
 import com.codecorecix.ecommerce.order.info.api.dto.request.OrderRequestDto;
+import com.codecorecix.ecommerce.order.info.api.dto.request.OrderStatusUpdateRequestDto;
 import com.codecorecix.ecommerce.order.info.api.dto.response.OrderResponseDto;
 import com.codecorecix.ecommerce.utils.GenericResponse;
 
@@ -38,4 +39,13 @@ public interface OrderService {
    * @return a {@link GenericResponse} containing a list of {@link OrderResponseDto}.
    */
   GenericResponse<List<OrderResponseDto>> getOrdersByCustomerId(final Integer customerId);
+
+  /**
+   * Method used to update the order status.
+   *
+   * @param orderId the order id.
+   * @param requestDto the request dto.
+   * @return a {@link GenericResponse} containing an object of {@link OrderResponseDto}.
+   */
+  GenericResponse<OrderResponseDto> updateOrderStatus(final Long orderId, final OrderStatusUpdateRequestDto requestDto);
 }
