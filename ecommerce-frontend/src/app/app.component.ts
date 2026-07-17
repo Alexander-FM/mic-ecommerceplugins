@@ -46,7 +46,7 @@ export class AppComponent implements OnInit {
     private router: Router,
     private messageService: MessageService,
     private orderService: OrderService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     // Escuchar cambios en el estado de autenticación
@@ -54,7 +54,7 @@ export class AppComponent implements OnInit {
       if (authState.isAuthenticated) {
         console.log('✅ Usuario autenticado, cargando menú...');
         this.showMenu = true;
-        this.username = authState.user?.sub || 'Usuario';
+        this.username = authState.user?.displayName || 'Usuario';
         const roles = authState.user?.roles || [];
         this.isAdmin = roles.includes('ROLE_ADMIN');
         console.log('🔐 isAdmin:', this.isAdmin);
@@ -75,9 +75,9 @@ export class AppComponent implements OnInit {
   loadOrdersCount(): void {
     const authState = this.authService.getAuthState();
     if (!authState.isAuthenticated || !authState.user) return;
-    
+
     const customerId = Number(authState.user['id'] || authState.user['userId'] || authState.user.sub) || 1;
-    
+
     const fetchOrders = () => {
       this.orderService.getOrdersByCustomer(customerId).subscribe({
         next: (response) => {

@@ -17,6 +17,10 @@ export interface TokenResponse {
 
 export interface AuthUser {
   sub: string;
+  username?: string;
+  displayName?: string;
+  customerId?: number;
+  employeeId?: number;
   email?: string;
   roles?: string[];
   [key: string]: any;

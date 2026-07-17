@@ -1,10 +1,8 @@
-package com.codecorecix.ecommerce.maintenance.employee.api.dto.response;
+package com.codecorecix.ecommerce.event.models;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
-
-import com.codecorecix.ecommerce.maintenance.user.api.dto.response.UserResponseDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

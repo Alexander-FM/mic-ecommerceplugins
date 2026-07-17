@@ -12,6 +12,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.codecorecix.ecommerce.api.dto.response.EcommerceUserDetails;
+
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
@@ -59,6 +61,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class SecurityConfig {
 
   private static final String LOGIN_URL = "/login";
+
   private static final String WRITE_SCOPE = "write";
 
   private final Environment environment;
@@ -79,92 +82,125 @@ public class SecurityConfig {
   @Bean
   @Order(1)
   public SecurityFilterChain authorizationServerSecurityFilterChain(final HttpSecurity http)
-    throws Exception {
+      throws Exception {
     OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
-    http.getConfigurer(OAuth2AuthorizationServerConfigurer.class).oidc(withDefaults());
+    http
+        .getConfigurer(OAuth2AuthorizationServerConfigurer.class)
+        .oidc(withDefaults());
     http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
     http
-      .exceptionHandling(exceptions -> exceptions
-        .defaultAuthenticationEntryPointFor(
-          new LoginUrlAuthenticationEntryPoint(LOGIN_URL),
-          new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
-        ))
-      .oauth2ResourceServer(resources -> resources.jwt(Customizer.withDefaults()));
+        .exceptionHandling(exceptions -> exceptions
+            .defaultAuthenticationEntryPointFor(
+                new LoginUrlAuthenticationEntryPoint(LOGIN_URL),
+                new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
+            ))
+        .oauth2ResourceServer(resources -> resources.jwt(Customizer.withDefaults()));
     return http.build();
   }
 
   @Bean
   @Order(2)
   public SecurityFilterChain defaultSecurityFilterChain(final HttpSecurity http)
-    throws Exception {
+      throws Exception {
     http
-      .authorizeHttpRequests(authorize -> authorize
-        .requestMatchers(LOGIN_URL, "/css/**", "/images/**", "/js/**").permitAll()
-        .anyRequest().authenticated())
-      .formLogin(form -> form.loginPage(LOGIN_URL).permitAll())
-      .csrf(AbstractHttpConfigurer::disable);
+        .authorizeHttpRequests(authorize -> authorize
+            .requestMatchers(LOGIN_URL, "/css/**", "/images/**", "/js/**")
+            .permitAll()
+            .anyRequest()
+            .authenticated())
+        .formLogin(form -> form
+            .loginPage(LOGIN_URL)
+            .permitAll())
+        .csrf(AbstractHttpConfigurer::disable);
     return http.build();
   }
 
   @Autowired
   protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
-    auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+    auth
+        .userDetailsService(userDetailsService)
+        .passwordEncoder(passwordEncoder());
   }
 
   @Bean
   public RegisteredClientRepository registeredClientRepository() {
-    RegisteredClient maintenanceClient = RegisteredClient.withId(UUID.randomUUID().toString())
-      .clientId("maintenance-client")
-      .clientSecret(passwordEncoder().encode("12345"))
-      .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-      .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-      .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-      .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-      .redirectUri(environment.getProperty("LB_MAINTENANCE_URI", "http://127.0.0.1:9090")
-        + "/login/oauth2/code/maintenance-client")
-      .redirectUri(environment.getProperty("LB_MAINTENANCE_URI", "http://127.0.0.1:9090")
-        + "/api/users/authorized")
-      .tokenSettings(TokenSettings.builder().accessTokenTimeToLive(Duration.ofHours(1)).build())
-      .scope(OidcScopes.OPENID)
-      .scope(OidcScopes.PROFILE)
-      .scope("read")
-      .scope(WRITE_SCOPE)
-      .clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).build())
-      .build();
+    RegisteredClient maintenanceClient = RegisteredClient
+        .withId(UUID
+            .randomUUID()
+            .toString())
+        .clientId("maintenance-client")
+        .clientSecret(passwordEncoder().encode("12345"))
+        .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+        .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+        .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+        .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+        .redirectUri(environment.getProperty("LB_MAINTENANCE_URI", "http://127.0.0.1:9090")
+            + "/login/oauth2/code/maintenance-client")
+        .redirectUri(environment.getProperty("LB_MAINTENANCE_URI", "http://127.0.0.1:9090")
+            + "/api/users/authorized")
+        .tokenSettings(TokenSettings
+            .builder()
+            .accessTokenTimeToLive(Duration.ofHours(1))
+            .build())
+        .scope(OidcScopes.OPENID)
+        .scope(OidcScopes.PROFILE)
+        .scope("read")
+        .scope(WRITE_SCOPE)
+        .clientSettings(ClientSettings
+            .builder()
+            .requireAuthorizationConsent(false)
+            .build())
+        .build();
 
-    RegisteredClient orderClient = RegisteredClient.withId(UUID.randomUUID().toString())
-      .clientId("order-client")
-      .clientSecret(passwordEncoder().encode("12345"))
-      .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-      .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-      .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-      .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-      .redirectUri(environment.getProperty("LB_ORDER_URI", "http://127.0.0.1:9091")
-        + "/login/oauth2/code/order-client")
-      .tokenSettings(TokenSettings.builder().accessTokenTimeToLive(Duration.ofHours(1)).build())
-      .scope(OidcScopes.OPENID)
-      .scope(OidcScopes.PROFILE)
-      .scope("read")
-      .scope(WRITE_SCOPE)
-      .clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).build())
-      .build();
+    RegisteredClient orderClient = RegisteredClient
+        .withId(UUID
+            .randomUUID()
+            .toString())
+        .clientId("order-client")
+        .clientSecret(passwordEncoder().encode("12345"))
+        .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+        .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+        .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+        .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+        .redirectUri(environment.getProperty("LB_ORDER_URI", "http://127.0.0.1:9091")
+            + "/login/oauth2/code/order-client")
+        .tokenSettings(TokenSettings
+            .builder()
+            .accessTokenTimeToLive(Duration.ofHours(1))
+            .build())
+        .scope(OidcScopes.OPENID)
+        .scope(OidcScopes.PROFILE)
+        .scope("read")
+        .scope(WRITE_SCOPE)
+        .clientSettings(ClientSettings
+            .builder()
+            .requireAuthorizationConsent(false)
+            .build())
+        .build();
 
-    RegisteredClient spaClient = RegisteredClient.withId(UUID.randomUUID().toString())
-      .clientId("maintenance-spa")
-      .clientAuthenticationMethod(ClientAuthenticationMethod.NONE)
-      .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-      .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-      .redirectUri("http://localhost:4200/auth/callback")
-      .tokenSettings(TokenSettings.builder().accessTokenTimeToLive(Duration.ofHours(1)).build())
-      .scope(OidcScopes.OPENID)
-      .scope(OidcScopes.PROFILE)
-      .scope("read")
-      .scope(WRITE_SCOPE)
-      .clientSettings(ClientSettings.builder()
-        .requireAuthorizationConsent(false)
-        .requireProofKey(true)
-        .build())
-      .build();
+    RegisteredClient spaClient = RegisteredClient
+        .withId(UUID
+            .randomUUID()
+            .toString())
+        .clientId("maintenance-spa")
+        .clientAuthenticationMethod(ClientAuthenticationMethod.NONE)
+        .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+        .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+        .redirectUri("http://localhost:4200/auth/callback")
+        .tokenSettings(TokenSettings
+            .builder()
+            .accessTokenTimeToLive(Duration.ofHours(1))
+            .build())
+        .scope(OidcScopes.OPENID)
+        .scope(OidcScopes.PROFILE)
+        .scope("read")
+        .scope(WRITE_SCOPE)
+        .clientSettings(ClientSettings
+            .builder()
+            .requireAuthorizationConsent(false)
+            .requireProofKey(true)
+            .build())
+        .build();
 
     return new InMemoryRegisteredClientRepository(maintenanceClient, orderClient, spaClient);
   }
@@ -175,9 +211,11 @@ public class SecurityConfig {
     RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
     RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
     RSAKey rsaKey = new RSAKey.Builder(publicKey)
-      .privateKey(privateKey)
-      .keyID(UUID.randomUUID().toString())
-      .build();
+        .privateKey(privateKey)
+        .keyID(UUID
+            .randomUUID()
+            .toString())
+        .build();
     JWKSet jwkSet = new JWKSet(rsaKey);
     return new ImmutableJWKSet<>(jwkSet);
   }
@@ -201,19 +239,21 @@ public class SecurityConfig {
 
   @Bean
   public AuthorizationServerSettings authorizationServerSettings() {
-    return AuthorizationServerSettings.builder().build();
+    return AuthorizationServerSettings
+        .builder()
+        .build();
   }
 
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
     configuration.setAllowedOrigins(java.util.Arrays.asList(
-      "http://localhost:3000",
-      "http://localhost:4200",
-      "http://localhost"
+        "http://localhost:3000",
+        "http://localhost:4200",
+        "http://localhost"
     ));
     configuration.setAllowedMethods(java.util.Arrays.asList(
-      "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"
+        "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"
     ));
     configuration.setAllowedHeaders(List.of("*"));
     configuration.setAllowCredentials(true);
@@ -228,14 +268,38 @@ public class SecurityConfig {
   public OAuth2TokenCustomizer<JwtEncodingContext> tokenCustomizer() {
     return context -> {
       if (OAuth2TokenType.ACCESS_TOKEN.equals(context.getTokenType())) {
-        Authentication principal = context.getPrincipal();
-
-        // Recolectamos las autoridades (ROLE_ADMIN, ROLE_USER, etc.)
-        Set<String> authorities = principal.getAuthorities().stream()
-          .map(GrantedAuthority::getAuthority)
-          .collect(Collectors.toSet());
-
-        context.getClaims().claim("roles", authorities);
+        Authentication authentication = context.getPrincipal();
+        EcommerceUserDetails user = (EcommerceUserDetails) authentication.getPrincipal();
+        if (user.getCustomerId() != null) {
+          context
+              .getClaims()
+              .claim("customerId", user.getCustomerId());
+        }
+        if (user.getEmployeeId() != null) {
+          context
+              .getClaims()
+              .claim("employeeId", user.getEmployeeId());
+        }
+        if (user.getCustomerName() != null) {
+          context
+              .getClaims()
+              .claim("displayName", user.getCustomerName());
+        } else if (user.getEmployeeName() != null) {
+          context
+              .getClaims()
+              .claim("displayName", user.getEmployeeName());
+        }
+        context
+            .getClaims()
+            .claim("username", user.getUsername());
+        Set<String> authorities = user
+            .getAuthorities()
+            .stream()
+            .map(GrantedAuthority::getAuthority)
+            .collect(Collectors.toSet());
+        context
+            .getClaims()
+            .claim("roles", authorities);
       }
     };
   }
