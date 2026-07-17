@@ -19,12 +19,14 @@
           <td><strong>#{{ order.id }}</strong></td>
           <td>{{ order.orderDate | date:'dd/MM/yyyy hh:mm a' }}</td>
           <td>
-            <p-tag [value]="order.orderStatusName" [severity]="getOrderStatusSeverity(order.orderStatusName)" [icon]="getOrderStatusIcon(order.orderStatusName)"></p-tag>
+            <p-tag [value]="order.orderStatusName" [severity]="getOrderStatusSeverity(order.orderStatusName)"
+              [icon]="getOrderStatusIcon(order.orderStatusName)"></p-tag>
           </td>
           <td class="font-bold">{{ order.totalAmount | currency:'PEN':'symbol' }}</td>
           <td>{{ order.orderNotes }}</td>
           <td style="text-align: center;">
-            <p-button icon="pi pi-eye" [rounded]="true" [text]="true" severity="info" (onClick)="viewDetail()" pTooltip="Ver detalle" tooltipPosition="top"></p-button>
+            <p-button icon="pi pi-eye" [rounded]="true" [text]="true" severity="info" (onClick)="viewDetail(order.id)"
+              pTooltip="Ver detalle" tooltipPosition="top"></p-button>
           </td>
         </tr>
       </ng-template>
@@ -49,3 +51,54 @@
     </div>
   </div>
 </div>
+
+<p-dialog [header]="'Detalle del pedido #' + selectedOrderId" [(visible)]="showDetailModal" [modal]="true"
+  [style]="{ width: '50vw' }" [breakpoints]="{ '960px': '75vw', '640px': '90vw' }" [dismissableMask]="true">
+  <div *ngIf="isDetailLoading" class="flex justify-content-center align-items-center p-5 text-center">
+    <p-progressSpinner></p-progressSpinner>
+  </div>
+
+  <div *ngIf="!isDetailLoading">
+    <div class="empty-state p-4 text-center" *ngIf="selectedOrderDetails.length === 0">
+      <i class="pi pi-inbox" style="font-size: 3rem; color: #ccc;"></i>
+      <h3 class="mt-3">No existen productos para este pedido</h3>
+    </div>
+
+    <p-table *ngIf="selectedOrderDetails.length > 0" [value]="selectedOrderDetails"
+      [tableStyle]="{'min-width': '40rem'}" responsiveLayout="scroll">
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 100px; text-align: center;">Imagen</th>
+          <th>Producto</th>
+          <th>Cantidad</th>
+          <th>Precio Unitario</th>
+          <th>Subtotal</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-detail>
+        <tr>
+          <td style="text-align: center;">
+            <img [src]="detail.productImageUrl || '/imagen_not_found_sorry.png'" [alt]="detail.productName"
+              class="product-thumbnail" />
+          </td>
+          <td><strong>{{ detail.productName }}</strong></td>
+          <td>{{ detail.quantity }}</td>
+          <td>{{ detail.unitPrice | currency:'PEN ':'symbol' }}</td>
+          <td>{{ detail.totalPrice | currency:'PEN ':'symbol' }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div *ngIf="selectedOrderDetails.length > 0" class="w-full flex flex-column mb-4 mt-2">
+      <hr style="border-top: 1px solid #dee2e6; width: 100%; margin: 1rem 0;" />
+      <div class="flex justify-content-between align-items-center px-3">
+        <span class="font-bold text-lg">Total del pedido </span>
+        <span class="font-bold text-xl" style="color: #495057;">{{ selectedOrderTotal | currency:'PEN ':'symbol'
+          }}</span>
+      </div>
+      <hr style="border-top: 1px solid #dee2e6; width: 100%; margin: 1rem 0;" />
+    </div>
+  </ng-template>
+</p-dialog>

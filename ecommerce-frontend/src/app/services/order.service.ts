@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
-import { GenericResponse, OrderRequest, OrderResponse } from '../models/ecommerce.models';
+import { GenericResponse, OrderRequest, OrderResponse, OrderDetail } from '../models/ecommerce.models';
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +21,10 @@ export class OrderService {
 
   getOrdersByCustomer(customerId: number): Observable<GenericResponse<OrderResponse[]>> {
     return this.http.get<GenericResponse<OrderResponse[]>>(`${this.apiUrl}/customer/${customerId}`);
+  }
+
+  getOrderDetails(orderId: number): Observable<GenericResponse<OrderDetail[]>> {
+    return this.http.get<GenericResponse<OrderDetail[]>>(`${this.apiUrl}/details/${orderId}`);
   }
 
   notifyOrderCreated(): void {

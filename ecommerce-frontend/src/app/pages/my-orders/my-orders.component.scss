@@ -51,3 +51,17 @@
     }
   }
 }
+
+::ng-deep .product-thumbnail {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  border-radius: 4px;
+  border: 1px solid #dee2e6;
+  background-color: #fff;
+  padding: 4px;
+}
+
+::ng-deep .p-dialog .p-dialog-footer {
+  padding-top: 0;
+}

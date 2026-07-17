@@ -16,6 +16,10 @@ public class OrderDetailRequestDto implements Serializable {
   @NotNull(message = "The productId is null, please fill")
   private Integer productId;
 
+  private String productName;
+
+  private String productImageUrl;
+
   @NotNull(message = "The quantity is null, please fill")
   private Integer quantity;
 

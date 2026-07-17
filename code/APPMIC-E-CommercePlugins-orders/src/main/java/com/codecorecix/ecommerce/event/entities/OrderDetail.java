@@ -36,6 +36,12 @@ public class OrderDetail implements Serializable {
   private Integer productId;
 
   @Column
+  private String productName;
+
+  @Column
+  private String productImageUrl;
+
+  @Column
   private Integer quantity;
 
   @Column

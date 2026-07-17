@@ -6,10 +6,12 @@ import { CardModule } from 'primeng/card';
 import { TagModule } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
+import { DialogModule } from 'primeng/dialog';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { MessageService } from 'primeng/api';
 import { OrderService } from '../../services/order.service';
 import { AuthService } from '../../services/auth.service';
-import { OrderResponse } from '../../models/ecommerce.models';
+import { OrderResponse, OrderDetail } from '../../models/ecommerce.models';
 
 @Component({
   selector: 'app-my-orders',
@@ -20,7 +22,9 @@ import { OrderResponse } from '../../models/ecommerce.models';
     CardModule,
     TagModule,
     ButtonModule,
-    ToastModule
+    ToastModule,
+    DialogModule,
+    ProgressSpinnerModule
   ],
   providers: [MessageService],
   templateUrl: './my-orders.component.html',
@@ -29,6 +33,11 @@ import { OrderResponse } from '../../models/ecommerce.models';
 export class MyOrdersComponent implements OnInit {
   orders: OrderResponse[] = [];
   isLoading = true;
+  showDetailModal = false;
+  isDetailLoading = false;
+  selectedOrderDetails: OrderDetail[] = [];
+  selectedOrderId: number | null = null;
+  selectedOrderTotal = 0;
 
   constructor(
     private orderService: OrderService,
@@ -104,15 +113,55 @@ export class MyOrdersComponent implements OnInit {
     }
   }
 
-  viewDetail(): void {
-    this.messageService.add({
-      severity: 'info',
-      summary: 'Próximamente',
-      detail: 'La visualización del detalle estará disponible próximamente.'
+  viewDetail(orderId: number): void {
+    this.selectedOrderId = orderId;
+    this.showDetailModal = true;
+    this.isDetailLoading = true;
+    this.selectedOrderDetails = [];
+    this.selectedOrderTotal = 0;
+
+    this.orderService.getOrderDetails(orderId).subscribe({
+      next: (response) => {
+        this.isDetailLoading = false;
+        if (response.rpta === 1 && response.body) {
+          this.selectedOrderDetails = response.body.map(detail => ({
+            ...detail,
+            productImageUrl: this.processImageUrl(detail.productImageUrl) || '/imagen_not_found_sorry.png'
+          }));
+          this.selectedOrderTotal = this.selectedOrderDetails.reduce((sum, item) => sum + (item.totalPrice || 0), 0);
+        } else {
+          this.selectedOrderDetails = [];
+        }
+      },
+      error: (err) => {
+        this.isDetailLoading = false;
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'No se pudo cargar el detalle del pedido.'
+        });
+      }
     });
   }
 
   continueShopping(): void {
     this.router.navigate(['/products']);
+  }
+
+  private processImageUrl(url: string | null | undefined): string | undefined {
+    if (!url) {
+      return undefined;
+    }
+
+    if (url.includes('drive.google.com')) {
+      const fileIdMatch = url.match(/\/d\/([a-zA-Z0-9-_]+)/);
+      if (fileIdMatch && fileIdMatch[1]) {
+        const fileId = fileIdMatch[1];
+        const previewUrl = `https://drive.google.com/uc?id=${fileId}&export=view`;
+        return `https://images.weserv.nl/?url=${encodeURIComponent(previewUrl)}&w=900`;
+      }
+    }
+
+    return url;
   }
 }
