@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 
@@ -21,4 +23,6 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
    * @return true si existe otro cliente con el mismo userId, false en caso contrario
    */
   boolean existsByUserIdAndIdNot(Integer userId, int id);
+
+  Optional<Customer> findByUserId(Integer userId);
 }

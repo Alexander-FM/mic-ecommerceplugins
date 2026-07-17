@@ -1,11 +1,5 @@
 package com.codecorecix.ecommerce.maintenance.customer.service;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import com.codecorecix.ecommerce.event.entities.Customer;
 import com.codecorecix.ecommerce.event.entities.User;
 import com.codecorecix.ecommerce.maintenance.customer.api.dto.request.CustomerRequestDto;
@@ -17,10 +11,15 @@ import com.codecorecix.ecommerce.maintenance.user.mapper.UserFieldsMapper;
 import com.codecorecix.ecommerce.maintenance.user.repository.UserRepository;
 import com.codecorecix.ecommerce.utils.GenericResponse;
 import com.codecorecix.ecommerce.utils.GenericUtils;
-
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -104,6 +103,21 @@ public class CustomerServiceImpl implements CustomerService {
     Optional<User> user = this.userRepository.findById(customer.get().getUserId());
     if (user.isEmpty()) {
       return GenericUtils.buildGenericResponseError(CustomerConstants.NOT_EXIST_USER_FOR_CUSTOMER, null);
+    }
+    final CustomerResponseDto responseDto = this.mapper.destinationToSource(customer.get());
+    responseDto.setUserResponseDto(this.userMapper.destinationToSource(user.get()));
+    return GenericUtils.buildGenericResponseSuccess(CustomerConstants.FIND_MESSAGE, responseDto);
+  }
+
+  @Override
+  public GenericResponse<CustomerResponseDto> findByUsername(String username) {
+    Optional<User> user = this.userRepository.findByUsername(username);
+    if (user.isEmpty()) {
+      return GenericUtils.buildGenericResponseError(CustomerConstants.NOT_EXIST_USER_FOR_CUSTOMER, null);
+    }
+    Optional<Customer> customer = this.repository.findByUserId(user.get().getId());
+    if (customer.isEmpty()) {
+      return GenericUtils.buildGenericResponseError(CustomerConstants.FIND_MESSAGE_ERROR, null);
     }
     final CustomerResponseDto responseDto = this.mapper.destinationToSource(customer.get());
     responseDto.setUserResponseDto(this.userMapper.destinationToSource(user.get()));

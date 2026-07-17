@@ -1,8 +1,5 @@
 package com.codecorecix.ecommerce.maintenance.customer.controller;
 
-import java.util.List;
-import java.util.Objects;
-
 import com.codecorecix.ecommerce.exception.GenericUnprocessableEntityException;
 import com.codecorecix.ecommerce.maintenance.customer.api.dto.request.CustomerRequestDto;
 import com.codecorecix.ecommerce.maintenance.customer.api.dto.response.CustomerResponseDto;
@@ -10,21 +7,14 @@ import com.codecorecix.ecommerce.maintenance.customer.service.CustomerService;
 import com.codecorecix.ecommerce.utils.GenericResponse;
 import com.codecorecix.ecommerce.utils.GenericResponseConstants;
 import com.codecorecix.ecommerce.utils.MaintenanceUtils;
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("${app.endpoints.customer}")
@@ -45,6 +35,16 @@ public class CustomerController {
   @GetMapping("/{id}")
   public ResponseEntity<GenericResponse<CustomerResponseDto>> getCustomerById(@PathVariable(value = "id") final Integer id) {
     final GenericResponse<CustomerResponseDto> response = this.service.findById(id);
+    if (Objects.nonNull(response.getBody())) {
+      return ResponseEntity.status(HttpStatus.OK).body(response);
+    } else {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+  }
+
+  @GetMapping("/username/{username}")
+  public ResponseEntity<GenericResponse<CustomerResponseDto>> getCustomerByUsername(@PathVariable final String username) {
+    final GenericResponse<CustomerResponseDto> response = this.service.findByUsername(username);
     if (Objects.nonNull(response.getBody())) {
       return ResponseEntity.status(HttpStatus.OK).body(response);
     } else {
