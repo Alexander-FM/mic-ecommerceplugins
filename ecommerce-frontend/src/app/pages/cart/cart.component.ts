@@ -41,7 +41,7 @@ export class CartComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private orderService: OrderService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadCart();
@@ -121,7 +121,7 @@ export class CartComponent implements OnInit {
 
     this.isProcessing = true;
 
-    const customerId = Number(authState.user['id'] || authState.user['userId'] || authState.user.sub) || 1;
+    const customerId = Number(authState.user['customerId']) || 0;
 
     const orderDetails: OrderDetailRequest[] = this.cartItems.map(item => ({
       productId: item.product.id!,

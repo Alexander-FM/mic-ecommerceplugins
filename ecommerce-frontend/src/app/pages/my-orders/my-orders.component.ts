@@ -57,7 +57,7 @@ export class MyOrdersComponent implements OnInit {
       return;
     }
 
-    const customerId = Number(authState.user['customerId']) || 1;
+    const customerId = Number(authState.user['customerId']) || 0;
 
     this.orderService.getOrdersByCustomer(customerId).subscribe({
       next: (response) => {

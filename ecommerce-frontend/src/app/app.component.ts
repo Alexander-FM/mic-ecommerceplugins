@@ -76,7 +76,7 @@ export class AppComponent implements OnInit {
     const authState = this.authService.getAuthState();
     if (!authState.isAuthenticated || !authState.user) return;
 
-    const customerId = Number(authState.user['id'] || authState.user['userId'] || authState.user.sub) || 1;
+    const customerId = Number(authState.user['id'] || authState.user['userId'] || authState.user.sub) || 0;
 
     const fetchOrders = () => {
       this.orderService.getOrdersByCustomer(customerId).subscribe({

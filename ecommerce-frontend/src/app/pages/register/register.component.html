@@ -186,29 +186,32 @@
                     <input pInputText [(ngModel)]="form.residenceNumber" placeholder="123" class="w-full" />
                   </div>
 
-                  <div class="field">
-                    <label>Departamento/Region</label>
-                    <input pInputText [(ngModel)]="form.department" placeholder="Lambayeque" class="w-full" />
-                  </div>
-                  <div class="field">
-                    <label>Provincia</label>
-                    <input pInputText [(ngModel)]="form.province" placeholder="Chiclayo" class="w-full" />
-                  </div>
-
-                  <div class="field">
-                    <label>Distrito</label>
-                    <input pInputText [(ngModel)]="form.district" placeholder="Pimentel" class="w-full" />
-                  </div>
-                  <div class="field">
-                    <label>Código Postal</label>
-                    <input pInputText [(ngModel)]="form.postalCode" placeholder="5001" class="w-full" />
+                  <div class="field full-width address-row-1">
+                    <div class="field mb-0">
+                      <label>Departamento/Region</label>
+                      <input pInputText [(ngModel)]="form.department" placeholder="Lambayeque" class="w-full" />
+                    </div>
+                    <div class="field mb-0">
+                      <label>Provincia</label>
+                      <input pInputText [(ngModel)]="form.province" placeholder="Chiclayo" class="w-full" />
+                    </div>
+                    <div class="field mb-0">
+                      <label>Distrito</label>
+                      <input pInputText [(ngModel)]="form.district" placeholder="Pimentel" class="w-full" />
+                    </div>
                   </div>
 
-                  <div class="field full-width">
-                    <label>Dirección</label>
-                    <div class="input-wrapper">
-                      <i class="pi pi-map"></i>
-                      <input pInputText [(ngModel)]="form.addressName" placeholder="Av. Principal" class="w-full" />
+                  <div class="field full-width address-row-2">
+                    <div class="field mb-0">
+                      <label>Dirección</label>
+                      <div class="input-wrapper">
+                        <i class="pi pi-map"></i>
+                        <input pInputText [(ngModel)]="form.addressName" placeholder="Av. Principal" class="w-full" />
+                      </div>
+                    </div>
+                    <div class="field mb-0">
+                      <label>Código Postal</label>
+                      <input pInputText [(ngModel)]="form.postalCode" placeholder="5001" class="w-full" />
                     </div>
                   </div>
                   <div class="field full-width">
