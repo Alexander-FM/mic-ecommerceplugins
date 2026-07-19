@@ -1,4 +1,4 @@
-package com.codesoft.config;
+package com.codecorecix.ecommerce.config;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,15 +24,16 @@ public class WebClientFactory {
     if (isLocalUrl(serviceUrl)) {
       // --- ESCENARIO LOCAL ---
       log.info("Web Client Factory: Detectado Localhost. Usando cliente SIMPLE: {}", serviceUrl);
-      return simpleWebClient.mutate()
-        .baseUrl(serviceUrl)
-        .build();
+      return simpleWebClient
+          .mutate()
+          .baseUrl(serviceUrl)
+          .build();
     } else {
       // --- ESCENARIO KUBERNETES ---
       log.info("Web Client Factory: Detectado Servicio K8s. Usando cliente LOAD BALANCED: {}", serviceUrl);
       return loadBalancedWebClientBuilder
-        .baseUrl(serviceUrl)
-        .build();
+          .baseUrl(serviceUrl)
+          .build();
     }
   }
 

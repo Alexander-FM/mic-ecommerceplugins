@@ -1,4 +1,4 @@
-package com.codesoft.utils;
+package com.codecorecix.ecommerce.utils;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -7,21 +7,21 @@ import org.springframework.http.HttpStatus;
 @Getter
 @RequiredArgsConstructor
 public enum BaseErrorMessage implements IErrorCode {
-  BAD_REQUEST(GenericResponseUtils.makeCode(GenericResponseConstants.APPMIC_COMMONS_ERROR_CODE, HttpStatus.BAD_REQUEST, 1),
-    HttpStatus.BAD_REQUEST, GenericResponseConstants.BAD_REQUEST_MESSAGE),
-  ID_PROVIDED_ON_CREATE(GenericResponseUtils.makeCode(GenericResponseConstants.APPMIC_COMMONS_ERROR_CODE, HttpStatus.BAD_REQUEST, 2),
-    HttpStatus.BAD_REQUEST, GenericResponseConstants.ID_PROVIDED_ON_CREATE),
-  UNAUTHORIZED(GenericResponseUtils.makeCode(GenericResponseConstants.APPMIC_COMMONS_ERROR_CODE, HttpStatus.UNAUTHORIZED, 1),
-    HttpStatus.UNAUTHORIZED, GenericResponseConstants.UNAUTHORIZED_MESSAGE),
-  ACCESS_DENIED(GenericResponseUtils.makeCode(GenericResponseConstants.APPMIC_COMMONS_ERROR_CODE, HttpStatus.FORBIDDEN, 1),
-    HttpStatus.FORBIDDEN, GenericResponseConstants.ACCESS_DENIED_MESSAGE),
-  NOT_FOUND(GenericResponseUtils.makeCode(GenericResponseConstants.APPMIC_COMMONS_ERROR_CODE, HttpStatus.NOT_FOUND, 1),
-    HttpStatus.NOT_FOUND, GenericResponseConstants.NOT_FOUND_MESSAGE),
-  ERROR_INTERNAL(GenericResponseUtils.makeCode(GenericResponseConstants.APPMIC_COMMONS_ERROR_CODE, HttpStatus.INTERNAL_SERVER_ERROR, 1),
-    HttpStatus.INTERNAL_SERVER_ERROR, GenericResponseConstants.ERROR_INTERNAL_MESSAGE),
+  BAD_REQUEST(makeCode(10, HttpStatus.BAD_REQUEST, 1),
+      HttpStatus.BAD_REQUEST, GenericResponseConstants.BAD_REQUEST_MESSAGE),
+  ID_PROVIDED_ON_CREATE(makeCode(10, HttpStatus.BAD_REQUEST, 2),
+      HttpStatus.BAD_REQUEST, GenericResponseConstants.ID_PROVIDED_ON_CREATE),
+  UNAUTHORIZED(makeCode(10, HttpStatus.UNAUTHORIZED, 1),
+      HttpStatus.UNAUTHORIZED, GenericResponseConstants.UNAUTHORIZED_MESSAGE),
+  ACCESS_DENIED(makeCode(10, HttpStatus.FORBIDDEN, 1),
+      HttpStatus.FORBIDDEN, GenericResponseConstants.ACCESS_DENIED_MESSAGE),
+  NOT_FOUND(makeCode(10, HttpStatus.NOT_FOUND, 1),
+      HttpStatus.NOT_FOUND, GenericResponseConstants.NOT_FOUND_MESSAGE),
+  ERROR_INTERNAL(makeCode(10, HttpStatus.INTERNAL_SERVER_ERROR, 1),
+      HttpStatus.INTERNAL_SERVER_ERROR, GenericResponseConstants.ERROR_INTERNAL_MESSAGE),
   SERVICE_NOT_AVAILABLE(
-    GenericResponseUtils.makeCode(GenericResponseConstants.APPMIC_COMMONS_ERROR_CODE, HttpStatus.SERVICE_UNAVAILABLE, 1),
-    HttpStatus.SERVICE_UNAVAILABLE, GenericResponseConstants.UNAVAILABLE_SERVICE_MESSAGE);
+      makeCode(10, HttpStatus.SERVICE_UNAVAILABLE, 1),
+      HttpStatus.SERVICE_UNAVAILABLE, GenericResponseConstants.UNAVAILABLE_SERVICE);
 
   private final Integer errorCode;
 
@@ -42,5 +42,17 @@ public enum BaseErrorMessage implements IErrorCode {
   @Override
   public HttpStatus getHttpStatus() {
     return httpStatus;
+  }
+
+  /**
+   * Method to create error codes.
+   *
+   * @param moduleId Module identifier (2 digits).
+   * @param status   HTTP status.
+   * @param seq      Sequence number (3 digits).
+   * @return Generated error code.
+   */
+  public static int makeCode(final int moduleId, final HttpStatus status, final int seq) {
+    return moduleId * 1_000_000 + status.value() * 1_000 + seq;
   }
 }

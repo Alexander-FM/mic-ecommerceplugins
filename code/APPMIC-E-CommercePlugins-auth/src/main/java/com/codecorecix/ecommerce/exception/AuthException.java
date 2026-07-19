@@ -1,4 +1,4 @@
-package com.codesoft.exception;
+package com.codecorecix.ecommerce.exception;
 
 public class AuthException extends BaseException {
 

@@ -1,8 +1,9 @@
-package com.codesoft.utils;
+package com.codecorecix.ecommerce.utils;
 
 import java.util.Map;
 
-import com.codesoft.exception.BaseException;
+import com.codecorecix.ecommerce.exception.BaseException;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;

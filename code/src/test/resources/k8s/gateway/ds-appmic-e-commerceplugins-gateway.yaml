@@ -15,8 +15,36 @@ spec:
       containers:
         - image: alexanderpe/appmic-e-commerceplugins-gateway:latest
           name: appmic-e-commerceplugins-gateway
+          imagePullPolicy: Always
           ports:
-            - containerPort: 9089
+            - containerPort: 80
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              valueFrom:
+                configMapKeyRef:
+                  name: appmic-e-commerceplugins-gateway
+                  key: profile_active
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: appmic-e-commerceplugins-gateway
+                  key: port
+            - name: LB_AUTH_SERVICE
+              valueFrom:
+                configMapKeyRef:
+                  name: appmic-e-commerceplugins-gateway
+                  key: lb_auth_service
+            - name: LB_ORDER_SERVICE
+              valueFrom:
+                configMapKeyRef:
+                  name: appmic-e-commerceplugins-gateway
+                  key: lb_order_service
+            - name: LB_MAINTENANCE_SERVICE
+              valueFrom:
+                configMapKeyRef:
+                  name: appmic-e-commerceplugins-gateway
+                  key: lb_maintenance_service
+
 ---
 apiVersion: v1
 kind: Service
@@ -26,7 +54,7 @@ spec:
   type: LoadBalancer
   ports:
     - protocol: TCP
-      port: 9089
-      targetPort: 9089
+      port: 80
+      targetPort: 80
   selector:
     role: appmic-e-commerceplugins-gateway

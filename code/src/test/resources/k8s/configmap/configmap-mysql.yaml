@@ -5,4 +5,5 @@ metadata:
   namespace: dev
 data:
   init-schemas.sql: |
-    CREATE DATABASE IF NOT EXISTS quotations_service;
+    CREATE DATABASE IF NOT EXISTS maintenance_service;
+    CREATE DATABASE IF NOT EXISTS orders_service;

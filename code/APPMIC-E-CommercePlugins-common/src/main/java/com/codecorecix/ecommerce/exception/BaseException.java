@@ -1,6 +1,7 @@
-package com.codesoft.exception;
+package com.codecorecix.ecommerce.exception;
 
-import com.codesoft.utils.IErrorCode;
+import com.codecorecix.ecommerce.utils.IErrorCode;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

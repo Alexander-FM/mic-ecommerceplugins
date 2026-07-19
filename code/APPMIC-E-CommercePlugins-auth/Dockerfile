@@ -1,9 +1,9 @@
-FROM openjdk:21
+FROM eclipse-temurin:21-jre-alpine
 
 WORKDIR /app
 
 COPY ./target/APPMIC-E-CommercePlugins-auth-2.10.1-SNAPSHOT.jar .
 
-EXPOSE 9001
+EXPOSE 9000
 
 ENTRYPOINT ["java", "-jar", "APPMIC-E-CommercePlugins-auth-2.10.1-SNAPSHOT.jar"]

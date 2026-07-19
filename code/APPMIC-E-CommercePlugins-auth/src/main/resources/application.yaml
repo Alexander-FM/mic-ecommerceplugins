@@ -3,7 +3,6 @@
 # ===============================================
 server:
   port: 9000
-
 spring:
   application:
     name: appmic-e-commerceplugins-auth
@@ -16,7 +15,6 @@ spring:
         enable-api: true
       discovery:
         all-namespaces: true
-
 app:
   external:
     # Se define la variable, pero el valor se asigna en el perfil correspondiente
@@ -26,7 +24,6 @@ app:
 # SEPARADOR DE PERFIL
 # ===============================================
 ---
-
 # ===============================================
 # PROPIEDADES EXCLUSIVAS PARA EL PERFIL 'dev'
 # ===============================================

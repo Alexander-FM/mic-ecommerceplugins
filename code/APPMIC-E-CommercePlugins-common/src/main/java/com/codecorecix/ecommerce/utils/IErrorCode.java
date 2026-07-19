@@ -1,4 +1,4 @@
-package com.codesoft.utils;
+package com.codecorecix.ecommerce.utils;
 
 import org.springframework.http.HttpStatus;
 

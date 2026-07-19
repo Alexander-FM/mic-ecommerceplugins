@@ -30,7 +30,6 @@
     <module>APPMIC-E-CommercePlugins-tracking</module>
     <module>APPMIC-E-CommercePlugins-gateway</module>
     <module>APPMIC-E-CommercePlugins-auth</module>
-    <module>APPMIC-E-CommercePlugins-jwt</module>
   </modules>
 
   <scm>

@@ -3,14 +3,12 @@ kind: ConfigMap
 metadata:
   name: appmic-e-commerceplugins-maintenance
 data:
-  lb_auth_issuer_uri: "http://appmic-e-commerceplugins-auth:9001"
+  lb_auth_issuer_uri: "http://appmic-e-commerceplugins-auth:9000"
   lb_maintenance_uri: "http://appmic-e-commerceplugins-maintenance:9090"
-  ms-maintenance_name: "http://appmic-e-commerceplugins-maintenance/api/users/login"
   port: "9090"
   db_host: "mysql:3306"
   database: "maintenance_service"
-#  username: root -- Ya se están obteniendo desde el secret
-#  password: root_password
+  spring_profile_active: "dev"
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -20,6 +18,25 @@ data:
   port: "9091"
   db_host: "mysql:3306"
   database: "orders_service"
-  spring_profile_active: "prod"
-#  username: root
-#  password: root_password
+  spring_profile_active: "dev"
+  lb_maintenance_service: "http://appmic-e-commerceplugins-maintenance:9090"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: appmic-e-commerceplugins-auth
+data:
+  port: "9000"
+  profile_active: "dev"
+  lb_maintenance_service: "http://appmic-e-commerceplugins-maintenance:9090"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: appmic-e-commerceplugins-gateway
+data:
+  port: "80"
+  profile_active: "dev"
+  lb_auth_service: "http://appmic-e-commerceplugins-auth:9000"
+  lb_order_service: "http://appmic-e-commerceplugins-orders:9091"
+  lb_maintenance_service: "http://appmic-e-commerceplugins-maintenance:9090"

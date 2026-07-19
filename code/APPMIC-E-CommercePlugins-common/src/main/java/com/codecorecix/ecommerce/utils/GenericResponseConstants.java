@@ -30,6 +30,18 @@ public class GenericResponseConstants {
 
   public static final String RETRIEVE_CODE_MSG = "The code was successfully generated with oauth 2.1";
 
+  public static final String BAD_REQUEST_MESSAGE = "Invalid request: incorrect parameters or missing required fields";
+
+  public static final String ID_PROVIDED_ON_CREATE = "The ID should not be provided when creating a new entity";
+
+  public static final String UNAUTHORIZED_MESSAGE = "The token is invalid or has been modified";
+
+  public static final String ACCESS_DENIED_MESSAGE = "You do not have the necessary permissions";
+
+  public static final String NOT_FOUND_MESSAGE = "The resource ID does not exist in the database";
+
+  public static final String ERROR_INTERNAL_MESSAGE = "An unexpected internal server error occurred. Please try again later or contact support.";
+
   public static final String VIEW = "/view";
 
   public static final String DASH = " - ";

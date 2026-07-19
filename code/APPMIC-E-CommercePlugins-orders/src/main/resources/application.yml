@@ -27,7 +27,7 @@ spring:
       discovery:
         all-namespaces: true
   profiles:
-    default: ${SPRING_PROFILES_ACTIVE:dev}
+    active: ${SPRING_PROFILES_ACTIVE:dev}
 resilience4j:
   circuitbreaker:
     instances:

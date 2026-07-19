@@ -1,22 +1,21 @@
-package com.codesoft.exception;
+package com.codecorecix.ecommerce.exception;
 
-import com.codesoft.utils.AuthConstants;
-import com.codesoft.utils.GenericResponseConstants;
-import com.codesoft.utils.GenericResponseUtils;
-import com.codesoft.utils.IErrorCode;
+import com.codecorecix.ecommerce.utils.AuthConstants;
+import com.codecorecix.ecommerce.utils.IErrorCode;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 @RequiredArgsConstructor
 public enum AuthMessageEnum implements IErrorCode {
   USER_NOT_FOUND(
-    GenericResponseUtils.makeCode(GenericResponseConstants.APPMIC_AUTH_ERROR_CODE, HttpStatus.NOT_FOUND, 1),
-    HttpStatus.NOT_FOUND,
-    AuthConstants.NOT_FOUND_MESSAGE),
+      makeCode(20, HttpStatus.NOT_FOUND, 1),
+      HttpStatus.NOT_FOUND,
+      AuthConstants.NOT_FOUND_MESSAGE),
   AUTH_EMPLOYEE_SERVICE_UNAVAILABLE(
-    GenericResponseUtils.makeCode(GenericResponseConstants.APPMIC_AUTH_ERROR_CODE, HttpStatus.SERVICE_UNAVAILABLE, 1),
-    HttpStatus.SERVICE_UNAVAILABLE,
-    AuthConstants.EMPLOYEE_SERVICE_UNAVAILABLE_MESSAGE);
+      makeCode(20, HttpStatus.SERVICE_UNAVAILABLE, 1),
+      HttpStatus.SERVICE_UNAVAILABLE,
+      AuthConstants.EMPLOYEE_SERVICE_UNAVAILABLE_MESSAGE);
 
   private final int code;
 
@@ -37,5 +36,17 @@ public enum AuthMessageEnum implements IErrorCode {
   @Override
   public HttpStatus getHttpStatus() {
     return status;
+  }
+
+  /**
+   * Method to create error codes.
+   *
+   * @param moduleId Module identifier (2 digits).
+   * @param status   HTTP status.
+   * @param seq      Sequence number (3 digits).
+   * @return Generated error code.
+   */
+  public static int makeCode(final int moduleId, final HttpStatus status, final int seq) {
+    return moduleId * 1_000_000 + status.value() * 1_000 + seq;
   }
 }
