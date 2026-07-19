@@ -1,0 +1,35 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: spring-cloud-k8s-discovery-role
+rules:
+  - apiGroups: [ "" ]
+    resources: [ "services", "endpoints", "pods", "configmaps", "secrets" ]
+    verbs: [ "get", "list", "watch" ]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: spring-cloud-k8s-discovery-binding-dev
+subjects:
+  - kind: ServiceAccount
+    name: default      # El usuario por defecto que usa tu pod
+    namespace: dev     # <--- IMPORTANTE: El namespace donde está tu pod
+roleRef:
+  kind: ClusterRole
+  name: spring-cloud-k8s-discovery-role
+  apiGroup: rbac.authorization.k8s.io
+---
+# Si también vas a desplegar en PROD, necesitas esto también:
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: spring-cloud-k8s-discovery-binding-prod
+subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: prod    # <--- Para que funcione en prod también
+roleRef:
+  kind: ClusterRole
+  name: spring-cloud-k8s-discovery-role
+  apiGroup: rbac.authorization.k8s.io
