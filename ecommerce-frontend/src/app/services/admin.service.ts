@@ -3,11 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { GenericResponse, Product, Attribute } from '../models/ecommerce.models';
 
+import { environment } from '../../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
 export class AdminService {
-  private readonly API_BASE = 'http://127.0.0.1:9089/api/maintenance';
+  private readonly API_BASE = environment.apiUrl + '/api/maintenance';
 
   constructor(private http: HttpClient) {}
 

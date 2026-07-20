@@ -26,4 +26,7 @@ spring:
           - id: appmic-e-commerceplugins-auth
             uri: ${LB_AUTH_SERVICE:http://127.0.0.1:9000}
             predicates:
-              - Path=/api/auth/**
+              - Path=/api/auth/**, /oauth2/**, /login/**, /css/**, /images/**
+cors:
+  allowed:
+    origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000,http://localhost:4200,http://localhost}

@@ -7,7 +7,6 @@ import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.time.Duration;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -52,9 +51,6 @@ import org.springframework.security.oauth2.server.authorization.token.OAuth2Toke
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -87,7 +83,6 @@ public class SecurityConfig {
     http
         .getConfigurer(OAuth2AuthorizationServerConfigurer.class)
         .oidc(withDefaults());
-    http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
     http
         .exceptionHandling(exceptions -> exceptions
             .defaultAuthenticationEntryPointFor(
@@ -186,7 +181,7 @@ public class SecurityConfig {
         .clientAuthenticationMethod(ClientAuthenticationMethod.NONE)
         .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
         .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-        .redirectUri("http://localhost:4200/auth/callback")
+        .redirectUri(environment.getProperty("SPA_REDIRECT_URI", "http://localhost:4200/auth/callback"))
         .tokenSettings(TokenSettings
             .builder()
             .accessTokenTimeToLive(Duration.ofHours(1))
@@ -242,26 +237,6 @@ public class SecurityConfig {
     return AuthorizationServerSettings
         .builder()
         .build();
-  }
-
-  @Bean
-  public CorsConfigurationSource corsConfigurationSource() {
-    CorsConfiguration configuration = new CorsConfiguration();
-    configuration.setAllowedOrigins(java.util.Arrays.asList(
-        "http://localhost:3000",
-        "http://localhost:4200",
-        "http://localhost"
-    ));
-    configuration.setAllowedMethods(java.util.Arrays.asList(
-        "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"
-    ));
-    configuration.setAllowedHeaders(List.of("*"));
-    configuration.setAllowCredentials(true);
-    configuration.setMaxAge(3600L);
-
-    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/**", configuration);
-    return source;
   }
 
   @Bean

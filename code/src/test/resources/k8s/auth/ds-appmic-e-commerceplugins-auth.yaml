@@ -34,6 +34,11 @@ spec:
                 configMapKeyRef:
                   name: appmic-e-commerceplugins-auth
                   key: lb_maintenance_service
+            - name: SPA_REDIRECT_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: appmic-e-commerceplugins-auth
+                  key: spa_redirect_uri
 ---
 apiVersion: v1
 kind: Service

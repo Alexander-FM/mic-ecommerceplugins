@@ -29,6 +29,7 @@ data:
   port: "9000"
   profile_active: "dev"
   lb_maintenance_service: "http://appmic-e-commerceplugins-maintenance:9090"
+  spa_redirect_uri: "http://localhost:4200/auth/callback"
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -37,6 +38,7 @@ metadata:
 data:
   port: "80"
   profile_active: "dev"
+  cors_allowed_origins: "http://localhost:4200"
   lb_auth_service: "http://appmic-e-commerceplugins-auth:9000"
   lb_order_service: "http://appmic-e-commerceplugins-orders:9091"
   lb_maintenance_service: "http://appmic-e-commerceplugins-maintenance:9090"

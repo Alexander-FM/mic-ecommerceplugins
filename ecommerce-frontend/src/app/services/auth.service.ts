@@ -2,15 +2,16 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { TokenResponse, AuthUser, AuthState } from '../models/auth.models';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly AUTHORIZATION_ENDPOINT = 'http://127.0.0.1:9001/oauth2/authorize';
-  private readonly TOKEN_URL = 'http://127.0.0.1:9001/oauth2/token';
-  private readonly REDIRECT_URI = 'http://localhost:4200/auth/callback';
-  private readonly CLIENT_ID = 'maintenance-spa';
+  private readonly AUTHORIZATION_ENDPOINT = environment.oauth.authorizationEndpoint;
+  private readonly TOKEN_URL = environment.oauth.tokenUrl;
+  private readonly REDIRECT_URI = environment.oauth.redirectUri;
+  private readonly CLIENT_ID = environment.oauth.clientId;
   private readonly STORAGE_KEY_CODE_VERIFIER = 'pkce_code_verifier';
   private readonly STORAGE_KEY_STATE = 'pkce_state';
   private readonly STORAGE_KEY_TOKEN = 'auth_token';

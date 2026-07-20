@@ -44,7 +44,11 @@ spec:
                 configMapKeyRef:
                   name: appmic-e-commerceplugins-gateway
                   key: lb_maintenance_service
-
+            - name: CORS_ALLOWED_ORIGINS
+              valueFrom:
+                configMapKeyRef:
+                  name: appmic-e-commerceplugins-gateway
+                  key: cors_allowed_origins
 ---
 apiVersion: v1
 kind: Service

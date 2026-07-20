@@ -3,11 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
 import { GenericResponse, OrderRequest, OrderResponse, OrderDetail } from '../models/ecommerce.models';
 
+import { environment } from '../../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
 export class OrderService {
-  private apiUrl = 'http://127.0.0.1:9089/api/orders';
+  private apiUrl = environment.apiUrl + '/api/orders';
   private ordersUpdatedSubject = new Subject<void>();
 
   // Observable para notificar cuando se crea una orden exitosamente
