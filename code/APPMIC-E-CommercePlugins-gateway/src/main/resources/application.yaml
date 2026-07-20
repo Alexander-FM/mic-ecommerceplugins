@@ -1,15 +1,10 @@
 server:
   port: 80
-
 spring:
   application:
     name: appmic-e-commerceplugins-gateway
-  
-  # Define el perfil activo. Lee la variable de entorno de K8s, 
-  # y si no existe, usa 'dev' por defecto para el entorno local.
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:dev}
-    
   cloud:
     gateway:
       mvc:

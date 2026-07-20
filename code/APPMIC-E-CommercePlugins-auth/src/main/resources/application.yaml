@@ -35,8 +35,7 @@ spring:
 app:
   external:
     # Valor por defecto para la URL en el entorno de desarrollo
-    maintenance-service-url: http://127.0.0.1:9090
-
+    maintenance-service-url: ${MS_MAINTENANCE:http://127.0.0.1:9090}
 logging:
   level:
     org:

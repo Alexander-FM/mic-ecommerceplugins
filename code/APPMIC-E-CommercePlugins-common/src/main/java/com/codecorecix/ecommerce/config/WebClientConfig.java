@@ -1,4 +1,4 @@
-package com.codecorecix.ecommerce.utils.httpclient;
+package com.codecorecix.ecommerce.config;
 
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +16,8 @@ public class WebClientConfig {
 
   @Bean
   WebClient simpleWebClient() {
-    return WebClient.builder().build();
+    return WebClient
+        .builder()
+        .build();
   }
 }
