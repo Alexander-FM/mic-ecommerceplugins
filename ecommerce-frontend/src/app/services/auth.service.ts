@@ -171,7 +171,7 @@ export class AuthService {
       console.log('✅ Estado de autenticación restaurado correctamente');
     } else {
       console.log('❌ Token inválido o no encontrado, limpiando estado');
-      this.logout();
+      this.logout(false);
     }
   }
 
@@ -276,7 +276,7 @@ export class AuthService {
   /**
    * Cierra la sesión y limpia el localStorage
    */
-  logout(): void {
+  logout(redirect: boolean = true): void {
     localStorage.removeItem(this.STORAGE_KEY_TOKEN);
     localStorage.removeItem(this.STORAGE_KEY_REFRESH);
     localStorage.removeItem(this.STORAGE_KEY_ID);
@@ -284,7 +284,9 @@ export class AuthService {
 
     this.authStateSubject.next(this.getInitialState());
 
-    // Redirigir al servidor de Autorización para cerrar la sesión (borrar la cookie JSESSIONID)
-    window.location.href = environment.apiUrl + '/logout';
+    // Redirigir al servidor de Autorización para cerrar la sesión (solo si fue solicitado explícitamente)
+    if (redirect) {
+      window.location.href = environment.apiUrl + '/logout';
+    }
   }
 }

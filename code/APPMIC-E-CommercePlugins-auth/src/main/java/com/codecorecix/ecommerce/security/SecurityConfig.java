@@ -107,7 +107,7 @@ public class SecurityConfig {
             .loginPage(LOGIN_URL)
             .permitAll())
         .logout(logout -> logout
-            .logoutSuccessUrl(LOGIN_URL)
+            .logoutSuccessUrl("http://localhost:4200/login")
             .permitAll())
         .csrf(AbstractHttpConfigurer::disable);
     return http.build();
