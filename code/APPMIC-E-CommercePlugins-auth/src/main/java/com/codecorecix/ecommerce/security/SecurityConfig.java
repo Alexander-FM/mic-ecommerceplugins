@@ -99,12 +99,15 @@ public class SecurityConfig {
       throws Exception {
     http
         .authorizeHttpRequests(authorize -> authorize
-            .requestMatchers(LOGIN_URL, "/css/**", "/images/**", "/js/**")
+            .requestMatchers(LOGIN_URL, "/css/**", "/images/**", "/js/**", "/error", "/favicon.ico")
             .permitAll()
             .anyRequest()
             .authenticated())
         .formLogin(form -> form
             .loginPage(LOGIN_URL)
+            .permitAll())
+        .logout(logout -> logout
+            .logoutSuccessUrl(LOGIN_URL)
             .permitAll())
         .csrf(AbstractHttpConfigurer::disable);
     return http.build();

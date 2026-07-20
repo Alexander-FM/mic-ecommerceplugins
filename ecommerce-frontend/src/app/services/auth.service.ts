@@ -283,5 +283,8 @@ export class AuthService {
     localStorage.removeItem(this.STORAGE_KEY_EXPIRES);
 
     this.authStateSubject.next(this.getInitialState());
+
+    // Redirigir al servidor de Autorización para cerrar la sesión (borrar la cookie JSESSIONID)
+    window.location.href = environment.apiUrl + '/logout';
   }
 }
