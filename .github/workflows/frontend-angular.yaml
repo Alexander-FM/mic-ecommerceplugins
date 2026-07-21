@@ -5,12 +5,12 @@ on:
     branches: [ "master", "develop" ]
     paths:
       # Ajusta esta ruta a la ubicación real de tu carpeta de Angular
-      - 'ecommerce-frontend-angular19/**' 
+      - 'ecommerce-frontend/**' 
   workflow_dispatch:
 
 env:
   IMAGE_NAME: alexanderpe/ecommerce-frontend
-  SERVICE_PATH: ecommerce-frontend-angular19
+  SERVICE_PATH: ecommerce-frontend
 
 jobs:
   # ------------------------------------------------------------------
