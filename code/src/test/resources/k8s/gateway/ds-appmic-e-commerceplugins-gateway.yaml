@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appmic-e-commerceplugins-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      role: appmic-e-commerceplugins-gateway
+  template:
+    metadata:
+      labels:
+        role: appmic-e-commerceplugins-gateway
+    spec:
+      containers:
+        - image: alexanderpe/appmic-e-commerceplugins-gateway:latest
+          name: appmic-e-commerceplugins-gateway
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              valueFrom:
+                configMapKeyRef:
+                  name: appmic-e-commerceplugins-gateway
+                  key: profile_active
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: appmic-e-commerceplugins-gateway
+                  key: port
+            - name: LB_AUTH_SERVICE
+              valueFrom:
+                configMapKeyRef:
+                  name: appmic-e-commerceplugins-gateway
+                  key: lb_auth_service
+            - name: LB_ORDER_SERVICE
+              valueFrom:
+                configMapKeyRef:
+                  name: appmic-e-commerceplugins-gateway
+                  key: lb_order_service
+            - name: LB_MAINTENANCE_SERVICE
+              valueFrom:
+                configMapKeyRef:
+                  name: appmic-e-commerceplugins-gateway
+                  key: lb_maintenance_service
+            - name: CORS_ALLOWED_ORIGINS
+              valueFrom:
+                configMapKeyRef:
+                  name: appmic-e-commerceplugins-gateway
+                  key: cors_allowed_origins
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: appmic-e-commerceplugins-gateway
+spec:
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  selector:
+    role: appmic-e-commerceplugins-gateway

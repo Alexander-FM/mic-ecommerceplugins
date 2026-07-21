@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "69bab446-b414-4510-ad7c-797602721eaa",
+		"_postman_id": "b76d88ed-9f3f-450e-b532-e79417cdba52",
 		"name": "APPMIC-E-CommercePlugins-auth",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "9753857",
-		"_collection_link": "https://orange-space-3640.postman.co/workspace/APPMIC-E-CommercePlugins~1c50689a-d05f-493d-854e-1ce929da7564/collection/9753857-69bab446-b414-4510-ad7c-797602721eaa?action=share&source=collection_link&creator=9753857"
+		"_collection_link": "https://orange-space-3640.postman.co/workspace/APPMIC-E-CommercePlugins~1c50689a-d05f-493d-854e-1ce929da7564/collection/9753857-b76d88ed-9f3f-450e-b532-e79417cdba52?action=share&source=collection_link&creator=9753857"
 	},
 	"item": [
 		{
@@ -12,10 +12,18 @@
 			"request": {
 				"auth": {
 					"type": "basic",
-					"basic": {
-						"username": "maintenance-client",
-						"password": "12345"
-					}
+					"basic": [
+						{
+							"key": "username",
+							"value": "maintenance-client",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "12345",
+							"type": "string"
+						}
+					]
 				},
 				"method": "POST",
 				"header": [],
@@ -24,7 +32,7 @@
 					"urlencoded": [
 						{
 							"key": "code",
-							"value": "AqW-x50Mf9Mk66BXgUC-ne3TnaSxQX-YCyY9vhiK3yUc7YTPNGlysNh3vjCvtadEmfQ-xC-lFw5Pglv5Vuoma1w72Rob3BYVvihPtzkDl4gUBNC8KQFdf_CPQxHGBQJk",
+							"value": "HANtRPhQeMk-SoQ2K7F_Cpw0Pecyw7PFSfX1KDX0KzQDtjkOp-QaAuI7jnrwI2foeRcUgRn5dyZ64oPDvHw5iwCWSfDMhTPezISam63u2mfPDMWbq6Z6204D6FtwHAV0",
 							"type": "text"
 						},
 						{
@@ -39,7 +47,16 @@
 						}
 					]
 				},
-				"url": "{{basic_url}}/oauth2/token"
+				"url": {
+					"raw": "{{basic_url}}/oauth2/token",
+					"host": [
+						"{{basic_url}}"
+					],
+					"path": [
+						"oauth2",
+						"token"
+					]
+				}
 			},
 			"response": []
 		},
@@ -48,17 +65,58 @@
 			"request": {
 				"auth": {
 					"type": "oauth2",
-					"oauth2": {
-						"redirect_uri": "http://127.0.0.1:9090/login/oauth2/code/maintenance-client",
-						"accessTokenUrl": "http://127.0.0.1:9001/oauth2/token",
-						"authUrl": "http://127.0.0.1:9001/oauth2/authorize",
-						"grant_type": "authorization_code",
-						"scope": "openid",
-						"clientSecret": "12345",
-						"clientId": "maintenance-client",
-						"tokenName": "bearer",
-						"addTokenTo": "header"
-					}
+					"oauth2": [
+						{
+							"key": "useBrowser",
+							"value": false,
+							"type": "boolean"
+						},
+						{
+							"key": "redirect_uri",
+							"value": "{{callback_url}}/login/oauth2/code/maintenance-client",
+							"type": "string"
+						},
+						{
+							"key": "accessTokenUrl",
+							"value": "{{auth_url}}/oauth2/token",
+							"type": "string"
+						},
+						{
+							"key": "authUrl",
+							"value": "{{auth_url}}/oauth2/authorize",
+							"type": "string"
+						},
+						{
+							"key": "grant_type",
+							"value": "authorization_code",
+							"type": "string"
+						},
+						{
+							"key": "scope",
+							"value": "openid",
+							"type": "string"
+						},
+						{
+							"key": "clientSecret",
+							"value": "12345",
+							"type": "string"
+						},
+						{
+							"key": "clientId",
+							"value": "maintenance-client",
+							"type": "string"
+						},
+						{
+							"key": "tokenName",
+							"value": "bearer",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						}
+					]
 				},
 				"method": "POST",
 				"header": [],
@@ -67,17 +125,19 @@
 					"urlencoded": [
 						{
 							"key": "username",
-							"value": "user",
+							"value": "AlexanderPro",
 							"type": "text"
 						},
 						{
 							"key": "password",
-							"value": "12345",
+							"value": "199912",
 							"type": "text"
 						}
 					]
 				},
-				"url": ""
+				"url": {
+					"raw": ""
+				}
 			},
 			"response": []
 		},
@@ -91,17 +151,25 @@
 					"formdata": [
 						{
 							"key": "username",
-							"value": "Admin",
+							"value": "AlexanderMax",
 							"type": "text"
 						},
 						{
 							"key": "password",
-							"value": "12345",
+							"value": "199912",
 							"type": "text"
 						}
 					]
 				},
-				"url": "{{basic_url}}/login"
+				"url": {
+					"raw": "{{basic_url}}/login",
+					"host": [
+						"{{basic_url}}"
+					],
+					"path": [
+						"login"
+					]
+				}
 			},
 			"response": []
 		}

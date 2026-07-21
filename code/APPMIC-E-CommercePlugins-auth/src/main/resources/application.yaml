@@ -1,0 +1,58 @@
+# ===============================================
+# SECCIÓN PRINCIPAL (COMÚN A TODOS LOS PERFILES)
+# ===============================================
+server:
+  port: 9000
+spring:
+  application:
+    name: appmic-e-commerceplugins-auth
+  # La clave para que funcione en local y en Kubernetes
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+  cloud:
+    kubernetes:
+      secrets:
+        enable-api: true
+      discovery:
+        all-namespaces: true
+app:
+  external:
+    # Se define la variable, pero el valor se asigna en el perfil correspondiente
+    maintenance-service-url: ${MS_MAINTENANCE}
+  frontend:
+    # Toma la variable FRONTEND_URL, si no existe, usa localhost
+    url: ${FRONTEND_URL:http://localhost:4200}
+
+# ===============================================
+# SEPARADOR DE PERFIL
+# ===============================================
+---
+# ===============================================
+# PROPIEDADES EXCLUSIVAS PARA EL PERFIL 'dev'
+# ===============================================
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+app:
+  external:
+    # Valor por defecto para la URL en el entorno de desarrollo
+    maintenance-service-url: ${MS_MAINTENANCE:http://127.0.0.1:9090}
+  frontend:
+    # Toma la variable FRONTEND_URL, si no existe, usa localhost
+    url: ${FRONTEND_URL:http://localhost:4200}
+logging:
+  level:
+    org:
+      springframework:
+        security:
+          web: DEBUG
+          oauth2:
+            server:
+              authorization:
+                web: DEBUG
+                authentication: DEBUG
+                client: DEBUG
+                token: DEBUG
+                OAuth2AuthorizationService: DEBUG

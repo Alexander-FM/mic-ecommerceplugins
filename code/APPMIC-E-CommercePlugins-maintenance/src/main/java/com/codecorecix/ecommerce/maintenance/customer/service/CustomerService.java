@@ -1,10 +1,10 @@
 package com.codecorecix.ecommerce.maintenance.customer.service;
 
-import java.util.List;
-
 import com.codecorecix.ecommerce.maintenance.customer.api.dto.request.CustomerRequestDto;
 import com.codecorecix.ecommerce.maintenance.customer.api.dto.response.CustomerResponseDto;
 import com.codecorecix.ecommerce.utils.GenericResponse;
+
+import java.util.List;
 
 public interface CustomerService {
 
@@ -47,4 +47,12 @@ public interface CustomerService {
    * @return List of CustomerResponseDto.
    */
   GenericResponse<CustomerResponseDto> findById(final Integer id);
+
+  /**
+   * Method used to find the customer by username.
+   *
+   * @param username The username of the customer.
+   * @return List of CustomerResponseDto.
+   */
+  GenericResponse<CustomerResponseDto> findByUsername(final String username);
 }

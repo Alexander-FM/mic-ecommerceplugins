@@ -11,6 +11,10 @@ public class OrderDetailResponseDto implements Serializable {
 
   private Integer productId;
 
+  private String productName;
+
+  private String productImageUrl;
+
   private Integer quantity;
 
   private Double unitPrice;

@@ -1,0 +1,117 @@
+<p-toast></p-toast>
+
+<div class="detail-container" *ngIf="!loading && product as p">
+  <div class="detail-grid">
+    <section class="gallery-column">
+      <div class="main-image-wrapper">
+        <img
+          [src]="galleryImages[currentImageIndex]"
+          [alt]="p.name"
+          class="main-image"
+          (error)="onImageError($event)"
+        />
+
+        <button
+          type="button"
+          class="carousel-btn prev"
+          (click)="previousImage()"
+          [disabled]="galleryImages.length <= 1"
+          aria-label="Imagen anterior"
+        >
+          <i class="pi pi-angle-left"></i>
+        </button>
+
+        <button
+          type="button"
+          class="carousel-btn next"
+          (click)="nextImage()"
+          [disabled]="galleryImages.length <= 1"
+          aria-label="Siguiente imagen"
+        >
+          <i class="pi pi-angle-right"></i>
+        </button>
+      </div>
+
+      <div class="thumbs" *ngIf="galleryImages.length > 1">
+        <button
+          type="button"
+          class="thumb"
+          *ngFor="let image of galleryImages; let i = index"
+          [class.active]="i === currentImageIndex"
+          (click)="selectImage(i)"
+        >
+          <img [src]="image" [alt]="p.name + ' imagen ' + (i + 1)" (error)="onImageError($event)" />
+        </button>
+      </div>
+    </section>
+
+    <section class="info-column">
+      <p-button
+        label="Volver"
+        icon="pi pi-arrow-left"
+        [text]="true"
+        (onClick)="goBack()"
+      ></p-button>
+
+      <h1>{{ p.name }}</h1>
+      <p class="description">{{ p.description || 'Sin descripción' }}</p>
+
+      <div class="tags-row">
+        <p-tag *ngIf="p.categoryName" [value]="p.categoryName" severity="info"></p-tag>
+        <p-tag *ngIf="p.brandName" [value]="p.brandName" severity="secondary"></p-tag>
+        <p-tag *ngIf="p.isRecommended" value="Recomendado" severity="success" icon="pi pi-star-fill"></p-tag>
+      </div>
+
+      <div class="price">${{ p.price | number:'1.2-2' }}</div>
+
+      <div class="meta-row">
+        <span><strong>Stock:</strong> {{ p.stock }}</span>
+        <span *ngIf="p.barCode"><strong>Código:</strong> {{ p.barCode }}</span>
+      </div>
+
+      <div class="actions">
+        <p-button
+          label="Agregar al carrito"
+          icon="pi pi-shopping-cart"
+          [disabled]="p.stock <= 0"
+          (onClick)="addToCart()"
+        ></p-button>
+        <p-button
+          label="Comprar ahora"
+          icon="pi pi-bolt"
+          severity="success"
+          [disabled]="p.stock <= 0"
+          (onClick)="buyNow()"
+        ></p-button>
+      </div>
+    </section>
+  </div>
+
+  <section class="attributes-section">
+    <h2>Características</h2>
+    <p-table [value]="productAttributes" [tableStyle]="{ 'min-width': '50rem' }">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Característica</th>
+          <th>Valor</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-attribute>
+        <tr>
+          <td>{{ attribute.name }}</td>
+          <td>{{ attribute.value }}</td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="2">Este producto no tiene características registradas.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </section>
+</div>
+
+<div *ngIf="loading" class="loading-container">
+  <i class="pi pi-spin pi-spinner" style="font-size: 3rem"></i>
+  <p>Cargando detalle del producto...</p>
+</div>

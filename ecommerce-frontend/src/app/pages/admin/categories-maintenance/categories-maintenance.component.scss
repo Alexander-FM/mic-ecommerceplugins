@@ -1,0 +1,75 @@
+.maintenance-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.maintenance-header {
+  margin-bottom: 1.5rem;
+
+  h2 {
+    margin: 0;
+  }
+
+  p {
+    margin-top: 0.5rem;
+    color: #6b7280;
+  }
+}
+
+.maintenance-form-card,
+.maintenance-table-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.category-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .actions-row {
+    align-items: center;
+  }
+
+  .checkbox-group {
+    justify-content: center;
+    min-height: 42px;
+  }
+
+  .button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+  }
+}
+
+.table-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.text-danger {
+  color: #ef4444;
+  font-size: 0.75rem;
+}

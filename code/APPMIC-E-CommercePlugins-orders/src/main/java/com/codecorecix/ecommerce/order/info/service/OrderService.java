@@ -1,10 +1,11 @@
 package com.codecorecix.ecommerce.order.info.service;
 
-import java.util.List;
-
 import com.codecorecix.ecommerce.order.info.api.dto.request.OrderRequestDto;
+import com.codecorecix.ecommerce.order.info.api.dto.request.OrderStatusUpdateRequestDto;
 import com.codecorecix.ecommerce.order.info.api.dto.response.OrderResponseDto;
 import com.codecorecix.ecommerce.utils.GenericResponse;
+
+import java.util.List;
 
 public interface OrderService {
 
@@ -12,10 +13,9 @@ public interface OrderService {
    * Method used to save the order.
    *
    * @param orderRequestDto the order request dto.
-   * @param token the token
    * @return the OrderResponseDto.
    */
-  GenericResponse<OrderResponseDto> saveOrder(final OrderRequestDto orderRequestDto, final String token);
+  GenericResponse<OrderResponseDto> saveOrder(final OrderRequestDto orderRequestDto);
 
   /**
    * Method used to get all orders.
@@ -31,4 +31,21 @@ public interface OrderService {
    * @return a {@link GenericResponse} containing an object of {@link OrderResponseDto}.
    */
   GenericResponse<OrderResponseDto> getOrderById(final Long orderId);
+
+  /**
+   * Method used to get orders by customer id.
+   *
+   * @param customerId the customer id.
+   * @return a {@link GenericResponse} containing a list of {@link OrderResponseDto}.
+   */
+  GenericResponse<List<OrderResponseDto>> getOrdersByCustomerId(final Integer customerId);
+
+  /**
+   * Method used to update the order status.
+   *
+   * @param orderId the order id.
+   * @param requestDto the request dto.
+   * @return a {@link GenericResponse} containing an object of {@link OrderResponseDto}.
+   */
+  GenericResponse<OrderResponseDto> updateOrderStatus(final Long orderId, final OrderStatusUpdateRequestDto requestDto);
 }

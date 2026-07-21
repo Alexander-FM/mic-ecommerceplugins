@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ecommerce-frontend
+  namespace: dev
+  labels:
+    app: ecommerce-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ecommerce-frontend
+  template:
+    metadata:
+      labels:
+        app: ecommerce-frontend
+    spec:
+      containers:
+        - name: frontend
+          image: alexanderpe/ecommerce-frontend:latest
+          imagePullPolicy: Always # Asegura que tome tu cambio manual o de CI/CD
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi" # Muy ligero porque es solo Nginx sirviendo estáticos
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ecommerce-frontend
+  namespace: dev
+spec:
+  type: LoadBalancer # En Minikube usaremos 'minikube service'
+  selector:
+    app: ecommerce-frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80

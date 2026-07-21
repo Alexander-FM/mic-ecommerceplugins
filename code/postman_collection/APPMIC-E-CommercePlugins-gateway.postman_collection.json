@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "f6626a91-7520-4b9a-88ce-a7327ae73157",
+		"_postman_id": "fa838b33-c8df-4fb9-a86d-89357e08432f",
 		"name": "APPMIC-E-CommercePlugins-gateway",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "9753857",
-		"_collection_link": "https://orange-space-3640.postman.co/workspace/APPMIC-E-CommercePlugins~1c50689a-d05f-493d-854e-1ce929da7564/collection/9753857-f6626a91-7520-4b9a-88ce-a7327ae73157?action=share&source=collection_link&creator=9753857"
+		"_collection_link": "https://orange-space-3640.postman.co/workspace/APPMIC-E-CommercePlugins~1c50689a-d05f-493d-854e-1ce929da7564/collection/9753857-fa838b33-c8df-4fb9-a86d-89357e08432f?action=share&source=collection_link&creator=9753857"
 	},
 	"item": [
 		{
@@ -16,9 +16,27 @@
 						{
 							"name": "Listar Categorías",
 							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
 								"method": "GET",
 								"header": [],
-								"url": "{{base_url}}/{{categories_endpoint}}"
+								"url": {
+									"raw": "{{base_url}}/{{categories_endpoint}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"{{categories_endpoint}}"
+									]
+								}
 							},
 							"response": []
 						}
@@ -37,7 +55,16 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "{{base_url}}/{{brands_endpoint}}/test-load-balancer"
+								"url": {
+									"raw": "{{base_url}}/{{brands_endpoint}}/test-load-balancer",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"{{brands_endpoint}}",
+										"test-load-balancer"
+									]
+								}
 							},
 							"response": []
 						}
@@ -56,7 +83,15 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "{{base_url}}/{{status_endpoint}}"
+								"url": {
+									"raw": "{{base_url}}/{{status_endpoint}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"{{status_endpoint}}"
+									]
+								}
 							},
 							"response": []
 						}
@@ -79,7 +114,15 @@
 										}
 									}
 								},
-								"url": "{{base_url}}/{{orders_enpoint}}"
+								"url": {
+									"raw": "{{base_url}}/{{orders_enpoint}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"{{orders_enpoint}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -88,7 +131,15 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "{{base_url}}/{{orders_enpoint}}"
+								"url": {
+									"raw": "{{base_url}}/{{orders_enpoint}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"{{orders_enpoint}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -97,7 +148,16 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "{{base_url}}/{{orders_enpoint}}/4"
+								"url": {
+									"raw": "{{base_url}}/{{orders_enpoint}}/4",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"{{orders_enpoint}}",
+										"4"
+									]
+								}
 							},
 							"response": []
 						},
@@ -106,7 +166,16 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "{{base_url}}/{{orders_details_endpoint}}/4"
+								"url": {
+									"raw": "{{base_url}}/{{orders_details_endpoint}}/4",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"{{orders_details_endpoint}}",
+										"4"
+									]
+								}
 							},
 							"response": []
 						}

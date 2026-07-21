@@ -7,7 +7,7 @@ import { Category, GenericResponse } from '../models/ecommerce.models';
   providedIn: 'root'
 })
 export class CategoryService {
-  private baseEndpoint = '/maintenance/api/categories';
+  private baseEndpoint = '/api/maintenance/categories';
 
   constructor(private apiService: ApiService) {}
 
@@ -23,12 +23,16 @@ export class CategoryService {
     return this.apiService.get<Category>(`${this.baseEndpoint}/${id}`);
   }
 
-  createCategory(category: Category): Observable<GenericResponse<Category>> {
+  createCategory(category: Partial<Category>): Observable<GenericResponse<Category>> {
     return this.apiService.post<Category>(this.baseEndpoint, category);
   }
 
-  updateCategory(id: number, category: Category): Observable<GenericResponse<Category>> {
+  updateCategory(id: number, category: Partial<Category>): Observable<GenericResponse<Category>> {
     return this.apiService.put<Category>(`${this.baseEndpoint}/${id}`, category);
+  }
+
+  updateCategoryStatus(id: number, isActive: boolean): Observable<GenericResponse<Category>> {
+    return this.apiService.patch<Category>(`${this.baseEndpoint}/${id}/status?isActive=${isActive}`);
   }
 
   deleteCategory(id: number): Observable<GenericResponse<Category>> {

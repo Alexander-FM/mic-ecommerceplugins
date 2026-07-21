@@ -1,6 +1,10 @@
 package com.codecorecix.ecommerce.maintenance.product.info.api.dto.response;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+
+import com.codecorecix.ecommerce.maintenance.product.image.api.dto.response.ProductImageResponseDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,5 +33,13 @@ public class ProductResponseDto implements Serializable {
 
   private String brandName;
 
+  private Boolean isActive;
+
   private Boolean isRecommended;
+
+  private String mainImageUrl;
+
+  private Set<ProductAttributeResponseDto> attributes = new HashSet<>();
+
+  private Set<ProductImageResponseDto> images = new HashSet<>();
 }

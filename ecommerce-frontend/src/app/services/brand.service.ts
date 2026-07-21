@@ -7,7 +7,7 @@ import { Brand, GenericResponse } from '../models/ecommerce.models';
   providedIn: 'root'
 })
 export class BrandService {
-  private baseEndpoint = '/maintenance/api/brands';
+  private baseEndpoint = '/api/maintenance/brands';
 
   constructor(private apiService: ApiService) {}
 
@@ -21,5 +21,21 @@ export class BrandService {
 
   getBrandById(id: number): Observable<GenericResponse<Brand>> {
     return this.apiService.get<Brand>(`${this.baseEndpoint}/${id}`);
+  }
+
+  createBrand(brand: Partial<Brand>): Observable<GenericResponse<Brand>> {
+    return this.apiService.post<Brand>(this.baseEndpoint, brand);
+  }
+
+  updateBrand(id: number, brand: Partial<Brand>): Observable<GenericResponse<Brand>> {
+    return this.apiService.put<Brand>(`${this.baseEndpoint}/${id}`, brand);
+  }
+
+  updateBrandStatus(id: number, isActive: boolean): Observable<GenericResponse<Brand>> {
+    return this.apiService.patch<Brand>(`${this.baseEndpoint}/${id}/status?isActive=${isActive}`);
+  }
+
+  deleteBrand(id: number): Observable<GenericResponse<Brand>> {
+    return this.apiService.delete<Brand>(`${this.baseEndpoint}/${id}`);
   }
 }

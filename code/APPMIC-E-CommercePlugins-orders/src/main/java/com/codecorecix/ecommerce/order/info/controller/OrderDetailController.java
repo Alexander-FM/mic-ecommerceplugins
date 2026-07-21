@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/orders/details")
+@RequestMapping("${app.endpoints.order-info}/details")
 @RequiredArgsConstructor
 public class OrderDetailController {
 
@@ -27,9 +27,13 @@ public class OrderDetailController {
       @PathVariable(value = "orderId") final Integer orderId) {
     final GenericResponse<List<OrderDetailResponseDto>> response = this.service.getDetailsByOrderId(orderId);
     if (ObjectUtils.isNotEmpty(response.getBody())) {
-      return ResponseEntity.status(HttpStatus.OK).body(response);
+      return ResponseEntity
+          .status(HttpStatus.OK)
+          .body(response);
     } else {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+      return ResponseEntity
+          .status(HttpStatus.NOT_FOUND)
+          .body(response);
     }
   }
 }

@@ -71,6 +71,13 @@
     font-size: 1.2rem;
     font-weight: 600;
     color: #2563eb;
+    white-space: nowrap;
+  }
+
+  .quantity-cell,
+  .total-cell {
+    white-space: nowrap;
+    overflow: hidden;
   }
 }
 
@@ -162,17 +169,26 @@
   }
 }
 
-::ng-deep {
-  .p-inputnumber {
-    width: 130px;
+:host ::ng-deep {
+  .quantity-cell .cart-qty-input.p-inputnumber {
+    width: 104px !important;
+    max-width: 104px !important;
+    min-width: 104px !important;
+    display: inline-flex;
+  }
 
-    .p-inputnumber-button {
-      width: 2rem;
-    }
+  .quantity-cell .cart-qty-input.p-inputnumber .p-inputnumber-button {
+    width: 1.6rem !important;
+    min-width: 1.6rem !important;
+    padding: 0 !important;
+  }
 
-    .p-inputnumber-input {
-      text-align: center;
-    }
+  .quantity-cell .cart-qty-input-field.p-inputtext {
+    width: 48px !important;
+    min-width: 48px !important;
+    max-width: 48px !important;
+    text-align: center;
+    padding: 0.35rem 0.2rem !important;
   }
 
   .p-datatable {

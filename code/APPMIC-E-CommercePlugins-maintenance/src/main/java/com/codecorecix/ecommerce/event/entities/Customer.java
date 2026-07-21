@@ -28,10 +28,10 @@ import org.hibernate.annotations.CreationTimestamp;
 @AllArgsConstructor
 @Entity
 @Table(name = "Customers", uniqueConstraints = {
-    @UniqueConstraint(columnNames = "email", name = "UK_Customers_email"),
-    @UniqueConstraint(columnNames = "phoneNumberOne", name = "UK_Customers_phoneNumberOne"),
-    @UniqueConstraint(columnNames = "phoneNumberTwo", name = "UK_Customers_phoneNumberTwo"),
-    @UniqueConstraint(columnNames = "phoneNumberThree", name = "UK_Customers_phoneNumberThree")
+  @UniqueConstraint(columnNames = "email", name = "UK_Customers_email"),
+  @UniqueConstraint(columnNames = "phoneNumberOne", name = "UK_Customers_phoneNumberOne"),
+  @UniqueConstraint(columnNames = "phoneNumberTwo", name = "UK_Customers_phoneNumberTwo"),
+  @UniqueConstraint(columnNames = "phoneNumberThree", name = "UK_Customers_phoneNumberThree")
 })
 public class Customer extends Person implements Serializable {
 
@@ -70,4 +70,7 @@ public class Customer extends Person implements Serializable {
 
   @Column
   private LocalDateTime modificationDate;
+
+  @Column(nullable = false)
+  private Integer userId;
 }

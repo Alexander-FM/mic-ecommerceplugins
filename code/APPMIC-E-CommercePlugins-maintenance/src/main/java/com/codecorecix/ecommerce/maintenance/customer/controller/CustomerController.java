@@ -11,6 +11,7 @@ import com.codecorecix.ecommerce.utils.GenericResponse;
 import com.codecorecix.ecommerce.utils.GenericResponseConstants;
 import com.codecorecix.ecommerce.utils.MaintenanceUtils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/customers")
+@RequestMapping("${app.endpoints.customer}")
+@Slf4j
 public class CustomerController {
 
   private final CustomerService service;
@@ -37,17 +39,29 @@ public class CustomerController {
 
   @GetMapping
   public ResponseEntity<GenericResponse<List<CustomerResponseDto>>> listCustomers() {
-    return ResponseEntity.status(HttpStatus.OK).body(this.service.listCustomers());
+    return ResponseEntity
+        .status(HttpStatus.OK)
+        .body(this.service.listCustomers());
   }
 
   @GetMapping("/{id}")
   public ResponseEntity<GenericResponse<CustomerResponseDto>> getCustomerById(@PathVariable(value = "id") final Integer id) {
     final GenericResponse<CustomerResponseDto> response = this.service.findById(id);
     if (Objects.nonNull(response.getBody())) {
-      return ResponseEntity.status(HttpStatus.OK).body(response);
+      return ResponseEntity
+          .status(HttpStatus.OK)
+          .body(response);
     } else {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+      return ResponseEntity
+          .status(HttpStatus.NOT_FOUND)
+          .body(response);
     }
+  }
+
+  @GetMapping("/username/{username}")
+  public ResponseEntity<GenericResponse<CustomerResponseDto>> getCustomerByUsername(@PathVariable final String username) {
+    final GenericResponse<CustomerResponseDto> response = this.service.findByUsername(username);
+    return ResponseEntity.ok(response);
   }
 
   @PostMapping
@@ -56,31 +70,55 @@ public class CustomerController {
       throw new GenericUnprocessableEntityException(GenericResponseConstants.UNPROCESSABLE_ENTITY_EXCEPTION);
     } else {
       MaintenanceUtils.validRequestDto(customerRequestDto);
-      return ResponseEntity.status(HttpStatus.CREATED).body(this.service.save(customerRequestDto, false));
+      GenericResponse<CustomerResponseDto> response = this.service.save(customerRequestDto, false);
+      if (response
+          .getRpta()
+          .equals(GenericResponseConstants.RPTA_WARNING)) {
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(response);
+      }
+      log.info("Customer created successfully with id: {}", response
+          .getBody()
+          .getId());
+      return ResponseEntity
+          .status(HttpStatus.CREATED)
+          .body(response);
     }
   }
 
   @PutMapping("/{id}")
   public ResponseEntity<GenericResponse<CustomerResponseDto>> updateCustomer(@PathVariable(value = "id") final Integer id,
-      @RequestBody final CustomerRequestDto customerRequestDto) {
+                                                                             @RequestBody final CustomerRequestDto customerRequestDto) {
     final GenericResponse<CustomerResponseDto> response = this.service.findById(id);
     if (ObjectUtils.isNotEmpty(response.getBody())) {
-      customerRequestDto.setId(response.getBody().getId());
+      customerRequestDto.setId(response
+          .getBody()
+          .getId());
       MaintenanceUtils.validRequestDto(customerRequestDto);
-      return ResponseEntity.status(HttpStatus.OK).body(this.service.save(customerRequestDto, true));
+      return ResponseEntity
+          .status(HttpStatus.OK)
+          .body(this.service.save(customerRequestDto, true));
     } else {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+      return ResponseEntity
+          .status(HttpStatus.NOT_FOUND)
+          .body(response);
     }
   }
 
   @PatchMapping("/{id}/status")
   public ResponseEntity<GenericResponse<CustomerResponseDto>> updateCustomerStatus(@PathVariable(value = "id") final Integer id,
-      @RequestParam(value = "isActive") final Boolean isActive) {
+                                                                                   @RequestParam(value = "isActive")
+                                                                                   final Boolean isActive) {
     final GenericResponse<CustomerResponseDto> response = this.service.findById(id);
     if (ObjectUtils.isNotEmpty(response.getBody())) {
-      return ResponseEntity.status(HttpStatus.OK).body(this.service.updateCustomerStatus(isActive, id));
+      return ResponseEntity
+          .status(HttpStatus.OK)
+          .body(this.service.updateCustomerStatus(isActive, id));
     } else {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+      return ResponseEntity
+          .status(HttpStatus.NOT_FOUND)
+          .body(response);
     }
   }
 
@@ -88,9 +126,13 @@ public class CustomerController {
   public ResponseEntity<GenericResponse<CustomerResponseDto>> deleteCustomerById(@PathVariable(value = "id") final Integer id) {
     final GenericResponse<CustomerResponseDto> response = this.service.findById(id);
     if (ObjectUtils.isNotEmpty(response.getBody())) {
-      return ResponseEntity.status(HttpStatus.OK).body(this.service.deleteCustomerById(id));
+      return ResponseEntity
+          .status(HttpStatus.OK)
+          .body(this.service.deleteCustomerById(id));
     } else {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+      return ResponseEntity
+          .status(HttpStatus.NOT_FOUND)
+          .body(response);
     }
   }
 }

@@ -1,0 +1,32 @@
+server:
+  port: ${PORT:8080}
+spring:
+  application:
+    name: appmic-e-commerceplugins-gateway
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+  cloud:
+    gateway:
+      mvc:
+        # Definición de las rutas del gateway
+        routes:
+          # Ruta para el microservicio de Mantenimiento
+          - id: appmic-e-commerceplugins-maintenance
+            uri: ${LB_MAINTENANCE_SERVICE:http://127.0.0.1:9090}
+            predicates:
+              - Path=/api/maintenance/**
+
+          # Ruta para el microservicio de Órdenes
+          - id: appmic-e-commerceplugins-orders
+            uri: ${LB_ORDER_SERVICE:http://127.0.0.1:9091}
+            predicates:
+              - Path=/api/orders/**
+
+          # Ruta para el microservicio de Autenticación
+          - id: appmic-e-commerceplugins-auth
+            uri: ${LB_AUTH_SERVICE:http://127.0.0.1:9000}
+            predicates:
+              - Path=/api/auth/**, /oauth2/**, /login/**, /css/**, /images/**, /logout, /error, /favicon.ico, /js/**
+cors:
+  allowed:
+    origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000,http://localhost:4200,http://localhost}

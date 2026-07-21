@@ -1,5 +1,10 @@
 package com.codecorecix.ecommerce.maintenance.user.api.dto.response;
 
+import java.io.Serializable;
+import java.util.List;
+
+import com.codecorecix.ecommerce.maintenance.role.dto.response.RoleResponseDto;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -9,7 +14,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserResponseDto {
+public class UserResponseDto implements Serializable {
 
   private Integer id;
 
@@ -18,4 +23,6 @@ public class UserResponseDto {
   private String password;
 
   private Boolean isActive;
+
+  private List<RoleResponseDto> roles;
 }

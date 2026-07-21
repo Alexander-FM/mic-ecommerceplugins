@@ -2,6 +2,7 @@ package com.codecorecix.ecommerce.event.entities;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ForeignKey;
@@ -16,6 +17,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -34,5 +36,8 @@ public class ProductImage implements Serializable {
 
   @ManyToOne
   @JoinColumn(foreignKey = @ForeignKey(name = "FK_ProductsImages_Products"))
+  @JsonBackReference // Evita que Jackson serialize al padre desde el hijo
+  @ToString.Exclude
+  @EqualsAndHashCode.Exclude
   private Product product;
 }

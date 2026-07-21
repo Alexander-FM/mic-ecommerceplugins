@@ -1,5 +1,9 @@
 package com.codecorecix.ecommerce.maintenance.user.api.dto.request;
 
+import java.util.List;
+
+import com.codecorecix.ecommerce.maintenance.role.dto.request.RoleRequestDto;
+
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -13,6 +17,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 
 public class UserRequestDto {
+
   private Integer id;
 
   @NotNull(message = "The username should not be null")
@@ -24,4 +29,6 @@ public class UserRequestDto {
   private String password;
 
   private Boolean isActive;
+
+  private List<RoleRequestDto> roles;
 }

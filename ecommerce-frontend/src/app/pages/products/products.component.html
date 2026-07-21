@@ -4,63 +4,62 @@
   <div class="filters-section">
     <div class="p-fluid">
       <h3>Filtros</h3>
-      
+
       <div class="p-field">
         <label for="search">Buscar</label>
         <span class="p-input-icon-left">
-          <i class="pi pi-search"></i>
-          <input 
+          <input
             id="search"
-            type="text" 
-            pInputText 
-            [(ngModel)]="searchText" 
+            type="text"
+            pInputText
+            [(ngModel)]="searchText"
             (input)="filterProducts()"
-            placeholder="Buscar productos..." 
+            placeholder="Buscar productos..."
           />
         </span>
       </div>
 
       <div class="p-field">
         <label for="brand">Marca</label>
-        <p-dropdown
-          id="brand"
+        <p-select
+          inputId="brand"
           [options]="brands"
           [(ngModel)]="selectedBrand"
           optionLabel="description"
           placeholder="Seleccionar marca"
           [showClear]="true"
           (onChange)="filterProducts()"
-        ></p-dropdown>
+        ></p-select>
       </div>
 
       <div class="p-field">
         <label for="minPrice">Precio mínimo: ${{ minPrice }}</label>
-        <input 
+        <input
           id="minPrice"
-          type="range" 
-          [(ngModel)]="minPrice" 
+          type="range"
+          [(ngModel)]="minPrice"
           (change)="filterProducts()"
-          min="0" 
-          max="10000" 
+          min="0"
+          max="10000"
           step="100"
         />
       </div>
 
       <div class="p-field">
         <label for="maxPrice">Precio máximo: ${{ maxPrice }}</label>
-        <input 
+        <input
           id="maxPrice"
-          type="range" 
-          [(ngModel)]="maxPrice" 
+          type="range"
+          [(ngModel)]="maxPrice"
           (change)="filterProducts()"
-          min="0" 
-          max="10000" 
+          min="0"
+          max="10000"
           step="100"
         />
       </div>
 
-      <p-button 
-        label="Limpiar filtros" 
+      <p-button
+        label="Limpiar filtros"
         icon="pi pi-filter-slash"
         [outlined]="true"
         (onClick)="resetFilters()"
@@ -75,34 +74,34 @@
     <div class="products-grid" *ngIf="!loading">
       <p-card *ngFor="let product of filteredProducts" class="product-card">
         <ng-template pTemplate="header">
-          <div class="product-image-container">
-            <img 
-              [src]="product.imageUrl || '/assets/images/product-placeholder.svg'" 
+          <div class="product-image-container" (click)="goToProductDetail(product)">
+            <img
+              [src]="product.mainImageUrl || 'imagen_not_found_sorry.png'"
               [alt]="product.name"
               class="product-image"
               (error)="onImageError($event)"
             />
           </div>
         </ng-template>
-        
+
         <div class="product-info">
-          <h3 class="product-name">{{ product.name }}</h3>
+          <h3 class="product-name" (click)="goToProductDetail(product)">{{ product.name }}</h3>
           <p class="product-description">{{ product.description || 'Sin descripción' }}</p>
-          
+
           <div class="product-details">
-            <p-tag 
-              *ngIf="product.categoryName" 
-              [value]="product.categoryName" 
+            <p-tag
+              *ngIf="product.categoryName"
+              [value]="product.categoryName"
               severity="info"
             ></p-tag>
-            <p-tag 
-              *ngIf="product.brandName" 
-              [value]="product.brandName" 
+            <p-tag
+              *ngIf="product.brandName"
+              [value]="product.brandName"
               severity="secondary"
             ></p-tag>
-            <p-tag 
-              *ngIf="product.isRecommended" 
-              value="Recomendado" 
+            <p-tag
+              *ngIf="product.isRecommended"
+              value="Recomendado"
               severity="success"
               icon="pi pi-star-fill"
             ></p-tag>
@@ -122,15 +121,15 @@
         </div>
 
         <ng-template pTemplate="footer">
-          <div class="product-actions">
-            <p-button 
-              label="Agregar al carrito" 
+          <div class="product-actions two-buttons">
+            <p-button
+              label="Agregar"
               icon="pi pi-shopping-cart"
               [disabled]="product.stock <= 0"
               (onClick)="addToCart(product)"
             ></p-button>
-            <p-button 
-              label="Comprar" 
+            <p-button
+              label="Comprar"
               icon="pi pi-bolt"
               severity="success"
               [disabled]="product.stock <= 0"

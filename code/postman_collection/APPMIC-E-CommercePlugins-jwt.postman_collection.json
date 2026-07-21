@@ -1,0 +1,64 @@
+{
+	"info": {
+		"_postman_id": "e8c3e123-2188-47cf-af3f-83397e8a4808",
+		"name": "APPMIC-E-CommercePlugins-jwt",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "9753857",
+		"_collection_link": "https://orange-space-3640.postman.co/workspace/APPMIC-E-CommercePlugins~1c50689a-d05f-493d-854e-1ce929da7564/collection/9753857-e8c3e123-2188-47cf-af3f-83397e8a4808?action=share&source=collection_link&creator=9753857"
+	},
+	"item": [
+		{
+			"name": "Login Request",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"MaryMe\",\r\n    \"password\": \"199912\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/{{login_endpoint}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"{{login_endpoint}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Validate Token",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{retrieve_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/{{validate_endpoint}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"{{validate_endpoint}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

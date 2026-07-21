@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: appmic-e-commerceplugins-maintenance
+data:
+  lb_auth_jwk_uri: "http://appmic-e-commerceplugins-auth:9000/oauth2/jwks"
+  port: "9090"
+  db_host: "mysql:3306"
+  database: "maintenance_service"
+  spring_profile_active: "dev"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: appmic-e-commerceplugins-orders
+data:
+  port: "9091"
+  db_host: "mysql:3306"
+  database: "orders_service"
+  spring_profile_active: "dev"
+  lb_auth_jwk_uri: "http://appmic-e-commerceplugins-auth:9000/oauth2/jwks"
+  lb_maintenance_service: "http://appmic-e-commerceplugins-maintenance:9090"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: appmic-e-commerceplugins-auth
+data:
+  port: "9000"
+  profile_active: "dev"
+  lb_maintenance_service: "http://appmic-e-commerceplugins-maintenance:9090"
+  spa_redirect_uri: "http://ecommerce-frontend/auth/callback"
+  frontend_url: "http://ecommerce-frontend"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: appmic-e-commerceplugins-gateway
+data:
+  port: "8080"
+  profile_active: "dev"
+  cors_allowed_origins: "http://ecommerce-frontend"
+  lb_auth_service: "http://appmic-e-commerceplugins-auth:9000"
+  lb_order_service: "http://appmic-e-commerceplugins-orders:9091"
+  lb_maintenance_service: "http://appmic-e-commerceplugins-maintenance:9090"

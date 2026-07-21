@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { DataViewModule } from 'primeng/dataview';
 import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
@@ -24,7 +24,7 @@ import { Product, Brand } from '../../models/ecommerce.models';
     CardModule,
     ButtonModule,
     InputTextModule,
-    DropdownModule,
+    SelectModule,
     DataViewModule,
     TagModule,
     ToastModule
@@ -49,7 +49,7 @@ export class ProductsComponent implements OnInit {
     private cartService: CartService,
     private messageService: MessageService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadProducts();
@@ -60,19 +60,41 @@ export class ProductsComponent implements OnInit {
     this.loading = true;
     this.productService.getActiveProducts().subscribe({
       next: (response) => {
+        console.log('✅ Productos recibidos:', response);
         if (response.body) {
-          this.products = response.body;
-          this.filteredProducts = response.body;
+          // Procesar URLs de imágenes (convertir Google Drive links si es necesario)
+          this.products = response.body.map(product => ({
+            ...product,
+            mainImageUrl: this.processImageUrl(product.mainImageUrl)
+          }));
+          this.filteredProducts = this.products;
+          console.log('📦 Total productos:', this.products.length);
           this.loading = false;
         }
       },
       error: (error) => {
-        console.error('Error loading products:', error);
+        console.error('❌ Error loading products:', error);
+
+        let errorMsg = 'No se pudieron cargar los productos';
+        if (error.status === 401) {
+          errorMsg = 'No autorizado. El token ha expirado.';
+        } else if (error.status === 403) {
+          errorMsg = 'Acceso denegado a los productos.';
+        } else if (error.status === 0) {
+          errorMsg = 'Error de conexión. Verifica que la API está disponible.';
+        } else if (error.error?.message) {
+          errorMsg = error.error.message;
+        }
+
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: 'No se pudieron cargar los productos'
+          detail: errorMsg
         });
+
+        console.log('📝 Status:', error.status);
+        console.log('📝 Error completo:', error.error);
+
         this.loading = false;
       }
     });
@@ -93,14 +115,14 @@ export class ProductsComponent implements OnInit {
 
   filterProducts(): void {
     this.filteredProducts = this.products.filter(product => {
-      const matchesSearch = !this.searchText || 
+      const matchesSearch = !this.searchText ||
         product.name.toLowerCase().includes(this.searchText.toLowerCase()) ||
         (product.description?.toLowerCase().includes(this.searchText.toLowerCase()));
-      
-      const matchesBrand = !this.selectedBrand || 
+
+      const matchesBrand = !this.selectedBrand ||
         product.brandName === this.selectedBrand.description;
-      
-      const matchesPrice = product.price >= this.minPrice && 
+
+      const matchesPrice = product.price >= this.minPrice &&
         product.price <= this.maxPrice;
 
       return matchesSearch && matchesBrand && matchesPrice;
@@ -121,6 +143,14 @@ export class ProductsComponent implements OnInit {
     this.router.navigate(['/cart']);
   }
 
+  goToProductDetail(product: Product): void {
+    if (!product.id) {
+      return;
+    }
+
+    this.router.navigate(['/products', product.id]);
+  }
+
   resetFilters(): void {
     this.searchText = '';
     this.selectedBrand = null;
@@ -131,6 +161,44 @@ export class ProductsComponent implements OnInit {
 
   onImageError(event: Event): void {
     const target = event.target as HTMLImageElement;
-    target.src = '/assets/images/product-placeholder.svg';
+    target.src = 'imagen_not_found_sorry.png';
+  }
+
+  /**
+   * Convierte URLs de Google Drive a formato accesible usando proxy
+   * Google Drive: https://drive.google.com/file/d/{FILE_ID}/view
+   * Convertidas a: URL preview o proxy de imágenes si es necesario
+   *
+   * El proxy images.weserv.nl permite acceder a imágenes bloqueadas por CORS
+   */
+  private processImageUrl(url: string | null | undefined): string | undefined {
+    if (!url) {
+      return undefined;
+    }
+
+    console.log('🖼️ Procesando URL:', url);
+
+    // Detectar si es URL de Google Drive
+    if (url.includes('drive.google.com')) {
+      try {
+        // Extraer FILE_ID del URL
+        const fileIdMatch = url.match(/\/d\/([a-zA-Z0-9-_]+)/);
+        if (fileIdMatch && fileIdMatch[1]) {
+          const fileId = fileIdMatch[1];
+          // Convertir a URL preview que funciona mejor
+          const previewUrl = `https://drive.google.com/uc?id=${fileId}&export=view`;
+
+          // Si necesitas usar un proxy para CORS issues, descomenta esto:
+          const proxyUrl = `https://images.weserv.nl/?url=${encodeURIComponent(previewUrl)}&w=400`;
+          return proxyUrl;
+        }
+      } catch (error) {
+        console.error('❌ Error procesando URL de Google Drive:', error);
+      }
+    }
+
+    // Si no es Google Drive o no pudo procesar, retornar URL original
+    console.log('ℹ️ URL original:', url);
+    return url;
   }
 }

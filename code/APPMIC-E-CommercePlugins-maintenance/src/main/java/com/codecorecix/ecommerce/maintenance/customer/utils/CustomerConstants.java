@@ -23,4 +23,9 @@ public class CustomerConstants {
   public static final String UPDATE_MESSAGE_ERROR = "An error occurred while updating the customer";
 
   public static final String DELETE_MESSAGE_ERROR = "An error occurred while deleting the customer";
+
+  public static final String NOT_EXIST_USER_FOR_CUSTOMER = "The user associated with the customer does not exist";
+
+  public static final String EMPLOYEE_CONFLICT = "Already exist a customer with the same userId";
+
 }

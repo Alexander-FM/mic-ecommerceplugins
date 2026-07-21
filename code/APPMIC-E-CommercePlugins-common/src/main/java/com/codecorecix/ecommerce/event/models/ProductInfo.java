@@ -1,5 +1,7 @@
 package com.codecorecix.ecommerce.event.models;
 
+import java.io.Serializable;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductInfo {
+public class ProductInfo implements Serializable {
 
   private Integer id;
 
@@ -24,4 +26,10 @@ public class ProductInfo {
   private String categoryName;
 
   private String brandName;
+
+  private String mainImageUrl;
+
+  private Boolean isActive;
+
+  private Boolean isRecommended;
 }

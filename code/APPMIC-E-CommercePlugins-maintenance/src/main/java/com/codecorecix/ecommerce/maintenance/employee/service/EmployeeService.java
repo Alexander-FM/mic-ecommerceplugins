@@ -1,10 +1,10 @@
 package com.codecorecix.ecommerce.maintenance.employee.service;
 
-import java.util.List;
-
 import com.codecorecix.ecommerce.maintenance.employee.api.dto.request.EmployeeRequestDto;
 import com.codecorecix.ecommerce.maintenance.employee.api.dto.response.EmployeeResponseDto;
 import com.codecorecix.ecommerce.utils.GenericResponse;
+
+import java.util.List;
 
 public interface EmployeeService {
 
@@ -47,4 +47,12 @@ public interface EmployeeService {
    * @return List of EmployeeResponseDto.
    */
   GenericResponse<EmployeeResponseDto> findById(final Integer id);
+
+  /**
+   * Method used to find the employee by username.
+   *
+   * @param username The username of the employee.
+   * @return List of EmployeeResponseDto.
+   */
+  GenericResponse<EmployeeResponseDto> findByUsername(final String username);
 }

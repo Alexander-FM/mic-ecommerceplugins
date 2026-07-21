@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/employees")
+@RequestMapping("${app.endpoints.employee}")
 @RequiredArgsConstructor
 public class EmployeeController {
 
@@ -35,17 +35,29 @@ public class EmployeeController {
 
   @GetMapping
   public ResponseEntity<GenericResponse<List<EmployeeResponseDto>>> getAllEmployees() {
-    return ResponseEntity.status(HttpStatus.OK).body(this.service.getAllEmployees());
+    return ResponseEntity
+        .status(HttpStatus.OK)
+        .body(this.service.getAllEmployees());
   }
 
   @GetMapping("/{id}")
   public ResponseEntity<GenericResponse<EmployeeResponseDto>> getEmployeeById(@PathVariable(value = "id") final Integer id) {
     final GenericResponse<EmployeeResponseDto> response = this.service.findById(id);
     if (Objects.nonNull(response.getBody())) {
-      return ResponseEntity.status(HttpStatus.OK).body(response);
+      return ResponseEntity
+          .status(HttpStatus.OK)
+          .body(response);
     } else {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+      return ResponseEntity
+          .status(HttpStatus.NOT_FOUND)
+          .body(response);
     }
+  }
+
+  @GetMapping("/username/{username}")
+  public ResponseEntity<GenericResponse<EmployeeResponseDto>> getEmployeeByUsername(@PathVariable final String username) {
+    final GenericResponse<EmployeeResponseDto> response = this.service.findByUsername(username);
+    return ResponseEntity.ok(response);
   }
 
   @PostMapping
@@ -54,31 +66,50 @@ public class EmployeeController {
       throw new GenericUnprocessableEntityException(GenericResponseConstants.UNPROCESSABLE_ENTITY_EXCEPTION);
     } else {
       MaintenanceUtils.validRequestDto(employeeRequestDto);
-      return ResponseEntity.status(HttpStatus.CREATED).body(this.service.save(employeeRequestDto, false));
+      GenericResponse<EmployeeResponseDto> response = this.service.save(employeeRequestDto, false);
+      if (response
+          .getRpta()
+          .equals(GenericResponseConstants.RPTA_WARNING)) {
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(response);
+      }
+      return ResponseEntity
+          .status(HttpStatus.CREATED)
+          .body(response);
     }
   }
 
   @PutMapping("/{id}")
   public ResponseEntity<GenericResponse<EmployeeResponseDto>> updateEmployee(@PathVariable(value = "id") final Integer id,
-      @RequestBody final EmployeeRequestDto employeeRequestDto) {
+                                                                             @RequestBody final EmployeeRequestDto employeeRequestDto) {
     final GenericResponse<EmployeeResponseDto> response = this.service.findById(id);
     if (ObjectUtils.isNotEmpty(response.getBody())) {
       employeeRequestDto.setId(id);
       MaintenanceUtils.validRequestDto(employeeRequestDto);
-      return ResponseEntity.status(HttpStatus.OK).body(this.service.save(employeeRequestDto, true));
+      return ResponseEntity
+          .status(HttpStatus.OK)
+          .body(this.service.save(employeeRequestDto, true));
     } else {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+      return ResponseEntity
+          .status(HttpStatus.NOT_FOUND)
+          .body(response);
     }
   }
 
   @PatchMapping("/{id}/status")
   public ResponseEntity<GenericResponse<EmployeeResponseDto>> updateEmployeeStatus(@PathVariable(value = "id") final Integer id,
-      @RequestParam(value = "isActive") final Boolean isActive) {
+                                                                                   @RequestParam(value = "isActive")
+                                                                                   final Boolean isActive) {
     final GenericResponse<EmployeeResponseDto> response = this.service.findById(id);
     if (ObjectUtils.isNotEmpty(response.getBody())) {
-      return ResponseEntity.status(HttpStatus.OK).body(this.service.updateEmployeeStatus(isActive, id));
+      return ResponseEntity
+          .status(HttpStatus.OK)
+          .body(this.service.updateEmployeeStatus(isActive, id));
     } else {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+      return ResponseEntity
+          .status(HttpStatus.NOT_FOUND)
+          .body(response);
     }
   }
 
@@ -86,9 +117,13 @@ public class EmployeeController {
   public ResponseEntity<GenericResponse<EmployeeResponseDto>> deleteEmployeeById(@PathVariable(value = "id") final Integer id) {
     final GenericResponse<EmployeeResponseDto> response = this.service.findById(id);
     if (ObjectUtils.isNotEmpty(response.getBody())) {
-      return ResponseEntity.status(HttpStatus.OK).body(this.service.deleteEmployeeById(id));
+      return ResponseEntity
+          .status(HttpStatus.OK)
+          .body(this.service.deleteEmployeeById(id));
     } else {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+      return ResponseEntity
+          .status(HttpStatus.NOT_FOUND)
+          .body(response);
     }
   }
 }

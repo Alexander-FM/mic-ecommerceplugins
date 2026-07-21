@@ -1,0 +1,444 @@
+:root {
+  --bg-1: #071a4b;
+  --bg-2: #0c4ea3;
+  --bg-3: #2e7bf6;
+  --card: rgba(8, 20, 43, 0.72);
+  --card-border: rgba(255, 255, 255, 0.14);
+  --text: #eaf2ff;
+  --muted: rgba(234, 242, 255, 0.76);
+  --accent: #67a7ff;
+  --accent-strong: #4a8dff;
+  --danger: #ff7b8d;
+  --success: #3ddc97;
+  --shadow: 0 30px 80px rgba(5, 12, 26, 0.42);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(103, 167, 255, 0.35), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(32, 89, 184, 0.34), transparent 28%),
+    linear-gradient(135deg, #02102d 0%, var(--bg-1) 40%, var(--bg-2) 72%, #0f62d4 100%);
+}
+
+.login-shell {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+}
+
+.login-card {
+  width: min(960px, 100%);
+  height: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  overflow: hidden;
+  border: 1px solid var(--card-border);
+  border-radius: 32px;
+  background: rgba(5, 13, 30, 0.38);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(20px);
+}
+
+.brand-panel,
+.form-panel {
+  padding: 24px;
+}
+
+.brand-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+  background: linear-gradient(180deg, rgba(12, 78, 163, 0.95) 0%, rgba(8, 39, 91, 0.9) 100%);
+}
+
+.brand-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.18), transparent 22%),
+    radial-gradient(circle at 80% 30%, rgba(255, 255, 255, 0.12), transparent 24%),
+    radial-gradient(circle at 50% 80%, rgba(103, 167, 255, 0.22), transparent 30%);
+  pointer-events: none;
+}
+
+.brand-badge,
+.brand-copy,
+.illustration,
+.feature-card {
+  position: relative;
+  z-index: 1;
+}
+
+.brand-badge {
+  width: 72px;
+  height: 72px;
+  display: grid;
+  place-items: center;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 18px 35px rgba(2, 8, 19, 0.22);
+}
+
+.brand-logo {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.brand-copy h1,
+.form-header h2 {
+  font-size: clamp(1.6rem, 3vw, 2rem); /* Reducido el tope máximo a 2rem */
+  margin-bottom: 8px;
+}
+
+.brand-copy h1 {
+  max-width: 18ch;
+  font-size: clamp(1.8rem, 4vw, 2.6rem); /* Reducido el tope máximo a 2.6rem */
+  text-wrap: balance;
+}
+
+.description,
+.form-header p,
+.feature-item {
+  color: var(--muted);
+}
+
+.description {
+  max-width: 520px;
+  margin: 6px 0 0;
+  font-size: 0.93rem;
+  line-height: 1.5;
+}
+
+.illustration {
+  display: grid;
+  place-items: center;
+  min-height: 230px;
+  position: relative;
+}
+
+.illustration-orb {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(1px);
+}
+
+.orb-one {
+  width: 180px;
+  height: 180px;
+  left: 20px;
+  top: 18px;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.08));
+  opacity: 0.45;
+}
+
+.orb-two {
+  width: 120px;
+  height: 120px;
+  right: 24px;
+  bottom: 28px;
+  background: radial-gradient(circle at 30% 30%, rgba(103, 167, 255, 0.9), rgba(103, 167, 255, 0.08));
+  opacity: 0.7;
+}
+
+.illustration-card {
+  position: absolute;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 18px 40px rgba(2, 10, 25, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.card-large {
+  width: 270px;
+  height: 180px;
+  transform: rotate(-10deg);
+  left: 54px;
+  top: 26px;
+  padding: 22px;
+}
+
+.card-topline {
+  width: 66px;
+  height: 10px;
+  border-radius: 99px;
+  background: linear-gradient(90deg, #dce8ff, #7cc1ff);
+  margin-bottom: 18px;
+}
+
+.card-row {
+  height: 16px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.card-row.short {
+  width: 68%;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.card-small {
+  width: 92px;
+  height: 92px;
+  right: 30px;
+  bottom: 30px;
+  display: grid;
+  place-items: center;
+  transform: rotate(12deg);
+}
+
+.card-small span {
+  font-size: 2rem;
+  font-weight: 700;
+  color: white;
+}
+
+.shopping-bag {
+  position: absolute;
+  width: 120px;
+  height: 140px;
+  left: 184px;
+  bottom: 8px;
+  transform: rotate(6deg);
+}
+
+.bag-handle {
+  width: 44px;
+  height: 24px;
+  margin: 0 auto;
+  border: 5px solid rgba(255, 255, 255, 0.92);
+  border-bottom: none;
+  border-radius: 999px 999px 0 0;
+}
+
+.bag-body {
+  width: 100%;
+  height: 104px;
+  margin-top: 6px;
+  border-radius: 26px 26px 34px 34px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(220, 234, 255, 0.6));
+  box-shadow: inset 0 -10px 25px rgba(47, 93, 180, 0.12);
+}
+
+.feature-card {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+  border-radius: 20px;
+  background: rgba(4, 15, 34, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.88rem;
+}
+
+.feature-icon {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.16);
+  color: white;
+  flex-shrink: 0;
+}
+
+.form-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 16px;
+  background: linear-gradient(180deg, rgba(10, 17, 34, 0.84), rgba(6, 12, 28, 0.92));
+}
+
+.form-header h2 {
+  font-size: clamp(1.6rem, 2.5vw, 1.9rem);
+  margin-bottom: 4px;
+}
+
+.form-header p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.alert {
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-size: 0.88rem;
+  line-height: 1.4;
+  border: 1px solid transparent;
+}
+
+.alert-error {
+  background: rgba(255, 123, 141, 0.12);
+  border-color: rgba(255, 123, 141, 0.26);
+  color: #ffd2d9;
+}
+
+.alert-success {
+  background: rgba(61, 220, 151, 0.12);
+  border-color: rgba(61, 220, 151, 0.24);
+  color: #d8ffe9;
+}
+
+.login-form {
+  display: grid;
+  gap: 12px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+}
+
+.field label {
+  font-weight: 600;
+  font-size: 0.93rem;
+}
+
+.input-wrap {
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  top: 50%;
+  left: 16px;
+  width: 20px;
+  height: 20px;
+  color: rgba(235, 243, 255, 0.68);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.input-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+input {
+  width: 100%;
+  height: 48px; /* Reducido de 58px */
+  padding: 0 16px 0 46px; /* Ajuste sutil para que el ícono quede bien posicionado */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+input::placeholder {
+  color: rgba(234, 242, 255, 0.42);
+}
+
+input:focus {
+  border-color: rgba(103, 167, 255, 0.9);
+  box-shadow: 0 0 0 4px rgba(74, 141, 255, 0.14);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.submit-btn {
+  margin-top: 4px;
+  height: 48px;
+  border: none;
+  border-radius: 16px;
+  background: linear-gradient(135deg, var(--accent-strong), #77b4ff);
+  color: white;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  box-shadow: 0 16px 30px rgba(45, 115, 248, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.submit-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.03);
+  box-shadow: 0 22px 38px rgba(45, 115, 248, 0.42);
+}
+
+.submit-btn:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 960px) {
+  .login-card {
+    grid-template-columns: 1fr;
+  }
+
+  .brand-panel {
+    min-height: auto;
+  }
+
+  .form-panel {
+    padding-top: 16px;
+  }
+}
+
+@media (max-width: 640px) {
+  .login-shell {
+    padding: 0;
+  }
+
+  .login-card {
+    min-height: 100vh;
+    border-radius: 0;
+  }
+
+  .brand-panel,
+  .form-panel {
+    padding: 28px 20px;
+  }
+
+  .brand-copy h1 {
+    font-size: 2.1rem;
+  }
+
+  .illustration {
+    min-height: 210px;
+  }
+
+  .card-large {
+    left: 12px;
+    top: 10px;
+    width: 220px;
+  }
+
+  .shopping-bag {
+    left: 150px;
+  }
+}

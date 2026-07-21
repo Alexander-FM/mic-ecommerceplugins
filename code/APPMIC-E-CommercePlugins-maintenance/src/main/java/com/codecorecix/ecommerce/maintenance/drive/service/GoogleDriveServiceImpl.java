@@ -3,6 +3,7 @@ package com.codecorecix.ecommerce.maintenance.drive.service;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.Objects;
@@ -26,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -34,6 +36,8 @@ import org.springframework.stereotype.Service;
 public class GoogleDriveServiceImpl implements GoogleDriveService {
 
   private final MaintenanceConfigBean maintenanceConfigBean;
+
+  private final Environment env;
 
   private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
 
@@ -89,18 +93,39 @@ public class GoogleDriveServiceImpl implements GoogleDriveService {
 
   private Drive createDriveService() {
     try {
-      // From an ENV of Kubernetes
-      final String credentialsPath = System.getenv("GOOGLE_APPLICATION_CREDENTIALS");
-      if (Objects.isNull(credentialsPath) || ObjectUtils.isEmpty(credentialsPath)) {
-        throw new MaintenanceException(MaintenanceErrorMessage.ERROR_RESOURCE_NOT_FOUND);
+      final InputStream in;
+      final GoogleCredential credential;
+      if (retrieveCredentialsByEnvironment()) {
+        // From an ENV of Kubernetes
+        final String credentialsPath = System.getenv("GOOGLE_APPLICATION_CREDENTIALS");
+        if (Objects.isNull(credentialsPath) || ObjectUtils.isEmpty(credentialsPath)) {
+          throw new MaintenanceException(MaintenanceErrorMessage.ERROR_RESOURCE_NOT_FOUND);
+        }
+        credential =
+            GoogleCredential.fromStream(new FileInputStream(credentialsPath)).createScoped(Collections.singletonList(DriveScopes.DRIVE));
+      } else {
+        // From application.properties
+        in = GoogleDriveService.class.getResourceAsStream(this.maintenanceConfigBean.getCredentialsPath());
+        if (Objects.isNull(in) || ObjectUtils.isEmpty(in)) {
+          throw new MaintenanceException(MaintenanceErrorMessage.ERROR_RESOURCE_NOT_FOUND);
+        }
+        credential = GoogleCredential.fromStream(in).createScoped(Collections.singletonList(DriveScopes.DRIVE));
       }
-      final GoogleCredential credential =
-          GoogleCredential.fromStream(new FileInputStream(credentialsPath)).createScoped(Collections.singletonList(DriveScopes.DRIVE));
       return new Drive.Builder(GoogleNetHttpTransport.newTrustedTransport(), JSON_FACTORY, credential).build();
     } catch (final IOException e) {
       throw new MaintenanceException(MaintenanceErrorMessage.ERROR_INTERNAL);
     } catch (final GeneralSecurityException e) {
       throw new MaintenanceException(MaintenanceErrorMessage.ERROR_SECURITY_GOOGLE_DRIVE);
+    }
+  }
+
+  private boolean retrieveCredentialsByEnvironment() {
+    if (StringUtils.isNotBlank(env.getProperty("GOOGLE_APPLICATION_CREDENTIALS"))) {
+      log.info("Credentials from Kubernetes secrets will be used.");
+      return true;
+    } else {
+      log.info("Credentials will be used from application.properties");
+      return false;
     }
   }
 }

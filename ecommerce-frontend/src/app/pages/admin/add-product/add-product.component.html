@@ -1,0 +1,362 @@
+<div class="admin-container" [class.is-submitting]="isSubmitting">
+  <div class="saving-overlay" *ngIf="isSubmitting">
+    <div class="saving-box">
+      <div class="saving-spinner"></div>
+      <h3>Guardando Cambios...</h3>
+      <p>Estamos procesando tu solicitud, por favor espera.</p>
+    </div>
+  </div>
+
+  <div class="admin-header">
+    <h1>{{ isEditMode ? '✏️ Edición de Producto' : '📦 Registro de Producto' }}</h1>
+    <p>
+      {{
+        isEditMode
+          ? 'Actualiza la información del producto en los 3 pasos'
+          : 'Completa los 3 pasos para registrar un nuevo producto'
+      }}
+    </p>
+  </div>
+
+  <p-tabView class="admin-tabview">
+    <!-- TAB 1: DATOS DEL PRODUCTO -->
+    <p-tabPanel header="1️⃣ Datos del Producto" leftIcon="pi pi-info-circle">
+      <form [formGroup]="productForm" class="product-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="barCode">Código de Barras *</label>
+            <input
+              pInputText
+              id="barCode"
+              formControlName="barCode"
+              placeholder="Ej: 123456789"
+              class="w-100"
+            />
+            <small class="text-danger" *ngIf="productForm.get('barCode')?.invalid && productForm.get('barCode')?.touched">
+              Campo requerido
+            </small>
+          </div>
+
+          <div class="form-group">
+            <label for="name">Nombre *</label>
+            <input
+              pInputText
+              id="name"
+              formControlName="name"
+              placeholder="Ej: Laptop Gaming"
+              class="w-100"
+            />
+            <small class="text-danger" *ngIf="productForm.get('name')?.invalid && productForm.get('name')?.touched">
+              Campo requerido
+            </small>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group full-width">
+            <label for="description">Descripción</label>
+            <textarea
+              id="description"
+              formControlName="description"
+              placeholder="Describe el producto"
+              rows="3"
+              class="w-100"
+              style="padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px; font-size: 0.9rem;"
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="price">Precio *</label>
+            <p-inputNumber
+              inputId="price"
+              formControlName="price"
+              [minFractionDigits]="2"
+              [maxFractionDigits]="2"
+              placeholder="0.00"
+              mode="currency"
+              currency="PEN"
+              currencyDisplay="symbol"
+              class="w-100"
+            ></p-inputNumber>
+            <small class="text-danger" *ngIf="productForm.get('price')?.invalid && productForm.get('price')?.touched">
+              Valor inválido
+            </small>
+          </div>
+
+          <div class="form-group">
+            <label for="stock">Stock *</label>
+            <p-inputNumber
+              inputId="stock"
+              formControlName="stock"
+              [min]="0"
+              placeholder="0"
+              class="w-100"
+            ></p-inputNumber>
+            <small class="text-danger" *ngIf="productForm.get('stock')?.invalid && productForm.get('stock')?.touched">
+              Valor inválido
+            </small>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="categoryId">Categoría *</label>
+            <p-select
+              inputId="categoryId"
+              formControlName="categoryId"
+              [options]="categories"
+              optionLabel="fullPath"
+              optionValue="id"
+              [filter]="true"
+              filterBy="fullPath"
+              placeholder="Selecciona categoría"
+              [showClear]="true"
+              class="w-100"
+            ></p-select>
+            <small class="text-danger" *ngIf="productForm.get('categoryId')?.invalid && productForm.get('categoryId')?.touched">
+              Campo requerido
+            </small>
+          </div>
+
+          <div class="form-group">
+            <label for="brandId">Marca *</label>
+            <p-select
+              inputId="brandId"
+              formControlName="brandId"
+              [options]="brands"
+              optionLabel="description"
+              optionValue="id"
+              [filter]="true"
+              filterBy="description"
+              placeholder="Selecciona marca"
+              [showClear]="true"
+              class="w-100"
+            ></p-select>
+            <small class="text-danger" *ngIf="productForm.get('brandId')?.invalid && productForm.get('brandId')?.touched">
+              Campo requerido
+            </small>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group checkbox">
+            <p-checkbox
+              inputId="isActive"
+              formControlName="isActive"
+              [binary]="true"
+            ></p-checkbox>
+            <label class="checkbox-label" for="isActive">Activo</label>
+          </div>
+
+          <div class="form-group checkbox">
+            <p-checkbox
+              inputId="isRecommended"
+              formControlName="isRecommended"
+              [binary]="true"
+            ></p-checkbox>
+            <label class="checkbox-label" for="isRecommended">Recomendado</label>
+          </div>
+        </div>
+
+        <!-- Main Image Upload -->
+        <div class="image-upload-section">
+          <h4>📷 Imagen Principal (Obligatoria)</h4>
+          <p-fileUpload
+            #mainImageUpload
+            name="mainImage"
+            [auto]="false"
+            [customUpload]="true"
+            [showUploadButton]="false"
+            [showCancelButton]="false"
+            (onSelect)="onMainImageSelect($event)"
+            accept="image/*"
+            [maxFileSize]="5242880"
+            chooseLabel="Seleccionar imagen"
+          ></p-fileUpload>
+
+          <div *ngIf="mainImagePreview" class="image-preview-container">
+            <img [src]="mainImagePreview" alt="Preview" />
+            <button
+              type="button"
+              pButton
+              icon="pi pi-trash"
+              class="p-button-rounded p-button-danger p-button-sm"
+              (click)="clearMainImage()"
+              title="Eliminar imagen"
+            ></button>
+          </div>
+
+          <div *ngIf="!mainImagePreview" class="alert alert-warning">
+            ⚠️ Debes subir una imagen principal para continuar
+          </div>
+        </div>
+      </form>
+    </p-tabPanel>
+
+    <!-- TAB 2: ATRIBUTOS -->
+    <p-tabPanel header="2️⃣ Atributos" leftIcon="pi pi-list">
+      <div class="attributes-section">
+        <h4>Agregar Atributos al Producto</h4>
+
+        <div *ngIf="isLoadingAttributes" class="alert alert-info">
+          ⏳ Cargando atributos...
+        </div>
+
+        <div *ngIf="!isLoadingAttributes" class="attribute-selector">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="attributeSelect">Selecciona Atributo</label>
+              <p-select
+                inputId="attributeSelect"
+                [(ngModel)]="selectedAttribute"
+                [options]="attributes"
+                optionLabel="name"
+                [filter]="true"
+                filterBy="name"
+                placeholder="Ej: Color, Talla, etc."
+                class="w-100"
+              ></p-select>
+            </div>
+
+            <div class="form-group">
+              <label for="attributeValue">Valor</label>
+              <input
+                pInputText
+                id="attributeValue"
+                [(ngModel)]="selectedAttributeValue"
+                placeholder="Ej: Rojo, Large, etc."
+                class="w-100"
+              />
+            </div>
+
+            <div class="form-group">
+              <button
+                pButton
+                type="button"
+                label="Agregar"
+                icon="pi pi-plus"
+                class="p-button-success"
+                (click)="addAttribute(selectedAttribute)"
+              ></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Attributes Table -->
+        <div *ngIf="attributesTable.length > 0" class="attributes-table">
+          <h5>Atributos Agregados ({{ attributesTable.length }})</h5>
+          <p-table [value]="attributesTable" [tableStyle]="{ 'min-width': '50rem' }">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Atributo</th>
+                <th>Valor</th>
+                <th style="width: 5rem">Acción</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
+              <tr>
+                <td>{{ rowData.name }}</td>
+                <td>{{ rowData.value }}</td>
+                <td>
+                  <button
+                    pButton
+                    type="button"
+                    icon="pi pi-trash"
+                    class="p-button-rounded p-button-danger p-button-sm"
+                    (click)="removeAttribute(rowIndex)"
+                    title="Eliminar atributo"
+                  ></button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+
+        <div *ngIf="attributesTable.length === 0" class="alert alert-info">
+          ℹ️ Los atributos son opcionales. Puedes agregar atributos o continuar sin ellos.
+        </div>
+      </div>
+    </p-tabPanel>
+
+    <!-- TAB 3: IMÁGENES DEL PRODUCTO -->
+    <p-tabPanel header="3️⃣ Imágenes" leftIcon="pi pi-images">
+      <div class="images-section">
+        <h4>Galería de Imágenes del Producto (hasta 4)</h4>
+
+        <p-fileUpload
+          #productImagesUpload
+          name="productImages"
+          [auto]="false"
+          [customUpload]="true"
+          [showUploadButton]="false"
+          [showCancelButton]="false"
+          (onSelect)="onImagesSelect($event)"
+          accept="image/*"
+          [maxFileSize]="5242880"
+          [multiple]="true"
+          chooseLabel="Seleccionar imágenes (hasta 4)"
+        ></p-fileUpload>
+
+        <!-- Images Preview Gallery -->
+        <div *ngIf="existingProductImages.length > 0" class="images-gallery">
+          <h5>Imágenes actuales ({{ existingProductImages.length }})</h5>
+          <div class="gallery-grid">
+            <div *ngFor="let img of existingProductImages" class="gallery-item">
+              <img [src]="img.previewUrl" [alt]="'Imagen ' + img.id" />
+              <small>Actual #{{ img.id }}</small>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="productImages.length > 0" class="images-gallery">
+          <h5>Imágenes Cargadas ({{ productImages.length }}/4)</h5>
+          <div class="gallery-grid">
+            <div *ngFor="let img of productImages; let idx = index" class="gallery-item">
+              <img [src]="img.base64" [alt]="img.name" />
+              <div class="gallery-overlay">
+                <button
+                  pButton
+                  type="button"
+                  icon="pi pi-trash"
+                  class="p-button-rounded p-button-danger p-button-sm"
+                  (click)="removeProductImage(idx)"
+                  title="Eliminar imagen"
+                ></button>
+              </div>
+              <small>{{ img.name }}</small>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="productImages.length === 0" class="alert alert-info">
+          ℹ️ Las imágenes del producto son opcionales.
+        </div>
+      </div>
+    </p-tabPanel>
+  </p-tabView>
+
+  <!-- Submit Buttons -->
+  <div class="form-actions">
+    <button
+      pButton
+      type="button"
+      label="Cancelar"
+      class="p-button-secondary"
+      (click)="onCancel()"
+      [disabled]="isSubmitting"
+    ></button>
+
+    <button
+      pButton
+      type="button"
+      [label]="isEditMode ? 'Actualizar Producto' : 'Registrar Producto'"
+      icon="pi pi-check"
+      class="p-button-success"
+      (click)="onSubmit()"
+      [loading]="isSubmitting"
+      [disabled]="isSubmitting"
+    ></button>
+  </div>
+</div>

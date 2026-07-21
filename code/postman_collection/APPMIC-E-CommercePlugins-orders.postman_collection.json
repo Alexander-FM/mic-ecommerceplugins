@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "3c517438-06c1-48f8-b6aa-12a98ef16205",
+		"_postman_id": "0dd06890-5017-4176-9c66-7c6d9f7459de",
 		"name": "APPMIC-E-CommercePlugins-orders",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "9753857",
-		"_collection_link": "https://orange-space-3640.postman.co/workspace/APPMIC-E-CommercePlugins~1c50689a-d05f-493d-854e-1ce929da7564/collection/9753857-3c517438-06c1-48f8-b6aa-12a98ef16205?action=share&source=collection_link&creator=9753857"
+		"_collection_link": "https://orange-space-3640.postman.co/workspace/APPMIC-E-CommercePlugins~1c50689a-d05f-493d-854e-1ce929da7564/collection/9753857-0dd06890-5017-4176-9c66-7c6d9f7459de?action=share&source=collection_link&creator=9753857"
 	},
 	"item": [
 		{
@@ -16,7 +16,80 @@
 						{
 							"name": "Guardar Estado",
 							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
 								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"statusName\": \"En transporte 2\",\r\n    \"isActive\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/{{status_endpoint}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"{{status_endpoint}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Listar Estados",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/{{status_endpoint}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"{{status_endpoint}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Actualizar Estado",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
 								"header": [],
 								"body": {
 									"mode": "raw",
@@ -27,43 +100,44 @@
 										}
 									}
 								},
-								"url": "{{base_url}}/{{status_endpoint}}"
-							},
-							"response": []
-						},
-						{
-							"name": "Listar Estados",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": "{{base_url}}/{{status_endpoint}}"
-							},
-							"response": []
-						},
-						{
-							"name": "Actualizar Estado",
-							"request": {
-								"method": "PUT",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"statusName\": \"Procesado\",\r\n    \"isActive\": true\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": "{{base_url}}/{{status_endpoint}}/2"
+								"url": {
+									"raw": "{{base_url}}/{{status_endpoint}}/7",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"{{status_endpoint}}",
+										"7"
+									]
+								}
 							},
 							"response": []
 						},
 						{
 							"name": "Eliminar Estado",
 							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
 								"method": "DELETE",
 								"header": [],
-								"url": "{{base_url}}/{{status_endpoint}}/2"
+								"url": {
+									"raw": "{{base_url}}/{{status_endpoint}}/8",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"{{status_endpoint}}",
+										"8"
+									]
+								}
 							},
 							"response": []
 						}
@@ -75,18 +149,36 @@
 						{
 							"name": "Guardar Orden",
 							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJraWQiOiIxNmFiNjMzZS02ZDU2LTQzMWMtOTAyMi1hOGFjNWE5N2M4MDQiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJBbGV4YW5kZXJNYXgiLCJhdWQiOiJtYWludGVuYW5jZS1jbGllbnQiLCJuYmYiOjE3NDM1NDM1ODcsInNjb3BlIjpbIm9wZW5pZCJdLCJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjkwMDEiLCJleHAiOjE3NDM1NDcxODcsImlhdCI6MTc0MzU0MzU4NywianRpIjoiOWI5M2Q2MzYtN2ViMC00NDY1LWE2NjYtMmMwMmViYzFiMTUxIn0.KR8bdScjashGX2EzOqq3BNKkSDOi3f0xYH8fob_6qI0tfAUoXOmwin3gcXadvgPHl7Ol3cqBpHDvMTsCtgiCX2IxClDA6nx-aHxFzUhB-T5KyBxh5bX27gZNWEQvhXvF9QkGFK79tBYA8_ldlMuUKiRifzXeVFUBsLcz2btygS4q_pdA-HbfRaCqDpzYrHHoMwpIOJX5HlQGFfJcaMgGM1v68m0KK0-pJOaJZRA4lBTXbMaFx5cTPEP5AsGIEXGag1TgL6V_-4HZJ8MCZw-2NXA0l73grrN9GTl47TYv-keD6gf8hvD8TBVc_QLzX3b7IfOk9iF-gxaLcCT6wtGT7g",
+											"type": "string"
+										}
+									]
+								},
 								"method": "POST",
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"customerId\": 1,\r\n    \"employeeId\": 1,\r\n    \"orderStatus\": {\r\n        \"id\": 1\r\n    },\r\n    \"totalAmount\": 429.30,\r\n    \"orderNotes\": \"El pedido debe ser enviado con cuidado\",\r\n    \"orderDetails\": [\r\n        {\r\n            \"productId\": 4,\r\n            \"quantity\": 1,\r\n            \"unitPrice\": 429.30,\r\n            \"totalPrice\": 429.30\r\n        }\r\n    ]\r\n}",
+									"raw": "{\r\n    \"customerId\": 1,\r\n    \"employeeId\": 1,\r\n    \"orderStatus\": {\r\n        \"id\": 1\r\n    },\r\n    \"totalAmount\": 429.30,\r\n    \"orderNotes\": \"El pedido debe ser enviado con cuidado\",\r\n    \"orderDetails\": [\r\n        {\r\n            \"productId\": 4,\r\n            \"quantity\": 4,\r\n            \"unitPrice\": 429.30\r\n        }\r\n    ]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
 										}
 									}
 								},
-								"url": "{{base_url}}/{{orders_enpoint}}"
+								"url": {
+									"raw": "{{base_url}}/{{orders_enpoint}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"{{orders_enpoint}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -95,7 +187,15 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "{{base_url}}/{{orders_enpoint}}"
+								"url": {
+									"raw": "{{base_url}}/{{orders_enpoint}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"{{orders_enpoint}}"
+									]
+								}
 							},
 							"response": []
 						},
@@ -104,7 +204,16 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "{{base_url}}/{{orders_enpoint}}/1"
+								"url": {
+									"raw": "{{base_url}}/{{orders_enpoint}}/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"{{orders_enpoint}}",
+										"1"
+									]
+								}
 							},
 							"response": []
 						},
@@ -113,7 +222,16 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "{{base_url}}/{{orders_details_endpoint}}/1"
+								"url": {
+									"raw": "{{base_url}}/{{orders_details_endpoint}}/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"{{orders_details_endpoint}}",
+										"1"
+									]
+								}
 							},
 							"response": []
 						}
