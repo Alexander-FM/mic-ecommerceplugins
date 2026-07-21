@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: quotation-frontend
+  name: ecommerce-frontend
   namespace: dev
   labels:
-    app: quotation-frontend
+    app: ecommerce-frontend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: quotation-frontend
+      app: ecommerce-frontend
   template:
     metadata:
       labels:
-        app: quotation-frontend
+        app: ecommerce-frontend
     spec:
       containers:
         - name: frontend
-          image: alexanderpe/quotation-frontend:latest
+          image: alexanderpe/ecommerce-frontend:latest
           imagePullPolicy: Always # Asegura que tome tu cambio manual o de CI/CD
           ports:
             - containerPort: 80
@@ -31,12 +31,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: quotation-frontend
+  name: ecommerce-frontend
   namespace: dev
 spec:
   type: LoadBalancer # En Minikube usaremos 'minikube service'
   selector:
-    app: quotation-frontend
+    app: ecommerce-frontend
   ports:
     - protocol: TCP
       port: 80

@@ -29,17 +29,17 @@ data:
   port: "9000"
   profile_active: "dev"
   lb_maintenance_service: "http://appmic-e-commerceplugins-maintenance:9090"
-  spa_redirect_uri: "https://pack-colleges-camps-academic.trycloudflare.com/auth/callback"
-  frontend_url: "https://pack-colleges-camps-academic.trycloudflare.com"
+  spa_redirect_uri: "http://ecommerce-frontend/auth/callback"
+  frontend_url: "http://ecommerce-frontend"
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: appmic-e-commerceplugins-gateway
 data:
-  port: "80"
+  port: "8080"
   profile_active: "dev"
-  cors_allowed_origins: "http://localhost:4200,https://pack-colleges-camps-academic.trycloudflare.com"
+  cors_allowed_origins: "http://ecommerce-frontend"
   lb_auth_service: "http://appmic-e-commerceplugins-auth:9000"
   lb_order_service: "http://appmic-e-commerceplugins-orders:9091"
   lb_maintenance_service: "http://appmic-e-commerceplugins-maintenance:9090"

@@ -1,5 +1,5 @@
 server:
-  port: 80
+  port: ${PORT:8080}
 spring:
   application:
     name: appmic-e-commerceplugins-gateway

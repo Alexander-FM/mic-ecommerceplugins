@@ -4,6 +4,6 @@ WORKDIR /app
 
 COPY ./target/APPMIC-E-CommercePlugins-gateway-2.10.1-SNAPSHOT.jar .
 
-EXPOSE 80
+EXPOSE 8080
 
 ENTRYPOINT ["java", "-jar", "APPMIC-E-CommercePlugins-gateway-2.10.1-SNAPSHOT.jar"]
