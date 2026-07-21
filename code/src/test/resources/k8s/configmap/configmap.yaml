@@ -39,7 +39,7 @@ metadata:
 data:
   port: "8080"
   profile_active: "dev"
-  cors_allowed_origins: "http://localhost:4200,http://localhost:80"
+  cors_allowed_origins: "http://localhost:4200,http://localhost:8080"
   lb_auth_service: "http://appmic-e-commerceplugins-auth:9000"
   lb_order_service: "http://appmic-e-commerceplugins-orders:9091"
   lb_maintenance_service: "http://appmic-e-commerceplugins-maintenance:9090"
