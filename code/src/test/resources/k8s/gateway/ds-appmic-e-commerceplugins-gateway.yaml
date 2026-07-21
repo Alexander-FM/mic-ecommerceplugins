@@ -17,7 +17,7 @@ spec:
           name: appmic-e-commerceplugins-gateway
           imagePullPolicy: Always
           ports:
-            - containerPort: 80
+            - containerPort: 8080
           env:
             - name: SPRING_PROFILES_ACTIVE
               valueFrom:
@@ -58,7 +58,7 @@ spec:
   type: LoadBalancer
   ports:
     - protocol: TCP
-      port: 80
-      targetPort: 80
+      port: 8080
+      targetPort: 8080
   selector:
     role: appmic-e-commerceplugins-gateway
