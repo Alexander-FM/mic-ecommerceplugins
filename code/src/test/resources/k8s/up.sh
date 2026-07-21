@@ -26,4 +26,8 @@ echo "--- Desplegando GATEWAY ---"
 kubectl apply -f gateway/ds-appmic-e-commerceplugins-gateway.yaml -n $NAMESPACE
 kubectl rollout status deployment/appmic-e-commerceplugins-gateway -n $NAMESPACE
 
-echo "✅ ¡Todo el ecosistema PEPSICO está arriba!"
+echo "--- Desplegando FRONTEND ---"
+kubectl apply -f frontend/ds-ecommercefrontend.yaml -n $NAMESPACE
+kubectl rollout status deployment/ecommerce-frontend -n $NAMESPACE
+
+echo "✅ ¡Todo el ecosistema ECOMMERCE está arriba!"
