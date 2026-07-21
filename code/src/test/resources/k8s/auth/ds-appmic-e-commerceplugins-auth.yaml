@@ -39,6 +39,11 @@ spec:
                 configMapKeyRef:
                   name: appmic-e-commerceplugins-auth
                   key: spa_redirect_uri
+            - name: FRONTEND_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: appmic-e-commerceplugins-auth
+                  key: frontend_url
 ---
 apiVersion: v1
 kind: Service

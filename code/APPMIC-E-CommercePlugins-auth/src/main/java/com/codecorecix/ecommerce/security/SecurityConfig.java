@@ -19,6 +19,7 @@ import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -55,6 +56,9 @@ import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+  @Value("${app.frontend.url}")
+  private String frontendUrl;
 
   private static final String LOGIN_URL = "/login";
 
@@ -107,7 +111,7 @@ public class SecurityConfig {
             .loginPage(LOGIN_URL)
             .permitAll())
         .logout(logout -> logout
-            .logoutSuccessUrl("http://localhost:4200/login")
+            .logoutSuccessUrl(frontendUrl + LOGIN_URL)
             .permitAll())
         .csrf(AbstractHttpConfigurer::disable);
     return http.build();

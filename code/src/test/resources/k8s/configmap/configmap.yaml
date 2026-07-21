@@ -29,7 +29,8 @@ data:
   port: "9000"
   profile_active: "dev"
   lb_maintenance_service: "http://appmic-e-commerceplugins-maintenance:9090"
-  spa_redirect_uri: "http://localhost:4200/auth/callback"
+  spa_redirect_uri: "https://pack-colleges-camps-academic.trycloudflare.com/auth/callback"
+  frontend_url: "https://pack-colleges-camps-academic.trycloudflare.com"
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -38,7 +39,7 @@ metadata:
 data:
   port: "80"
   profile_active: "dev"
-  cors_allowed_origins: "http://localhost:4200"
+  cors_allowed_origins: "http://localhost:4200,https://pack-colleges-camps-academic.trycloudflare.com"
   lb_auth_service: "http://appmic-e-commerceplugins-auth:9000"
   lb_order_service: "http://appmic-e-commerceplugins-orders:9091"
   lb_maintenance_service: "http://appmic-e-commerceplugins-maintenance:9090"

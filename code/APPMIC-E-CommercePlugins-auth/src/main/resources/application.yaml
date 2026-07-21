@@ -19,6 +19,9 @@ app:
   external:
     # Se define la variable, pero el valor se asigna en el perfil correspondiente
     maintenance-service-url: ${MS_MAINTENANCE}
+  frontend:
+    # Toma la variable FRONTEND_URL, si no existe, usa localhost
+    url: ${FRONTEND_URL:http://localhost:4200}
 
 # ===============================================
 # SEPARADOR DE PERFIL
@@ -36,6 +39,9 @@ app:
   external:
     # Valor por defecto para la URL en el entorno de desarrollo
     maintenance-service-url: ${MS_MAINTENANCE:http://127.0.0.1:9090}
+  frontend:
+    # Toma la variable FRONTEND_URL, si no existe, usa localhost
+    url: ${FRONTEND_URL:http://localhost:4200}
 logging:
   level:
     org:
