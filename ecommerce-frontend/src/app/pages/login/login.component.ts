@@ -25,7 +25,7 @@ export class LoginComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private messageService: MessageService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     // Verificar si hay un código en los query parameters
@@ -107,7 +107,7 @@ export class LoginComponent implements OnInit {
         } else if (error.status === 401) {
           errorMsg = 'No autorizado. Verifique sus credenciales.';
         } else if (error.status === 0) {
-          errorMsg = 'Error de conexión. Verifique que el servidor OAuth esté disponible en http://127.0.0.1:9001';
+          errorMsg = 'Error de conexión. Verifique que el servidor OAuth esté disponible en http://127.0.0.1:9000';
         } else if (error.error?.error) {
           errorMsg = `${error.error.error}: ${error.error.error_description || ''}`;
         }
