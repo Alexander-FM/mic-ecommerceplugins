@@ -11,6 +11,7 @@ import { CategoryService } from './services/category.service';
 import { CartService } from './services/cart.service';
 import { AuthService } from './services/auth.service';
 import { OrderService } from './services/order.service';
+import { MenuModule } from 'primeng/menu';
 import { Category } from './models/ecommerce.models';
 
 @Component({
@@ -24,7 +25,8 @@ import { Category } from './models/ecommerce.models';
     ButtonModule,
     BadgeModule,
     TooltipModule,
-    ToastModule
+    ToastModule,
+    MenuModule
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
@@ -33,11 +35,13 @@ import { Category } from './models/ecommerce.models';
 export class AppComponent implements OnInit {
   title = 'ecommerce-frontend';
   showMenu = true;
+  isAuthenticated = false;
   username = 'Usuario';
   isAdmin = false;
   cartItemCount = 0;
   ordersCount = 0;
   menuItems: MenuItem[] = [];
+  unauthMenuItems: MenuItem[] = [];
 
   constructor(
     private categoryService: CategoryService,
@@ -49,27 +53,57 @@ export class AppComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.setupUnauthMenu();
+    this.loadCategories();
+    this.loadCartCount();
+
     // Escuchar cambios en el estado de autenticación
     this.authService.authState$.subscribe((authState) => {
+      this.isAuthenticated = authState.isAuthenticated;
+      this.showMenu = true; // Mostrar siempre la barra de navegación principal
+
       if (authState.isAuthenticated) {
-        console.log('✅ Usuario autenticado, cargando menú...');
-        this.showMenu = true;
-        this.username = authState.user?.displayName || 'Usuario';
+        console.log('✅ Usuario autenticado, cargando datos de usuario...');
+        this.username = authState.user?.displayName || authState.user?.sub || 'Usuario';
         const roles = authState.user?.roles || [];
         this.isAdmin = roles.includes('ROLE_ADMIN');
         console.log('🔐 isAdmin:', this.isAdmin);
-        this.loadCategories();
-        this.loadCartCount();
         this.loadOrdersCount();
       } else {
-        console.log('❌ Usuario no autenticado, ocultando menú...');
-        this.showMenu = false;
-        this.menuItems = [];
-        this.cartItemCount = 0;
+        console.log('ℹ️ Usuario no autenticado');
+        this.username = '';
+        this.cartItemCount = this.cartService.getCartItemCount();
         this.ordersCount = 0;
         this.isAdmin = false;
       }
+      this.loadCategories();
     });
+  }
+
+  private setupUnauthMenu(): void {
+    this.unauthMenuItems = [
+      {
+        label: 'Inicia sesión',
+        icon: 'pi pi-sign-in',
+        command: () => this.router.navigate(['/login'])
+      },
+      {
+        label: 'Regístrate',
+        icon: 'pi pi-user-plus',
+        command: () => this.router.navigate(['/register'])
+      },
+      {
+        label: 'Mi cuenta',
+        icon: 'pi pi-user',
+        command: () => {
+          if (this.isAuthenticated) {
+            this.router.navigate(['/my-orders']);
+          } else {
+            this.router.navigate(['/login']);
+          }
+        }
+      }
+    ];
   }
 
   loadOrdersCount(): void {

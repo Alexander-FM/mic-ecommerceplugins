@@ -4,7 +4,7 @@
   <div class="navbar" *ngIf="showMenu">
     <p-menubar [model]="menuItems">
       <ng-template pTemplate="start">
-        <div class="flex align-items-center gap-2">
+        <div class="flex align-items-center gap-2 cursor-pointer" routerLink="/products">
           <span class="text-primary font-bold text-2xl">E</span>
           <div>
             <p class="m-0 font-bold">E-Commerce</p>
@@ -35,8 +35,10 @@
       </ng-template>
 
       <ng-template pTemplate="end">
-        <div class="flex align-items-center gap-2">
+        <div class="flex align-items-center gap-3">
+          <!-- Botón Mis Compras: solo si está autenticado -->
           <p-button
+            *ngIf="isAuthenticated"
             label="Mis Compras"
             icon="pi pi-shopping-bag"
             [text]="true"
@@ -46,16 +48,35 @@
             badgeClass="p-badge-info"
           ></p-button>
 
-          <span class="text-sm font-semibold text-color-secondary mx-2">{{ username }}</span>
-          <p-button
-            icon="pi pi-sign-out"
-            [rounded]="true"
-            [text]="true"
-            severity="danger"
-            (onClick)="logout()"
-            pTooltip="Cerrar Sesión"
-            tooltipPosition="bottom"
-          ></p-button>
+          <!-- Si el usuario ESTÁ autenticado -->
+          <div *ngIf="isAuthenticated" class="flex align-items-center gap-2">
+            <span class="text-sm font-semibold text-color-secondary mx-2">{{ username }}</span>
+            <p-button
+              icon="pi pi-sign-out"
+              [rounded]="true"
+              [text]="true"
+              severity="danger"
+              (onClick)="logout()"
+              pTooltip="Cerrar Sesión"
+              tooltipPosition="bottom"
+            ></p-button>
+          </div>
+
+          <!-- Si el usuario NO ESTÁ autenticado: "Hola, Inicia sesión ∨" -->
+          <div *ngIf="!isAuthenticated" class="auth-dropdown-wrapper">
+            <p-menu #unauthMenu [model]="unauthMenuItems" [popup]="true"></p-menu>
+            <div class="auth-user-trigger" (click)="unauthMenu.toggle($event)">
+              <div class="user-avatar-circle">
+                <i class="pi pi-user"></i>
+              </div>
+              <div class="user-text-container">
+                <span class="greeting-line">Hola,</span>
+                <span class="action-line">
+                  Inicia sesión <i class="pi pi-angle-down chevron-icon"></i>
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
       </ng-template>
     </p-menubar>
