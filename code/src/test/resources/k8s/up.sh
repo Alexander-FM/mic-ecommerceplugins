@@ -27,7 +27,7 @@ kubectl apply -f gateway/ds-appmic-e-commerceplugins-gateway.yaml -n $NAMESPACE
 kubectl rollout status deployment/appmic-e-commerceplugins-gateway -n $NAMESPACE
 
 echo "--- Desplegando FRONTEND ---"
-kubectl apply -f frontend/ds-ecommercefrontend.yaml -n $NAMESPACE
-kubectl rollout status deployment/ecommerce-frontend -n $NAMESPACE
+#kubectl apply -f frontend/ds-ecommercefrontend.yaml -n $NAMESPACE
+#kubectl rollout status deployment/ecommerce-frontend -n $NAMESPACE
 
 echo "✅ ¡Todo el ecosistema ECOMMERCE está arriba!"

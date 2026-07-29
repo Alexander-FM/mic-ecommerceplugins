@@ -11,7 +11,7 @@ kubectl delete -f orders/ds-appmic-e-commerceplugins-orders.yaml -n $NAMESPACE
 kubectl delete -f gateway/ds-appmic-e-commerceplugins-gateway.yaml -n $NAMESPACE
 
 echo "--- Eliminando Frontend ---"
-kubectl delete -f frontend/ds-ecommercefrontend.yaml -n $NAMESPACE
+#kubectl delete -f frontend/ds-ecommercefrontend.yaml -n $NAMESPACE
 
 echo "--- Eliminando Base de datos ---"
 kubectl delete -f bd/ds-mysql.yaml -n $NAMESPACE
