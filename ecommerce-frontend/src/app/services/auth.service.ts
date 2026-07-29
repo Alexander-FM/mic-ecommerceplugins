@@ -275,9 +275,11 @@ export class AuthService {
 
   /**
    * Cierra la sesión y limpia el localStorage.
-   * Notifica al servidor OAuth usando la URI de redirección registrada (this.REDIRECT_URI).
+   * Notifica al servidor OAuth usando la URI de redirección registrada (this.REDIRECT_URI) e id_token_hint.
    */
   logout(redirect: boolean = true): void {
+    const idToken = localStorage.getItem(this.STORAGE_KEY_ID);
+
     localStorage.removeItem(this.STORAGE_KEY_TOKEN);
     localStorage.removeItem(this.STORAGE_KEY_REFRESH);
     localStorage.removeItem(this.STORAGE_KEY_ID);
@@ -286,8 +288,18 @@ export class AuthService {
     this.authStateSubject.next(this.getInitialState());
 
     if (redirect) {
+      // El servidor OAuth2 (donde está RegisteredClient) corre en el puerto 9000 (AUTHORIZATION_ENDPOINT)
+      const oauthBaseUrl = this.AUTHORIZATION_ENDPOINT.substring(0, this.AUTHORIZATION_ENDPOINT.indexOf('/oauth2'));
       const returnUrl = encodeURIComponent(this.REDIRECT_URI);
-      window.location.href = `${environment.apiUrl}/logout?post_logout_redirect_uri=${returnUrl}`;
+
+      // Endpoint estándar OIDC de Spring Authorization Server: /connect/logout (o /logout) en puerto 9000
+      let logoutUrl = `${oauthBaseUrl}/connect/logout?post_logout_redirect_uri=${returnUrl}&client_id=${this.CLIENT_ID}`;
+      if (idToken) {
+        logoutUrl += `&id_token_hint=${encodeURIComponent(idToken)}`;
+      }
+
+      console.log('🌐 Redirigiendo a Logout en Servidor OAuth (puerto 9000):', logoutUrl);
+      window.location.href = logoutUrl;
     }
   }
 }

@@ -32,13 +32,14 @@ export class LoginComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       const code = params['code'];
       const state = params['state'];
+      const isLogoutParam = params['logout'] !== undefined || params['post_logout'] !== undefined;
 
       // Debug: log todos los parámetros recibidos
       console.log('🔍 Query params recibidos:', { code, state, allParams: params });
 
       if (code) {
         this.handleOAuthCallback(code, state);
-      } else if (this.router.url.includes('/auth/callback')) {
+      } else if (isLogoutParam || this.router.url.includes('/auth/callback')) {
         // Retorno de post-logout (sin código OAuth): redirigir a la página principal de productos
         this.router.navigate(['/products']);
       }
