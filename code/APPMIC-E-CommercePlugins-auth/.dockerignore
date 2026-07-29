@@ -1,0 +1,25 @@
+# Ignorar la carpeta de salida de la compilación de Maven
+target/
+
+# Ignorar el historial de Git
+.git/
+
+# Ignorar archivos y carpetas del IDE
+.idea/
+*.iml
+.vscode/
+
+# Ignorar archivos de log
+*.log
+
+# Ignorar el propio Dockerfile y el .dockerignore para no incluirlos en el contexto
+Dockerfile
+.dockerignore
+
+# Ignorar los archivos del Maven Wrapper (generalmente no se necesitan en la imagen final)
+.mvn/
+mvnw
+mvnw.cmd
+
+# Ignorar archivos de configuración local que no deben ir en la imagen
+.env

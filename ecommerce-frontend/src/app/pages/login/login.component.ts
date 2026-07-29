@@ -38,6 +38,9 @@ export class LoginComponent implements OnInit {
 
       if (code) {
         this.handleOAuthCallback(code, state);
+      } else if (this.router.url.includes('/auth/callback')) {
+        // Retorno de post-logout (sin código OAuth): redirigir a la página principal de productos
+        this.router.navigate(['/products']);
       }
     });
   }

@@ -189,6 +189,7 @@ public class SecurityConfig {
         .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
         .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
         .redirectUri(environment.getProperty("SPA_REDIRECT_URI", "http://localhost:4200/auth/callback"))
+        .postLogoutRedirectUri(environment.getProperty("SPA_REDIRECT_URI", "http://localhost:4200/auth/callback"))
         .tokenSettings(TokenSettings
             .builder()
             .accessTokenTimeToLive(Duration.ofHours(1))

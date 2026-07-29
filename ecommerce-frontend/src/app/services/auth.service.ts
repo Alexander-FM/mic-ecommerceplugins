@@ -274,7 +274,8 @@ export class AuthService {
   }
 
   /**
-   * Cierra la sesión y limpia el localStorage
+   * Cierra la sesión y limpia el localStorage.
+   * Notifica al servidor OAuth usando la URI de redirección registrada (this.REDIRECT_URI).
    */
   logout(redirect: boolean = true): void {
     localStorage.removeItem(this.STORAGE_KEY_TOKEN);
@@ -284,9 +285,9 @@ export class AuthService {
 
     this.authStateSubject.next(this.getInitialState());
 
-    // Redirigir al servidor de Autorización para cerrar la sesión (solo si fue solicitado explícitamente)
     if (redirect) {
-      window.location.href = environment.apiUrl + '/logout';
+      const returnUrl = encodeURIComponent(this.REDIRECT_URI);
+      window.location.href = `${environment.apiUrl}/logout?post_logout_redirect_uri=${returnUrl}`;
     }
   }
 }

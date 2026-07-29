@@ -244,8 +244,6 @@ export class AppComponent implements OnInit {
   }
 
   logout(): void {
-    this.authService.logout();
-    // El navbar se ocultará automáticamente gracias a authState$ subscription
     this.messageService.add({
       severity: 'info',
       summary: 'Sesión cerrada',
@@ -253,8 +251,8 @@ export class AppComponent implements OnInit {
       life: 2000
     });
     setTimeout(() => {
-      this.router.navigate(['/login']);
-    }, 2000);
+      this.authService.logout(true);
+    }, 1500);
   }
 }
 
