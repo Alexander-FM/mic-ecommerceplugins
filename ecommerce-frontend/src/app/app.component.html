@@ -64,8 +64,7 @@
 
           <!-- Si el usuario NO ESTÁ autenticado: "Hola, Inicia sesión ∨" -->
           <div *ngIf="!isAuthenticated" class="auth-dropdown-wrapper">
-            <p-menu #unauthMenu [model]="unauthMenuItems" [popup]="true"></p-menu>
-            <div class="auth-user-trigger" (click)="unauthMenu.toggle($event)">
+            <div class="auth-user-trigger" (click)="toggleUserMenu($event)">
               <div class="user-avatar-circle">
                 <i class="pi pi-user"></i>
               </div>
@@ -74,6 +73,21 @@
                 <span class="action-line">
                   Inicia sesión <i class="pi pi-angle-down chevron-icon"></i>
                 </span>
+              </div>
+            </div>
+
+            <div class="auth-custom-dropdown" *ngIf="isUserMenuOpen">
+              <div class="dropdown-option" (click)="navigateTo('/login')">
+                <i class="pi pi-sign-in"></i>
+                <span>Inicia sesión</span>
+              </div>
+              <div class="dropdown-option" (click)="navigateTo('/register')">
+                <i class="pi pi-user-plus"></i>
+                <span>Regístrate</span>
+              </div>
+              <div class="dropdown-option" (click)="navigateTo('/my-orders')">
+                <i class="pi pi-user"></i>
+                <span>Mi cuenta</span>
               </div>
             </div>
           </div>

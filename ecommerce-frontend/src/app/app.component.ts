@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { MenubarModule } from 'primeng/menubar';
@@ -11,7 +11,6 @@ import { CategoryService } from './services/category.service';
 import { CartService } from './services/cart.service';
 import { AuthService } from './services/auth.service';
 import { OrderService } from './services/order.service';
-import { MenuModule } from 'primeng/menu';
 import { Category } from './models/ecommerce.models';
 
 @Component({
@@ -25,8 +24,7 @@ import { Category } from './models/ecommerce.models';
     ButtonModule,
     BadgeModule,
     TooltipModule,
-    ToastModule,
-    MenuModule
+    ToastModule
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
@@ -41,7 +39,7 @@ export class AppComponent implements OnInit {
   cartItemCount = 0;
   ordersCount = 0;
   menuItems: MenuItem[] = [];
-  unauthMenuItems: MenuItem[] = [];
+  isUserMenuOpen = false;
 
   constructor(
     private categoryService: CategoryService,
@@ -49,11 +47,11 @@ export class AppComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private messageService: MessageService,
-    private orderService: OrderService
+    private orderService: OrderService,
+    private elementRef: ElementRef
   ) { }
 
   ngOnInit(): void {
-    this.setupUnauthMenu();
     this.loadCategories();
     this.loadCartCount();
 
@@ -80,30 +78,28 @@ export class AppComponent implements OnInit {
     });
   }
 
-  private setupUnauthMenu(): void {
-    this.unauthMenuItems = [
-      {
-        label: 'Inicia sesión',
-        icon: 'pi pi-sign-in',
-        command: () => this.router.navigate(['/login'])
-      },
-      {
-        label: 'Regístrate',
-        icon: 'pi pi-user-plus',
-        command: () => this.router.navigate(['/register'])
-      },
-      {
-        label: 'Mi cuenta',
-        icon: 'pi pi-user',
-        command: () => {
-          if (this.isAuthenticated) {
-            this.router.navigate(['/my-orders']);
-          } else {
-            this.router.navigate(['/login']);
-          }
-        }
+  toggleUserMenu(event: Event): void {
+    event.stopPropagation();
+    this.isUserMenuOpen = !this.isUserMenuOpen;
+  }
+
+  navigateTo(path: string): void {
+    this.isUserMenuOpen = false;
+    if (path === '/my-orders' && !this.isAuthenticated) {
+      this.router.navigate(['/login']);
+    } else {
+      this.router.navigate([path]);
+    }
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event): void {
+    if (this.isUserMenuOpen) {
+      const clickedInside = this.elementRef.nativeElement.querySelector('.auth-dropdown-wrapper')?.contains(event.target as Node);
+      if (!clickedInside) {
+        this.isUserMenuOpen = false;
       }
-    ];
+    }
   }
 
   loadOrdersCount(): void {
