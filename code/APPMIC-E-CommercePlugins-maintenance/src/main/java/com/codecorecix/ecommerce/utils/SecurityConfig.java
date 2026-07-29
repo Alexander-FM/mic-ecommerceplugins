@@ -70,7 +70,7 @@ public class SecurityConfig {
             //1. Rutas públicas (sin autenticación) para login y consultas de datos activos
             .requestMatchers("/api/maintenance/users/authorized", "/api/maintenance/users/login",
                 "/api/maintenance/customers/username/{username}", "/api/maintenance/employees/username/{username}",
-                "/api/maintenance/products/active",
+                "/api/maintenance/products/active", "/api/maintenance/products/{id}",
                 "/api/maintenance/brands/active", "/api/maintenance/categories/active")
             .permitAll()
             .requestMatchers(HttpMethod.GET, "/api/maintenance/roles")
