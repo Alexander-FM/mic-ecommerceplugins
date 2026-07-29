@@ -16,7 +16,7 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
   intercept(
     request: HttpRequest<unknown>,
@@ -35,8 +35,6 @@ export class AuthInterceptor implements HttpInterceptor {
         }
       });
       console.log('✅ Header Authorization agregado');
-    } else {
-      console.warn('⚠️ NO HAY TOKEN en el interceptor para URL:', request.url);
     }
 
     return next.handle(request).pipe(
