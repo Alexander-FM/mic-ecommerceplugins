@@ -5,6 +5,7 @@ export const environment = {
   oauth: {
     authorizationEndpoint: `http://localhost:9000/oauth2/authorize`,
     tokenUrl: `${BASE_URL}/oauth2/token`,
+    logoutEndpoint: `http://localhost:9000/connect/logout`,
     redirectUri: 'http://localhost:4200/auth/callback',
     clientId: 'maintenance-spa'
   }

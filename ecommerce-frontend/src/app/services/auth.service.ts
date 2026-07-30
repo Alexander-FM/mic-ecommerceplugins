@@ -288,17 +288,15 @@ export class AuthService {
     this.authStateSubject.next(this.getInitialState());
 
     if (redirect) {
-      // El servidor OAuth2 (donde está RegisteredClient) corre en el puerto 9000 (AUTHORIZATION_ENDPOINT)
-      const oauthBaseUrl = this.AUTHORIZATION_ENDPOINT.substring(0, this.AUTHORIZATION_ENDPOINT.indexOf('/oauth2'));
+      const logoutEndpoint = environment.oauth.logoutEndpoint || `${environment.apiUrl}/logout`;
       const returnUrl = encodeURIComponent(this.REDIRECT_URI);
 
-      // Endpoint estándar OIDC de Spring Authorization Server: /connect/logout (o /logout) en puerto 9000
-      let logoutUrl = `${oauthBaseUrl}/connect/logout?post_logout_redirect_uri=${returnUrl}&client_id=${this.CLIENT_ID}`;
+      let logoutUrl = `${logoutEndpoint}?post_logout_redirect_uri=${returnUrl}&client_id=${this.CLIENT_ID}`;
       if (idToken) {
         logoutUrl += `&id_token_hint=${encodeURIComponent(idToken)}`;
       }
 
-      console.log('🌐 Redirigiendo a Logout en Servidor OAuth (puerto 9000):', logoutUrl);
+      console.log('🌐 Redirigiendo a Logout OAuth:', logoutUrl);
       window.location.href = logoutUrl;
     }
   }
