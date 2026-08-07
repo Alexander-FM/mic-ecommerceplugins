@@ -1,4 +1,4 @@
-const BASE_URL = 'https://api.aromadeuva.codesoftperu.com';
+const BASE_URL = 'https://api-aromadeuva.codesoftperu.com';
 export const environment = {
   production: true,
   apiUrl: BASE_URL,
