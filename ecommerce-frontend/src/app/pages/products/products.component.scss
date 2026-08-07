@@ -63,7 +63,8 @@
 
 .products-section {
   flex: 1;
-  min-width: 0; /* Permite que el grid responda adecuadamente */
+  min-width: 0;
+  /* Permite que el grid responda adecuadamente */
 
   .products-header {
     display: flex;
