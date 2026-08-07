@@ -55,13 +55,13 @@ data:
     );
     
     -- Crear la tabla de productos
-    CREATE TABLE IF NOT EXISTS products
+    CREATE TABLE IF NOT EXISTS maintenance_service.products
     (
         id             INT NOT NULL AUTO_INCREMENT,
         bar_code       VARCHAR(255),
-        description    VARCHAR(1500),
-        is_active      BIT, -- También puedes usar BOOLEAN dependiendo de tu motor de BD
-        is_recommended BIT,
+        description    VARCHAR(9999),
+        is_active      BOOLEAN,
+        is_recommended BOOLEAN,
         main_image_url VARCHAR(255),
         name           VARCHAR(255),
         price          DOUBLE,
@@ -74,7 +74,7 @@ data:
     );
     
     -- Crear la tabla de valores de atributos de productos
-    CREATE TABLE IF NOT EXISTS product_attributes
+    CREATE TABLE IF NOT EXISTS maintenance_service.product_attributes
     (
         id           INT          NOT NULL,
         value        VARCHAR(100) NOT NULL,
@@ -85,7 +85,7 @@ data:
     );
     
     -- Crear la tabla de imágenes de productos
-    CREATE TABLE IF NOT EXISTS product_images
+    CREATE TABLE IF NOT EXISTS maintenance_service.product_images
     (
         id         INT          NOT NULL,
         image_url  VARCHAR(255) NOT NULL,
