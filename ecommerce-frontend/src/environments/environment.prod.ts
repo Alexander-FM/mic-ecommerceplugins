@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:8080';
+const BASE_URL = 'https://api.aromadeuva.codesoftperu.com';
 export const environment = {
   production: true,
   apiUrl: BASE_URL,
@@ -6,7 +6,7 @@ export const environment = {
     authorizationEndpoint: `${BASE_URL}/oauth2/authorize`,
     tokenUrl: `${BASE_URL}/oauth2/token`,
     logoutEndpoint: `${BASE_URL}/connect/logout`,
-    redirectUri: 'http://localhost:4200/auth/callback',
+    redirectUri: 'https://aromadeuva.codesoftperu.com/auth/callback',
     clientId: 'maintenance-spa'
   }
 };
