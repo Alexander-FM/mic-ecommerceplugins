@@ -19,7 +19,7 @@ data:
     );
     
     -- Crear la tabla de categorías
-    CREATE TABLE IF NOT EXISTS maintenance_service.category
+    CREATE TABLE IF NOT EXISTS maintenance_service.categories
     (
         id              INT          NOT NULL,
         description     VARCHAR(100) NOT NULL,
@@ -29,7 +29,7 @@ data:
     );
     
     -- Crear la tabla de marcas
-    CREATE TABLE IF NOT EXISTS maintenance_service.brand
+    CREATE TABLE IF NOT EXISTS maintenance_service.brands
     (
         id          INT          NOT NULL,
         description VARCHAR(100) NOT NULL,
@@ -74,13 +74,13 @@ data:
     );
     
     -- Crear la tabla de valores de atributos de productos
-    CREATE TABLE IF NOT EXISTS product_attribute_value
+    CREATE TABLE IF NOT EXISTS product_attributes
     (
         id           INT          NOT NULL,
         value        VARCHAR(100) NOT NULL,
         attribute_id INT          NOT NULL,
         product_id   INT          NOT NULL,
-        CONSTRAINT pk_product_attribute_value PRIMARY KEY (id),
+        CONSTRAINT pk_product_attribute PRIMARY KEY (id),
         CONSTRAINT FK_ProductsAttribute_Products FOREIGN KEY (product_id) REFERENCES maintenance_service.products (id)
     );
     
@@ -102,7 +102,7 @@ data:
            (5, true, 'Entregado'),
            (6, true, 'Cancelado');
     
-    INSERT INTO maintenance_service.category (id, description, is_active, parent_category)
+    INSERT INTO maintenance_service.categories (id, description, is_active, parent_category)
     VALUES (1, 'Alimentos y Bebidas', true, NULL),
            (2, 'Bebidas y Licores', true, 1),
            (3, 'Vinos', true, 2),
@@ -110,7 +110,7 @@ data:
            (5, 'Licores', true, 2),
            (6, 'Ron', true, 5);
     
-    INSERT INTO maintenance_service.brand (id, description, is_active)
+    INSERT INTO maintenance_service.brands (id, description, is_active)
     VALUES (1, 'La Mascota', true),
            (2, 'Ricadonna', true),
            (3, 'Catena Zapata', true),
@@ -161,7 +161,7 @@ data:
             true, false, 'https://drive.google.com/file/d/1EfHlKJ0Gac-0sWbjjHSjAOB7Xt5q6bAt/view',
             'RICCADONNA RUBY 750ML', 54.5, 100, 2, 4);
     
-    INSERT INTO product_attribute_value (id, value, attribute_id, product_id)
+    INSERT INTO maintenance_service.product_attributes (id, value, attribute_id, product_id)
     VALUES (1, '750', 15, 1),
            (2, 'Tinto', 9, 1),
            (3, '750 ml', 15, 2),
@@ -172,7 +172,7 @@ data:
            (8, 'Cabernet', 11, 4),
            (9, '2004', 12, 4);
     
-    INSERT INTO product_images (id, image_url, product_id)
+    INSERT INTO maintenance_service.product_images (id, image_url, product_id)
     VALUES (1, 'https://drive.google.com/file/d/1gHzfliT-Zdpbc5yNpvbidawexqXOuUwk/view', 1),
            (2, 'https://drive.google.com/file/d/19HO2fOZfjX_f2BcsNYZOdLXuN8N23XFS/view', 1),
            (3, 'https://drive.google.com/file/d/12uDLGw_HUnB0qnWQYNRII2PEeFvHxxeD/view', 2),
