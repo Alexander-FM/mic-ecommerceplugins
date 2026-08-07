@@ -32,6 +32,97 @@
 }
 
 .cart-items {
+  /* Alternancia de vistas: Tabla para Desktop/Tablet y Tarjetas para Celular */
+  .desktop-cart-table {
+    display: block;
+
+    @media (max-width: 767px) {
+      display: none !important;
+    }
+  }
+
+  .mobile-cart-list {
+    display: none;
+
+    @media (max-width: 767px) {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .cart-header-mobile {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0.25rem;
+
+      h3 {
+        margin: 0;
+        font-size: 1.2rem;
+        color: #333;
+      }
+    }
+
+    .mobile-cards-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .mobile-cart-card {
+      ::ng-deep .p-card-body {
+        padding: 1rem;
+      }
+
+      .mobile-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.75rem;
+
+        .mobile-product-name {
+          margin: 0;
+          font-size: 1.05rem;
+          font-weight: 600;
+          color: #1e293b;
+        }
+      }
+
+      .mobile-card-body {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .mobile-product-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        font-size: 0.85rem;
+        color: #64748b;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid #f1f5f9;
+      }
+
+      .mobile-card-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .row-label {
+          font-size: 0.9rem;
+          color: #64748b;
+        }
+
+        &.total-row {
+          padding-top: 0.5rem;
+          border-top: 1px solid #e2e8f0;
+          margin-top: 0.25rem;
+        }
+      }
+    }
+  }
+
   .cart-header {
     display: flex;
     justify-content: space-between;

@@ -1,7 +1,73 @@
 <p-toast></p-toast>
 
+<!-- Drawer para filtros en Móvil/Tablet -->
+<p-drawer [(visible)]="filterDrawerVisible" header="Filtros" position="left" [style]="{ width: '300px' }">
+  <div class="p-fluid">
+    <div class="p-field">
+      <label for="search-mobile">Buscar</label>
+      <span class="p-input-icon-left">
+        <input
+          id="search-mobile"
+          type="text"
+          pInputText
+          [(ngModel)]="searchText"
+          (input)="filterProducts()"
+          placeholder="Buscar productos..."
+        />
+      </span>
+    </div>
+
+    <div class="p-field">
+      <label for="brand-mobile">Marca</label>
+      <p-select
+        inputId="brand-mobile"
+        [options]="brands"
+        [(ngModel)]="selectedBrand"
+        optionLabel="description"
+        placeholder="Seleccionar marca"
+        [showClear]="true"
+        (onChange)="filterProducts()"
+      ></p-select>
+    </div>
+
+    <div class="p-field">
+      <label for="minPrice-mobile">Precio mínimo: ${{ minPrice }}</label>
+      <input
+        id="minPrice-mobile"
+        type="range"
+        [(ngModel)]="minPrice"
+        (change)="filterProducts()"
+        min="0"
+        max="10000"
+        step="100"
+      />
+    </div>
+
+    <div class="p-field">
+      <label for="maxPrice-mobile">Precio máximo: ${{ maxPrice }}</label>
+      <input
+        id="maxPrice-mobile"
+        type="range"
+        [(ngModel)]="maxPrice"
+        (change)="filterProducts()"
+        min="0"
+        max="10000"
+        step="100"
+      />
+    </div>
+
+    <p-button
+      label="Limpiar filtros"
+      icon="pi pi-filter-slash"
+      [outlined]="true"
+      (onClick)="resetFilters()"
+    ></p-button>
+  </div>
+</p-drawer>
+
 <div class="products-container">
-  <div class="filters-section">
+  <!-- Sección de filtros en Desktop -->
+  <div class="filters-section desktop-filters">
     <div class="p-fluid">
       <h3>Filtros</h3>
 
@@ -68,8 +134,20 @@
   </div>
 
   <div class="products-section">
-    <h2>Productos</h2>
-    <p class="results-count">{{ filteredProducts.length }} productos encontrados</p>
+    <div class="products-header">
+      <div>
+        <h2>Productos</h2>
+        <p class="results-count">{{ filteredProducts.length }} productos encontrados</p>
+      </div>
+      <p-button
+        label="Filtros"
+        icon="pi pi-filter"
+        severity="secondary"
+        [outlined]="true"
+        class="mobile-filter-trigger"
+        (onClick)="filterDrawerVisible = true"
+      ></p-button>
+    </div>
 
     <div class="products-grid" *ngIf="!loading">
       <p-card *ngFor="let product of filteredProducts" class="product-card">
