@@ -11,8 +11,6 @@
   --text-secondary: #94a3b8;
   --text-muted: #64748b;
   --border: rgba(255, 255, 255, 0.1);
-  --border-light: rgba(255, 255, 255, 0.2);
-  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
   --shadow-lg: 0 20px 40px -5px rgba(0, 0, 0, 0.5);
 }
 
@@ -21,26 +19,29 @@
    ============================================ */
 .register-shell {
   min-height: 100vh;
+  min-height: 100dvh;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  padding: clamp(0.75rem, 3vw, 2.5rem);
+  padding-left: max(clamp(0.5rem, 2vw, 2.5rem), env(safe-area-inset-left));
+  padding-right: max(clamp(0.5rem, 2vw, 2.5rem), env(safe-area-inset-right));
+  padding-bottom: max(clamp(0.75rem, 3vw, 2.5rem), env(safe-area-inset-bottom));
   background: radial-gradient(circle at 15% 50%, rgba(37, 99, 235, 0.08), transparent 25%),
     radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.08), transparent 25%),
     linear-gradient(135deg, var(--bg-1), #050811);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   color: var(--text-primary);
-  overflow-x: hidden;
   position: relative;
+  box-sizing: border-box;
+  overflow-x: hidden;
 
   &::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMDMiLz4KPC9zdmc+') repeat;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect width='4' height='4' fill='%23fff' fill-opacity='0.03'/%3E%3C/svg%3E") repeat;
     opacity: 0.4;
     pointer-events: none;
     z-index: 0;
@@ -53,27 +54,22 @@
   display: flex;
   width: 100%;
   max-width: 1400px;
-  min-height: 700px;
+  min-height: min(720px, 90vh);
+  height: auto;
   background: rgba(15, 25, 55, 0.45);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 24px;
+  border-radius: clamp(16px, 3vw, 24px);
   overflow: hidden;
   box-shadow: var(--shadow-lg);
   animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  box-sizing: border-box;
 }
 
 @keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* ============================================
@@ -83,12 +79,13 @@
   flex: 0 0 36%;
   background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(15, 25, 55, 0.2));
   border-right: 1px solid var(--border);
-  padding: 3.5rem 3rem;
+  padding: clamp(2rem, 3.5vw, 3.5rem) clamp(1.5rem, 3vw, 3rem);
   display: flex;
   flex-direction: column;
   justify-content: center;
   position: relative;
   overflow: hidden;
+  box-sizing: border-box;
 
   &::before {
     content: '';
@@ -112,8 +109,8 @@
 }
 
 .brand-copy {
-  font-size: 2.8rem;
-  line-height: 1.1;
+  font-size: clamp(1.8rem, 3vw, 2.8rem);
+  line-height: 1.15;
   font-weight: 800;
   margin: 0 0 1rem;
   background: linear-gradient(to right, #fff, #94a3b8);
@@ -124,24 +121,24 @@
 
 .brand-description {
   color: var(--text-secondary);
-  font-size: 1.05rem;
+  font-size: clamp(0.9rem, 1.1vw, 1.05rem);
   line-height: 1.5;
-  margin-bottom: 3rem;
-  max-width: 90%;
+  margin-bottom: clamp(1.5rem, 2.5vw, 3rem);
+  max-width: 95%;
 }
 
 .feature-cards {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: clamp(0.75rem, 1.2vw, 1.25rem);
   flex: 1;
 }
 
 .feature-item {
   display: flex;
   align-items: flex-start;
-  gap: 1.25rem;
-  padding: 1.25rem;
+  gap: 1rem;
+  padding: clamp(0.75rem, 1.2vw, 1.25rem);
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: 16px;
@@ -157,29 +154,29 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 42px;
-    height: 42px;
+    width: 40px;
+    height: 40px;
     background: rgba(37, 99, 235, 0.15);
     border: 1px solid rgba(37, 99, 235, 0.3);
     border-radius: 12px;
     color: var(--accent-light);
-    font-size: 1.25rem;
+    font-size: 1.15rem;
     flex-shrink: 0;
   }
 
   .feature-text {
     h3 {
-      margin: 0 0 0.25rem;
-      font-size: 1rem;
+      margin: 0 0 0.2rem;
+      font-size: 0.95rem;
       font-weight: 600;
       color: #fff;
     }
 
     p {
       margin: 0;
-      font-size: 0.85rem;
+      font-size: 0.825rem;
       color: var(--text-muted);
-      line-height: 1.4;
+      line-height: 1.35;
     }
   }
 }
@@ -189,16 +186,17 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding-top: 2rem;
+  padding-top: 1.25rem;
 
   i {
     color: var(--text-muted);
-    font-size: 1.1rem;
+    font-size: 1rem;
+    flex-shrink: 0;
   }
 
   p {
     margin: 0;
-    font-size: 0.8rem;
+    font-size: 0.775rem;
     color: var(--text-muted);
 
     a {
@@ -218,48 +216,50 @@
    PANEL DERECHO (FORMULARIO)
    ============================================ */
 .form-panel {
-  flex: 0 0 64%;
-  padding: 3.5rem 4rem;
+  flex: 1 1 64%;
+  min-width: 0;
+  padding: clamp(1.75rem, 3.5vw, 3.5rem) clamp(1.25rem, 3.5vw, 3.5rem);
   display: flex;
   flex-direction: column;
   background: rgba(10, 15, 30, 0.3);
-  overflow-y: auto;
+  box-sizing: border-box;
 }
 
 .form-content {
   width: 100%;
   max-width: 800px;
   margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .form-header {
-  margin-bottom: 2.5rem;
+  margin-bottom: clamp(1.25rem, 2.5vw, 2.25rem);
   text-align: center;
 
   .user-icon-wrapper {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 60px;
-    height: 60px;
+    width: clamp(46px, 5vw, 58px);
+    height: clamp(46px, 5vw, 58px);
     background: rgba(37, 99, 235, 0.1);
     border: 1px solid rgba(37, 99, 235, 0.2);
-    border-radius: 20px;
+    border-radius: 18px;
     color: var(--accent-light);
-    margin-bottom: 1.25rem;
+    margin-bottom: 0.85rem;
     box-shadow: 0 0 20px rgba(37, 99, 235, 0.2);
   }
 
   .form-title {
-    font-size: 2rem;
+    font-size: clamp(1.4rem, 2.5vw, 2rem);
     font-weight: 700;
     color: #fff;
-    margin: 0 0 0.5rem;
+    margin: 0 0 0.4rem;
   }
 
   .form-subtitle {
     color: var(--text-secondary);
-    font-size: 0.95rem;
+    font-size: clamp(0.825rem, 1.5vw, 0.95rem);
     margin: 0;
   }
 }
@@ -268,14 +268,16 @@
    INPUTS Y CAMPOS
    ============================================ */
 .field {
-  margin-bottom: 1.5rem !important;
+  margin-bottom: 1.15rem !important;
+  width: 100%;
+  box-sizing: border-box;
 
   label {
     display: block;
     color: var(--text-secondary);
     font-size: 0.85rem;
     font-weight: 500;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.45rem;
   }
 }
 
@@ -287,12 +289,13 @@
 
   i {
     position: absolute;
-    left: 1.2rem;
+    left: 1.1rem;
     color: var(--text-muted);
     font-size: 1.1rem;
     z-index: 2;
     opacity: 0.7;
     transition: opacity 0.3s;
+    pointer-events: none;
   }
 
   &:focus-within i {
@@ -310,7 +313,10 @@
 .form-actions {
   display: flex;
   align-items: center;
-  margin-top: 2.5rem;
+  margin-top: clamp(1.25rem, 2.5vw, 2.25rem);
+  gap: 0.85rem;
+  width: 100%;
+  box-sizing: border-box;
 
   &.single-next {
     justify-content: flex-end;
@@ -318,7 +324,6 @@
 
   &.row-actions {
     justify-content: space-between;
-    width: 100%;
   }
 }
 
@@ -326,19 +331,56 @@
    SOBRESCRITURAS DE PRIMENG (Globales e Inputs)
    ============================================ */
 ::ng-deep {
+  .modern-stepper {
+    background: transparent !important;
 
-  /* Inputs Generales */
+    .p-stepper-header {
+      padding: 0.4rem !important;
+      border-radius: 12px;
+    }
+
+    .p-stepper-title {
+      font-size: clamp(0.75rem, 1.4vw, 0.875rem) !important;
+    }
+
+    .p-step-list {
+      display: flex !important;
+      flex-wrap: nowrap !important;
+      gap: 0.4rem !important;
+      justify-content: space-between !important;
+      margin-bottom: 1.5rem !important;
+      overflow-x: auto !important;
+      scrollbar-width: none !important;
+      -webkit-overflow-scrolling: touch;
+
+      &::-webkit-scrollbar {
+        display: none !important;
+      }
+    }
+
+    .p-step {
+      flex: 1 1 auto !important;
+      min-width: max-content !important;
+      padding: 0.45rem 0.6rem !important;
+      font-size: clamp(0.75rem, 1.3vw, 0.85rem) !important;
+      white-space: nowrap !important;
+    }
+  }
+
   .p-inputtext,
   .p-select,
   .p-calendar .p-inputtext {
-    width: 100%;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
     background: rgba(0, 0, 0, 0.25) !important;
     border: 1px solid rgba(255, 255, 255, 0.12) !important;
     border-radius: 12px !important;
     color: var(--text-primary) !important;
-    padding: 0.85rem 1rem;
+    padding: 0.8rem 0.95rem;
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    height: 50px;
+    height: 48px;
+    min-height: 46px;
     font-size: 0.95rem;
 
     &:hover {
@@ -359,27 +401,50 @@
     }
   }
 
-  /* PrimeNG Select Panel Fixes */
+  input[type="date"].p-inputtext {
+    color-scheme: dark;
+    &::-webkit-calendar-picker-indicator {
+      filter: invert(0.8);
+      cursor: pointer;
+    }
+  }
+
+  .p-select {
+    display: inline-flex !important;
+    align-items: center !important;
+  }
+
   .p-select-label {
     padding: 0 !important;
     display: flex;
     align-items: center;
+    color: var(--text-primary) !important;
+
+    &.p-placeholder {
+      color: rgba(255, 255, 255, 0.35) !important;
+    }
   }
 
   .p-select-dropdown {
     color: var(--text-muted) !important;
   }
 
-  .p-select-panel {
+  .p-select-panel,
+  .p-popover {
     background: #0d1e42 !important;
     border: 1px solid rgba(255, 255, 255, 0.15) !important;
     border-radius: 12px !important;
     box-shadow: var(--shadow-lg) !important;
+    z-index: 1200 !important;
+    max-width: min(calc(100vw - 2rem), 400px) !important;
 
     .p-select-option {
       color: var(--text-primary) !important;
       background: transparent !important;
       padding: 0.75rem 1rem !important;
+      min-height: 44px !important;
+      display: flex !important;
+      align-items: center !important;
 
       &:not(.p-select-option-selected):not(.p-disabled):hover {
         background: rgba(255, 255, 255, 0.08) !important;
@@ -391,17 +456,19 @@
     }
   }
 
-  /* Botones Generales */
   .p-button {
-    padding: 0.85rem 1.75rem;
+    padding: 0.8rem 1.5rem;
     font-weight: 600;
     border-radius: 12px;
     border: none;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: inline-flex;
     align-items: center;
-    gap: 0.6rem;
-    font-size: 0.95rem;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.925rem;
+    min-height: 46px;
+    box-sizing: border-box;
   }
 
   .next-btn .p-button,
@@ -430,14 +497,13 @@
     }
   }
 
-  /* ============================================
-     CSS GRID PARA FORMULARIO
-     ============================================ */
   .form-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+    gap: clamp(0.75rem, 1.8vw, 1.25rem);
     align-items: start;
+    width: 100%;
+    box-sizing: border-box;
 
     .field {
       margin-bottom: 0 !important;
@@ -446,14 +512,18 @@
 
   .address-row-1 {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+    gap: clamp(0.75rem, 1.8vw, 1.25rem);
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .address-row-2 {
     display: grid;
-    grid-template-columns: 8fr 2fr;
-    gap: 1.25rem;
+    grid-template-columns: minmax(min(100%, 200px), 3fr) minmax(min(100%, 110px), 1fr);
+    gap: clamp(0.75rem, 1.8vw, 1.25rem);
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .full-width {
@@ -461,49 +531,144 @@
   }
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateX(15px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(0);
+/* Prevención de Auto-Zoom en Safari iOS en dispositivos móviles */
+@media screen and (max-width: 768px) {
+  ::ng-deep {
+    .p-inputtext,
+    .p-select,
+    .p-calendar .p-inputtext {
+      font-size: 16px !important;
+    }
   }
 }
 
-/* ============================================
-   RESPONSIVE
-   ============================================ */
-@media screen and (max-width: 992px) {
+/* Laptop / Desktop Pequeño (1025px - 1366px) */
+@media screen and (max-width: 1366px) {
+  .brand-panel {
+    flex: 0 0 35%;
+    padding: 2.25rem 1.75rem;
+  }
+
+  .form-panel {
+    padding: 2.25rem 2rem;
+  }
+}
+
+/* Tablets (<= 1024px, ej. iPad 1024x768, iPad Pro 11" 1194x834) */
+@media screen and (max-width: 1024px) {
   .brand-panel {
     display: none;
   }
 
   .register-card {
-    max-width: 550px;
+    max-width: min(840px, 100%);
+    min-height: auto;
   }
 
   .form-panel {
-    padding: 3rem 2rem;
+    flex: 1 1 100%;
+    padding: clamp(1.75rem, 3.5vw, 2.75rem) clamp(1.25rem, 3vw, 2.25rem);
+  }
+
+  ::ng-deep {
+    .address-row-2 {
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr));
+    }
   }
 }
 
-@media screen and (max-width: 768px) {
-  ::ng-deep .form-grid,
-  ::ng-deep .address-row-1,
-  ::ng-deep .address-row-2 {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media screen and (max-width: 480px) {
+/* Celulares (< 576px) */
+@media screen and (max-width: 576px) {
   .register-shell {
-    padding: 1rem;
+    padding-top: 0.75rem;
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+  }
+
+  .register-card {
+    border-radius: 16px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
   }
 
   .form-panel {
-    padding: 2rem 1.5rem;
+    padding: 1.25rem 0.85rem;
+  }
+
+  .form-header {
+    margin-bottom: 1.25rem;
+
+    .user-icon-wrapper {
+      width: 44px;
+      height: 44px;
+      margin-bottom: 0.6rem;
+    }
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+    gap: 0.65rem;
+    align-items: stretch;
+
+    &.single-next {
+      justify-content: stretch;
+    }
+
+    &.row-actions {
+      flex-direction: column-reverse;
+      gap: 0.65rem;
+      align-items: stretch;
+
+      .flex.gap-3 {
+        width: 100%;
+        flex-direction: column;
+        gap: 0.65rem !important;
+      }
+    }
+
+    ::ng-deep .p-button,
+    p-button {
+      width: 100% !important;
+      display: flex !important;
+      justify-content: center !important;
+    }
+  }
+}
+
+/* Pantallas Muy Pequeñas (< 400px) */
+@media screen and (max-width: 400px) {
+  .form-panel {
+    padding: 1rem 0.65rem;
+  }
+
+  ::ng-deep {
+    .modern-stepper {
+      .p-step-list {
+        gap: 0.2rem !important;
+      }
+
+      .p-step {
+        padding: 0.35rem 0.4rem !important;
+        font-size: 0.75rem !important;
+      }
+    }
+  }
+}
+
+/* Dispositivos en Orientación Horizontal con Altura Reducida (ej. Celular Landscape < 600px) */
+@media screen and (max-height: 600px) {
+  .register-shell {
+    padding: 0.5rem;
+    align-items: flex-start;
+  }
+
+  .register-card {
+    min-height: auto;
+  }
+
+  .form-header {
+    margin-bottom: 0.75rem;
+
+    .user-icon-wrapper {
+      display: none;
+    }
   }
 }
