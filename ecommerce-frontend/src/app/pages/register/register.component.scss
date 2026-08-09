@@ -1,6 +1,3 @@
-/* ============================================
-   VARIABLES GLOBALES
-   ============================================ */
 :host {
   --bg-1: #0a0f1c;
   --bg-2: #121b33;
@@ -14,9 +11,6 @@
   --shadow-lg: 0 20px 40px -5px rgba(0, 0, 0, 0.5);
 }
 
-/* ============================================
-   CONTENEDOR PRINCIPAL
-   ============================================ */
 .register-shell {
   min-height: 100vh;
   min-height: 100dvh;
@@ -34,7 +28,6 @@
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   color: var(--text-primary);
   position: relative;
-  box-sizing: border-box;
   overflow-x: hidden;
 
   &::before {
@@ -64,7 +57,6 @@
   overflow: hidden;
   box-shadow: var(--shadow-lg);
   animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  box-sizing: border-box;
 }
 
 @keyframes slideUp {
@@ -72,9 +64,6 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* ============================================
-   PANEL IZQUIERDO (BRANDING)
-   ============================================ */
 .brand-panel {
   flex: 0 0 36%;
   background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(15, 25, 55, 0.2));
@@ -85,7 +74,6 @@
   justify-content: center;
   position: relative;
   overflow: hidden;
-  box-sizing: border-box;
 
   &::before {
     content: '';
@@ -212,9 +200,6 @@
   }
 }
 
-/* ============================================
-   PANEL DERECHO (FORMULARIO)
-   ============================================ */
 .form-panel {
   flex: 1 1 64%;
   min-width: 0;
@@ -222,14 +207,12 @@
   display: flex;
   flex-direction: column;
   background: rgba(10, 15, 30, 0.3);
-  box-sizing: border-box;
 }
 
 .form-content {
   width: 100%;
   max-width: 800px;
   margin: 0 auto;
-  box-sizing: border-box;
 }
 
 .form-header {
@@ -264,13 +247,9 @@
   }
 }
 
-/* ============================================
-   INPUTS Y CAMPOS
-   ============================================ */
 .field {
   margin-bottom: 1.15rem !important;
   width: 100%;
-  box-sizing: border-box;
 
   label {
     display: block;
@@ -316,20 +295,11 @@
   margin-top: clamp(1.25rem, 2.5vw, 2.25rem);
   gap: 0.85rem;
   width: 100%;
-  box-sizing: border-box;
 
-  &.single-next {
-    justify-content: flex-end;
-  }
-
-  &.row-actions {
-    justify-content: space-between;
-  }
+  &.single-next { justify-content: flex-end; }
+  &.row-actions { justify-content: space-between; }
 }
 
-/* ============================================
-   SOBRESCRITURAS DE PRIMENG (Globales e Inputs)
-   ============================================ */
 ::ng-deep {
   .modern-stepper {
     background: transparent !important;
@@ -353,9 +323,7 @@
       scrollbar-width: none !important;
       -webkit-overflow-scrolling: touch;
 
-      &::-webkit-scrollbar {
-        display: none !important;
-      }
+      &::-webkit-scrollbar { display: none !important; }
     }
 
     .p-step {
@@ -365,110 +333,6 @@
       font-size: clamp(0.75rem, 1.3vw, 0.85rem) !important;
       white-space: nowrap !important;
     }
-  }
-
-  .p-inputtext,
-  .p-select,
-  .p-calendar .p-inputtext {
-    width: 100% !important;
-    max-width: 100% !important;
-    box-sizing: border-box !important;
-    background: rgba(0, 0, 0, 0.25) !important;
-    border: 1px solid rgba(255, 255, 255, 0.12) !important;
-    border-radius: 12px !important;
-    color: var(--text-primary) !important;
-    padding: 0.8rem 0.95rem;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    height: 48px;
-    min-height: 46px;
-    font-size: 0.95rem;
-
-    &:hover {
-      border-color: rgba(255, 255, 255, 0.25) !important;
-      background: rgba(0, 0, 0, 0.3) !important;
-    }
-
-    &:focus,
-    &.p-focus,
-    &:focus-within {
-      background: rgba(0, 0, 0, 0.4) !important;
-      border-color: var(--accent-light) !important;
-      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25) !important;
-    }
-
-    &::placeholder {
-      color: rgba(255, 255, 255, 0.35) !important;
-    }
-  }
-
-  input[type="date"].p-inputtext {
-    color-scheme: dark;
-    &::-webkit-calendar-picker-indicator {
-      filter: invert(0.8);
-      cursor: pointer;
-    }
-  }
-
-  .p-select {
-    display: inline-flex !important;
-    align-items: center !important;
-  }
-
-  .p-select-label {
-    padding: 0 !important;
-    display: flex;
-    align-items: center;
-    color: var(--text-primary) !important;
-
-    &.p-placeholder {
-      color: rgba(255, 255, 255, 0.35) !important;
-    }
-  }
-
-  .p-select-dropdown {
-    color: var(--text-muted) !important;
-  }
-
-  .p-select-panel,
-  .p-popover {
-    background: #0d1e42 !important;
-    border: 1px solid rgba(255, 255, 255, 0.15) !important;
-    border-radius: 12px !important;
-    box-shadow: var(--shadow-lg) !important;
-    z-index: 1200 !important;
-    max-width: min(calc(100vw - 2rem), 400px) !important;
-
-    .p-select-option {
-      color: var(--text-primary) !important;
-      background: transparent !important;
-      padding: 0.75rem 1rem !important;
-      min-height: 44px !important;
-      display: flex !important;
-      align-items: center !important;
-
-      &:not(.p-select-option-selected):not(.p-disabled):hover {
-        background: rgba(255, 255, 255, 0.08) !important;
-      }
-
-      &.p-select-option-selected {
-        background: var(--accent) !important;
-      }
-    }
-  }
-
-  .p-button {
-    padding: 0.8rem 1.5rem;
-    font-weight: 600;
-    border-radius: 12px;
-    border: none;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    font-size: 0.925rem;
-    min-height: 46px;
-    box-sizing: border-box;
   }
 
   .next-btn .p-button,
@@ -503,11 +367,8 @@
     gap: clamp(0.75rem, 1.8vw, 1.25rem);
     align-items: start;
     width: 100%;
-    box-sizing: border-box;
 
-    .field {
-      margin-bottom: 0 !important;
-    }
+    .field { margin-bottom: 0 !important; }
   }
 
   .address-row-1 {
@@ -515,7 +376,6 @@
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
     gap: clamp(0.75rem, 1.8vw, 1.25rem);
     width: 100%;
-    box-sizing: border-box;
   }
 
   .address-row-2 {
@@ -523,109 +383,51 @@
     grid-template-columns: minmax(min(100%, 200px), 3fr) minmax(min(100%, 110px), 1fr);
     gap: clamp(0.75rem, 1.8vw, 1.25rem);
     width: 100%;
-    box-sizing: border-box;
   }
 
-  .full-width {
-    grid-column: 1 / -1;
-  }
+  .full-width { grid-column: 1 / -1; }
 }
 
-/* Prevención de Auto-Zoom en Safari iOS en dispositivos móviles */
 @media screen and (max-width: 768px) {
   ::ng-deep {
     .p-inputtext,
     .p-select,
-    .p-calendar .p-inputtext {
-      font-size: 16px !important;
-    }
+    .p-calendar .p-inputtext { font-size: 16px !important; }
   }
 }
 
-/* Laptop / Desktop Pequeño (1025px - 1366px) */
 @media screen and (max-width: 1366px) {
-  .brand-panel {
-    flex: 0 0 35%;
-    padding: 2.25rem 1.75rem;
-  }
-
-  .form-panel {
-    padding: 2.25rem 2rem;
-  }
+  .brand-panel { flex: 0 0 35%; padding: 2.25rem 1.75rem; }
+  .form-panel { padding: 2.25rem 2rem; }
 }
 
-/* Tablets (<= 1024px, ej. iPad 1024x768, iPad Pro 11" 1194x834) */
 @media screen and (max-width: 1024px) {
-  .brand-panel {
-    display: none;
-  }
-
-  .register-card {
-    max-width: min(840px, 100%);
-    min-height: auto;
-  }
-
-  .form-panel {
-    flex: 1 1 100%;
-    padding: clamp(1.75rem, 3.5vw, 2.75rem) clamp(1.25rem, 3vw, 2.25rem);
-  }
-
-  ::ng-deep {
-    .address-row-2 {
-      grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr));
-    }
-  }
+  .brand-panel { display: none; }
+  .register-card { max-width: min(840px, 100%); min-height: auto; }
+  .form-panel { flex: 1 1 100%; padding: clamp(1.75rem, 3.5vw, 2.75rem) clamp(1.25rem, 3vw, 2.25rem); }
+  ::ng-deep .address-row-2 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr)); }
 }
 
-/* Celulares (< 576px) */
 @media screen and (max-width: 576px) {
-  .register-shell {
-    padding-top: 0.75rem;
-    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
-  }
-
-  .register-card {
-    border-radius: 16px;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
-  }
-
-  .form-panel {
-    padding: 1.25rem 0.85rem;
-  }
-
+  .register-shell { padding-top: 0.75rem; padding-bottom: max(0.75rem, env(safe-area-inset-bottom)); }
+  .register-card { border-radius: 16px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4); }
+  .form-panel { padding: 1.25rem 0.85rem; }
   .form-header {
     margin-bottom: 1.25rem;
-
-    .user-icon-wrapper {
-      width: 44px;
-      height: 44px;
-      margin-bottom: 0.6rem;
-    }
+    .user-icon-wrapper { width: 44px; height: 44px; margin-bottom: 0.6rem; }
   }
-
   .form-actions {
     flex-direction: column-reverse;
     gap: 0.65rem;
     align-items: stretch;
-
-    &.single-next {
-      justify-content: stretch;
-    }
-
+    &.single-next { justify-content: stretch; }
     &.row-actions {
       flex-direction: column-reverse;
       gap: 0.65rem;
       align-items: stretch;
-
-      .flex.gap-3 {
-        width: 100%;
-        flex-direction: column;
-        gap: 0.65rem !important;
-      }
+      .flex.gap-3 { width: 100%; flex-direction: column; gap: 0.65rem !important; }
     }
-
-    ::ng-deep .p-button,
-    p-button {
+    ::ng-deep .p-button, p-button {
       width: 100% !important;
       display: flex !important;
       justify-content: center !important;
@@ -633,42 +435,19 @@
   }
 }
 
-/* Pantallas Muy Pequeñas (< 400px) */
 @media screen and (max-width: 400px) {
-  .form-panel {
-    padding: 1rem 0.65rem;
-  }
-
-  ::ng-deep {
-    .modern-stepper {
-      .p-step-list {
-        gap: 0.2rem !important;
-      }
-
-      .p-step {
-        padding: 0.35rem 0.4rem !important;
-        font-size: 0.75rem !important;
-      }
-    }
+  .form-panel { padding: 1rem 0.65rem; }
+  ::ng-deep .modern-stepper {
+    .p-step-list { gap: 0.2rem !important; }
+    .p-step { padding: 0.35rem 0.4rem !important; font-size: 0.75rem !important; }
   }
 }
 
-/* Dispositivos en Orientación Horizontal con Altura Reducida (ej. Celular Landscape < 600px) */
 @media screen and (max-height: 600px) {
-  .register-shell {
-    padding: 0.5rem;
-    align-items: flex-start;
-  }
-
-  .register-card {
-    min-height: auto;
-  }
-
+  .register-shell { padding: 0.5rem; align-items: flex-start; }
+  .register-card { min-height: auto; }
   .form-header {
     margin-bottom: 0.75rem;
-
-    .user-icon-wrapper {
-      display: none;
-    }
+    .user-icon-wrapper { display: none; }
   }
-}
+}
