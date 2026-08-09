@@ -149,7 +149,7 @@ export class CartComponent implements OnInit {
           });
           this.orderService.notifyOrderCreated();
           this.cartService.clearCart();
-          this.router.navigate([`/orders/${response.body.id}`]);
+          this.router.navigate([`/my-orders`]);
         } else {
           this.messageService.add({
             severity: 'error',
