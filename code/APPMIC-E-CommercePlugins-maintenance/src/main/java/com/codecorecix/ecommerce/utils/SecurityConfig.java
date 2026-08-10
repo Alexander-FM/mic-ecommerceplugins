@@ -81,6 +81,11 @@ public class SecurityConfig {
             .permitAll()
             .requestMatchers(HttpMethod.POST, "/api/maintenance/users")
             .permitAll()
+            // 4. Operaciones internas por los microservicios (MOVIDO HACIA ARRIBA)
+            .requestMatchers(HttpMethod.GET, "/api/maintenance/roles/internal/**")
+            .hasAuthority(INTERNAL_WRITE)
+            .requestMatchers(HttpMethod.DELETE, "/api/maintenance/users/internal/**")
+            .hasAuthority(INTERNAL_WRITE)
             // 2. Operaciones permitidas para ADMIN y USER (GET y POST)
             .requestMatchers(HttpMethod.GET, allMaintenancePaths)
             .hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
@@ -93,11 +98,6 @@ public class SecurityConfig {
             .hasAuthority(ROLE_ADMIN)
             .requestMatchers(HttpMethod.DELETE, allMaintenancePaths)
             .hasAuthority(ROLE_ADMIN)
-            // 4. Operaciones internas por los microservicios
-            .requestMatchers(HttpMethod.GET, "/api/maintenance/roles/internal/**")
-            .hasAnyAuthority(INTERNAL_WRITE)
-            .requestMatchers(HttpMethod.DELETE, "/api/maintenance/users/internal/**")
-            .hasAuthority(INTERNAL_WRITE)
             .anyRequest()
             .authenticated()
         )
@@ -117,7 +117,8 @@ public class SecurityConfig {
     JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
     // Le decimos que busque los permisos en la claim "roles"
     grantedAuthoritiesConverter.setAuthoritiesClaimName("roles");
-    // Eliminamos el prefijo SCOPE_ que pone por defecto para que use ROLE_
+    // Eliminamos el prefijo por defecto (SCOPE_) para tener control total.
+    // Ahora, las autoridades serán exactamente las que vengan en el claim "roles".
     grantedAuthoritiesConverter.setAuthorityPrefix("");
 
     JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();

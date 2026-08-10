@@ -244,7 +244,7 @@ public class SecurityConfig {
           // Es un token de client_credentials, añadimos los scopes como roles
           // no hacemos nada y dejamos que el token se genere con los claims por defecto (como el scope).
           Set<String> scopes = context.getRegisteredClient().getScopes();
-          context.getClaims().claim("roles", scopes.stream().map(s -> "SCOPE_" + s).collect(Collectors.toSet()));
+          context.getClaims().claim("roles", scopes);
         }
       }
     };
