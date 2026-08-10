@@ -7,6 +7,6 @@ export const environment = {
     tokenUrl: `${BASE_URL}/oauth2/token`,
     logoutEndpoint: `${BASE_URL}/connect/logout`,
     redirectUri: 'https://aromadeuva.codesoftperu.com/auth/callback',
-    clientId: 'maintenance-spa'
+    clientId: 'ecommerce-spa'
   }
 };

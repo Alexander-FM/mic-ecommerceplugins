@@ -7,6 +7,6 @@ export const environment = {
     tokenUrl: `${BASE_URL}/oauth2/token`,
     logoutEndpoint: `http://localhost:9000/connect/logout`,
     redirectUri: 'http://localhost:4200/auth/callback',
-    clientId: 'maintenance-spa'
+    clientId: 'ecommerce-spa'
   }
 };

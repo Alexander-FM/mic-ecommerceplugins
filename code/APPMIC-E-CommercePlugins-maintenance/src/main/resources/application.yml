@@ -6,24 +6,6 @@ spring:
       resourceserver:
         jwt:
           jwk-set-uri: ${LB_AUTH_JWK_URI:http://127.0.0.1:9000/oauth2/jwks}
-        #issuer-uri: ${LB_AUTH_ISSUER_URI:http://127.0.0.1:9001}
-            #client:
-            #registration:
-            #maintenance-client:
-            #provider: spring
-            #client-id: maintenance-client
-            #client-secret: 12345
-            #authorization-grant-type: authorization_code
-            #redirect-uri: ${LB_MAINTENANCE_URI:http://127.0.0.1:9090}/api/maintenance/users/authorized
-            #scope:
-            #- openid
-            #- profile
-            #- read
-          #- write
-          #client-name: maintenance-client
-          #provider:
-          #spring:
-          #issuer-uri: ${LB_AUTH_ISSUER_URI:http://127.0.0.1:9001}
   application:
     name: appmic-e-commerceplugins-maintenance
   profiles:

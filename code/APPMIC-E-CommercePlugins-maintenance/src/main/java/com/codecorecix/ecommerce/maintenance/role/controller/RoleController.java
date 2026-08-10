@@ -38,16 +38,36 @@ public class RoleController {
 
   @GetMapping
   public ResponseEntity<GenericResponse<List<RoleResponseDto>>> getAllRoles() {
-    return ResponseEntity.status(HttpStatus.OK).body(this.service.getAllRoles());
+    return ResponseEntity
+        .status(HttpStatus.OK)
+        .body(this.service.getAllRoles());
   }
 
   @GetMapping("/{id}")
   public ResponseEntity<GenericResponse<RoleResponseDto>> getRoleById(@PathVariable(value = "id") final Integer id) {
     final GenericResponse<RoleResponseDto> response = this.service.findById(id);
     if (Objects.nonNull(response.getBody())) {
-      return ResponseEntity.status(HttpStatus.OK).body(response);
+      return ResponseEntity
+          .status(HttpStatus.OK)
+          .body(response);
     } else {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+      return ResponseEntity
+          .status(HttpStatus.NOT_FOUND)
+          .body(response);
+    }
+  }
+
+  @GetMapping("/internal/name/{roleName}")
+  public ResponseEntity<GenericResponse<RoleResponseDto>> getRoleByName(@PathVariable(value = "roleName") final String roleName) {
+    final GenericResponse<RoleResponseDto> response = this.service.findByName(roleName);
+    if (Objects.nonNull(response.getBody())) {
+      return ResponseEntity
+          .status(HttpStatus.OK)
+          .body(response);
+    } else {
+      return ResponseEntity
+          .status(HttpStatus.NOT_FOUND)
+          .body(response);
     }
   }
 
@@ -57,31 +77,41 @@ public class RoleController {
       throw new GenericUnprocessableEntityException(RoleConstants.UNPROCESSABLE_ENTITY_EXCEPTION);
     } else {
       MaintenanceUtils.validRequestDto(roleRequestDto);
-      return ResponseEntity.status(HttpStatus.CREATED).body(this.service.save(roleRequestDto));
+      return ResponseEntity
+          .status(HttpStatus.CREATED)
+          .body(this.service.save(roleRequestDto));
     }
   }
 
   @PutMapping("/{id}")
   public ResponseEntity<GenericResponse<RoleResponseDto>> updateBrand(@Valid @PathVariable(value = "id") final Integer id,
-      @RequestBody final RoleRequestDto roleRequestDto) {
+                                                                      @RequestBody final RoleRequestDto roleRequestDto) {
     final GenericResponse<RoleResponseDto> response = this.service.findById(id);
     if (ObjectUtils.isNotEmpty(response.getBody())) {
       roleRequestDto.setId(id);
       MaintenanceUtils.validRequestDto(roleRequestDto);
-      return ResponseEntity.status(HttpStatus.OK).body(this.service.save(roleRequestDto));
+      return ResponseEntity
+          .status(HttpStatus.OK)
+          .body(this.service.save(roleRequestDto));
     } else {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+      return ResponseEntity
+          .status(HttpStatus.NOT_FOUND)
+          .body(response);
     }
   }
 
   @PatchMapping("/{id}/status")
   public ResponseEntity<GenericResponse<RoleResponseDto>> updateRoleStatus(@PathVariable(value = "id") final Integer id,
-      @RequestParam(value = "isActive") final Boolean isActive) {
+                                                                           @RequestParam(value = "isActive") final Boolean isActive) {
     final GenericResponse<RoleResponseDto> response = this.service.findById(id);
     if (ObjectUtils.isNotEmpty(response.getBody())) {
-      return ResponseEntity.status(HttpStatus.OK).body(this.service.updateBrandStatus(isActive, id));
+      return ResponseEntity
+          .status(HttpStatus.OK)
+          .body(this.service.updateBrandStatus(isActive, id));
     } else {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+      return ResponseEntity
+          .status(HttpStatus.NOT_FOUND)
+          .body(response);
     }
   }
 
@@ -89,9 +119,13 @@ public class RoleController {
   public ResponseEntity<GenericResponse<RoleResponseDto>> deleteRole(@PathVariable(value = "id") final Integer id) {
     final GenericResponse<RoleResponseDto> response = this.service.findById(id);
     if (ObjectUtils.isNotEmpty(response.getBody())) {
-      return ResponseEntity.status(HttpStatus.OK).body(this.service.deleteById(id));
+      return ResponseEntity
+          .status(HttpStatus.OK)
+          .body(this.service.deleteById(id));
     } else {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+      return ResponseEntity
+          .status(HttpStatus.NOT_FOUND)
+          .body(response);
     }
   }
 }

@@ -47,6 +47,8 @@ public class SecurityConfig {
 
   private static final String ROLE_USER = "ROLE_USER";
 
+  private static final String INTERNAL_WRITE = "SCOPE_internal.write";
+
   private final CustomAccessDeniedHandler accessDeniedHandler;
 
   private final CustomAuthenticationEntryPoint authenticationEntryPoint;
@@ -91,6 +93,11 @@ public class SecurityConfig {
             .hasAuthority(ROLE_ADMIN)
             .requestMatchers(HttpMethod.DELETE, allMaintenancePaths)
             .hasAuthority(ROLE_ADMIN)
+            // 4. Operaciones internas por los microservicios
+            .requestMatchers(HttpMethod.GET, "/api/maintenance/roles/internal/**")
+            .hasAnyAuthority(INTERNAL_WRITE)
+            .requestMatchers(HttpMethod.DELETE, "/api/maintenance/users/internal/**")
+            .hasAuthority(INTERNAL_WRITE)
             .anyRequest()
             .authenticated()
         )
@@ -101,8 +108,6 @@ public class SecurityConfig {
         .csrf(AbstractHttpConfigurer::disable)
         .cors(Customizer.withDefaults())
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        //.oauth2Login(oauth2 -> oauth2.loginPage("/oauth2/authorization/maintenance-client"))
-        //.oauth2Client(Customizer.withDefaults())
         .oauth2ResourceServer(resourceServer -> resourceServer.jwt(Customizer.withDefaults()));
     return http.build();
   }

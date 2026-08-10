@@ -64,6 +64,10 @@ public class SecurityConfig {
 
   private static final String WRITE_SCOPE = "write";
 
+  private static final String READ_SCOPE = "read";
+
+  private static final String INTERNAL_WRITE_SCOPE = "internal.write";
+
   private final Environment environment;
 
   private final UserDetailsService userDetailsService;
@@ -103,7 +107,7 @@ public class SecurityConfig {
       throws Exception {
     http
         .authorizeHttpRequests(authorize -> authorize
-            .requestMatchers(LOGIN_URL, "/css/**", "/images/**", "/js/**", "/error", "/favicon.ico")
+            .requestMatchers(LOGIN_URL, "/api/auth/register", "/css/**", "/images/**", "/js/**", "/error", "/favicon.ico")
             .permitAll()
             .anyRequest()
             .authenticated())
@@ -126,65 +130,28 @@ public class SecurityConfig {
 
   @Bean
   public RegisteredClientRepository registeredClientRepository() {
-    RegisteredClient maintenanceClient = RegisteredClient
+    // Cliente para la comunicación SERVICIO-A-SERVICIO (Auth -> Maintenance)
+    RegisteredClient maintenanceInternalClient = RegisteredClient
         .withId(UUID
             .randomUUID()
             .toString())
-        .clientId("maintenance-client")
-        .clientSecret(passwordEncoder().encode("12345"))
+        .clientId("maintenance-client") // El ID que usará Auth para identificarse
+        .clientSecret(passwordEncoder().encode("12345")) // El secreto
         .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-        .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-        .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-        .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-        .redirectUri(environment.getProperty("LB_MAINTENANCE_URI", "http://127.0.0.1:9090")
-            + "/login/oauth2/code/maintenance-client")
-        .redirectUri(environment.getProperty("LB_MAINTENANCE_URI", "http://127.0.0.1:9090")
-            + "/api/users/authorized")
+        .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS) // <-- ¡SOLO ESTE GRANT TYPE!
         .tokenSettings(TokenSettings
             .builder()
-            .accessTokenTimeToLive(Duration.ofHours(1))
+            .accessTokenTimeToLive(Duration.ofMinutes(30))
             .build())
-        .scope(OidcScopes.OPENID)
-        .scope(OidcScopes.PROFILE)
-        .scope("read")
-        .scope(WRITE_SCOPE)
-        .clientSettings(ClientSettings
-            .builder()
-            .requireAuthorizationConsent(false)
-            .build())
+        .scope(INTERNAL_WRITE_SCOPE) // <-- El permiso especial para operaciones internas
         .build();
 
-    RegisteredClient orderClient = RegisteredClient
-        .withId(UUID
-            .randomUUID()
-            .toString())
-        .clientId("order-client")
-        .clientSecret(passwordEncoder().encode("12345"))
-        .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-        .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-        .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-        .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-        .redirectUri(environment.getProperty("LB_ORDER_URI", "http://127.0.0.1:9091")
-            + "/login/oauth2/code/order-client")
-        .tokenSettings(TokenSettings
-            .builder()
-            .accessTokenTimeToLive(Duration.ofHours(1))
-            .build())
-        .scope(OidcScopes.OPENID)
-        .scope(OidcScopes.PROFILE)
-        .scope("read")
-        .scope(WRITE_SCOPE)
-        .clientSettings(ClientSettings
-            .builder()
-            .requireAuthorizationConsent(false)
-            .build())
-        .build();
-
+    // Cliente para tu aplicación Angular (SPA)
     RegisteredClient spaClient = RegisteredClient
         .withId(UUID
             .randomUUID()
             .toString())
-        .clientId("maintenance-spa")
+        .clientId("ecommerce-spa")
         .clientAuthenticationMethod(ClientAuthenticationMethod.NONE)
         .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
         .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
@@ -196,7 +163,7 @@ public class SecurityConfig {
             .build())
         .scope(OidcScopes.OPENID)
         .scope(OidcScopes.PROFILE)
-        .scope("read")
+        .scope(READ_SCOPE)
         .scope(WRITE_SCOPE)
         .clientSettings(ClientSettings
             .builder()
@@ -205,7 +172,7 @@ public class SecurityConfig {
             .build())
         .build();
 
-    return new InMemoryRegisteredClientRepository(maintenanceClient, orderClient, spaClient);
+    return new InMemoryRegisteredClientRepository(maintenanceInternalClient, spaClient);
   }
 
   @Bean
@@ -252,37 +219,33 @@ public class SecurityConfig {
     return context -> {
       if (OAuth2TokenType.ACCESS_TOKEN.equals(context.getTokenType())) {
         Authentication authentication = context.getPrincipal();
-        EcommerceUserDetails user = (EcommerceUserDetails) authentication.getPrincipal();
-        if (user.getCustomerId() != null) {
-          context
-              .getClaims()
-              .claim("customerId", user.getCustomerId());
+        // --- ¡LA CORRECCIÓN ESTÁ AQUÍ! ---
+        // Verificamos si el principal es un usuario humano antes de hacer el cast
+        if (authentication.getPrincipal() instanceof EcommerceUserDetails user) {
+          // Si es un usuario, añadimos sus claims específicos
+          Set<String> authorities = user.getAuthorities().stream()
+              .map(GrantedAuthority::getAuthority)
+              .collect(Collectors.toSet());
+          context.getClaims().claim("roles", authorities);
+
+          if (user.getCustomerId() != null) {
+            context.getClaims().claim("customerId", user.getCustomerId());
+          }
+          if (user.getEmployeeId() != null) {
+            context.getClaims().claim("employeeId", user.getEmployeeId());
+          }
+          if (user.getCustomerName() != null && !user.getCustomerName().isBlank()) {
+            context.getClaims().claim("displayName", user.getCustomerName());
+          } else if (user.getEmployeeName() != null) {
+            context.getClaims().claim("displayName", user.getEmployeeName());
+          }
+          context.getClaims().claim("username", user.getUsername());
+        } else {
+          // Es un token de client_credentials, añadimos los scopes como roles
+          // no hacemos nada y dejamos que el token se genere con los claims por defecto (como el scope).
+          Set<String> scopes = context.getRegisteredClient().getScopes();
+          context.getClaims().claim("roles", scopes.stream().map(s -> "SCOPE_" + s).collect(Collectors.toSet()));
         }
-        if (user.getEmployeeId() != null) {
-          context
-              .getClaims()
-              .claim("employeeId", user.getEmployeeId());
-        }
-        if (user.getCustomerName() != null) {
-          context
-              .getClaims()
-              .claim("displayName", user.getCustomerName());
-        } else if (user.getEmployeeName() != null) {
-          context
-              .getClaims()
-              .claim("displayName", user.getEmployeeName());
-        }
-        context
-            .getClaims()
-            .claim("username", user.getUsername());
-        Set<String> authorities = user
-            .getAuthorities()
-            .stream()
-            .map(GrantedAuthority::getAuthority)
-            .collect(Collectors.toSet());
-        context
-            .getClaims()
-            .claim("roles", authorities);
       }
     };
   }

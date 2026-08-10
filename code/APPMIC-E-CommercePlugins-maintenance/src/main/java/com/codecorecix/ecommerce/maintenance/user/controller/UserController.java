@@ -1,8 +1,6 @@
 package com.codecorecix.ecommerce.maintenance.user.controller;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import com.codecorecix.ecommerce.exception.GenericUnprocessableEntityException;
@@ -12,7 +10,6 @@ import com.codecorecix.ecommerce.maintenance.user.service.UserService;
 import com.codecorecix.ecommerce.maintenance.user.utils.UserConstants;
 import com.codecorecix.ecommerce.utils.GenericResponse;
 import com.codecorecix.ecommerce.utils.GenericResponseConstants;
-import com.codecorecix.ecommerce.utils.GenericUtils;
 import com.codecorecix.ecommerce.utils.MaintenanceUtils;
 
 import jakarta.validation.Valid;
@@ -105,10 +102,15 @@ public class UserController {
     }
   }
 
-  @GetMapping("/authorized")
-  public ResponseEntity<GenericResponse<Map<String, Object>>> retrieveAuthorizedUsers(@RequestParam(name = "code") final String code) {
-    return ResponseEntity.status(HttpStatus.OK)
-        .body(GenericUtils.buildGenericResponseSuccess(GenericResponseConstants.RETRIEVE_CODE_MSG, Collections.singletonMap("code", code)));
+  @DeleteMapping("/internal/users/{id}")
+  public ResponseEntity<GenericResponse<Void>> deleteUserInternal(@PathVariable(value = "id") final Integer id) {
+    GenericResponse<UserResponseDto> serviceResponse = service.deleteById(id);
+    if (serviceResponse.getRpta() == GenericResponseConstants.RPTA_OK) {
+      return ResponseEntity.ok(new GenericResponse<>(serviceResponse.getRpta(), "Usuario eliminado por compensación.", null));
+    } else {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND)
+          .body(new GenericResponse<>(serviceResponse.getRpta(), serviceResponse.getMessage(), null));
+    }
   }
 
   @GetMapping("/login")

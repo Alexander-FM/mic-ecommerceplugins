@@ -1,9 +1,7 @@
-package com.codecorecix.ecommerce.maintenance.customer.api.dto.request;
+package com.codecorecix.ecommerce.event.models;
 
 import java.io.Serializable;
 import java.util.Date;
-
-import com.codecorecix.ecommerce.event.entities.Address;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

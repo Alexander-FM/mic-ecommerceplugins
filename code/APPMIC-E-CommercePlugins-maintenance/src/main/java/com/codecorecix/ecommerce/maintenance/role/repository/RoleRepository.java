@@ -1,6 +1,7 @@
 package com.codecorecix.ecommerce.maintenance.role.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.codecorecix.ecommerce.event.entities.Role;
 
@@ -17,4 +18,6 @@ public interface RoleRepository extends JpaRepository<Role, Integer> {
   @Modifying
   @Query("UPDATE Role R SET R.isActive = ?1 WHERE R.id = ?2")
   void disabledOrEnabledBrand(final Boolean isActive, final Integer id);
+
+  Optional<Role> findRoleByDescription(final String roleName);
 }
