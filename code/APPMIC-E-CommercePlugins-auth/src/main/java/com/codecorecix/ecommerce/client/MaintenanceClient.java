@@ -36,7 +36,7 @@ public class MaintenanceClient {
   public GenericResponse<RoleResponseDto> findRoleByName(final String roleName) {
     return webClient
         .get()
-        .uri("/api/maintenance/roles/internal/name/{roleName}", roleName)
+        .uri("/api/maintenance/roles/internal/roleName/{roleName}", roleName)
         .retrieve()
         .bodyToMono(new ParameterizedTypeReference<GenericResponse<RoleResponseDto>>() {
         })
@@ -69,7 +69,7 @@ public class MaintenanceClient {
     log.warn("Enviando petición de borrado por compensación para el usuario ID: {}", userId);
     webClient
         .delete()
-        .uri("/api/maintenance/internal/users/{userId}", userId)
+        .uri("/api/maintenance/users/internal/user/{userId}", userId)
         .retrieve()
         .bodyToMono(new ParameterizedTypeReference<GenericResponse<Void>>() {
         })

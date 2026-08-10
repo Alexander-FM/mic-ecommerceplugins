@@ -57,7 +57,7 @@ public class RoleController {
     }
   }
 
-  @GetMapping("/internal/name/{roleName}")
+  @GetMapping("/internal/roleName/{roleName}")
   public ResponseEntity<GenericResponse<RoleResponseDto>> getRoleByName(@PathVariable(value = "roleName") final String roleName) {
     final GenericResponse<RoleResponseDto> response = this.service.findByName(roleName);
     if (Objects.nonNull(response.getBody())) {

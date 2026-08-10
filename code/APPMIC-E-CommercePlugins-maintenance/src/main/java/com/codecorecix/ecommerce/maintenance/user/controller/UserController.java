@@ -102,7 +102,7 @@ public class UserController {
     }
   }
 
-  @DeleteMapping("/internal/users/{id}")
+  @DeleteMapping("/internal/user/{id}")
   public ResponseEntity<GenericResponse<Void>> deleteUserInternal(@PathVariable(value = "id") final Integer id) {
     GenericResponse<UserResponseDto> serviceResponse = service.deleteById(id);
     if (serviceResponse.getRpta() == GenericResponseConstants.RPTA_OK) {
