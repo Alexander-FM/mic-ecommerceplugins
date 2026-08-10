@@ -87,8 +87,8 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.DELETE, "/api/maintenance/users/internal/**")
             .hasAuthority(INTERNAL_WRITE)
             // 2. Operaciones permitidas para ADMIN y USER (GET y POST)
-            .requestMatchers(HttpMethod.GET, allMaintenancePaths)
-            .hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
+            // .requestMatchers(HttpMethod.GET, allMaintenancePaths)  // <--- COMENTADO TEMPORALMENTE
+            // .hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
             .requestMatchers(HttpMethod.POST, allMaintenancePaths)
             .hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
             // 3. Operaciones exclusivas para ADMIN (PUT, PATCH, DELETE)
