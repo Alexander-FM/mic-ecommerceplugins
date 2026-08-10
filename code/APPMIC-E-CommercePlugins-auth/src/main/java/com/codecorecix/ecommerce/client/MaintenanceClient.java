@@ -6,6 +6,7 @@ import com.codecorecix.ecommerce.event.models.CustomerResponseDto;
 import com.codecorecix.ecommerce.event.models.RoleResponseDto;
 import com.codecorecix.ecommerce.event.models.UserRequestDto;
 import com.codecorecix.ecommerce.event.models.UserResponseDto;
+import com.codecorecix.ecommerce.exception.AuthMessageEnum;
 import com.codecorecix.ecommerce.utils.GenericResponse;
 import com.codecorecix.ecommerce.utils.WebClientErrorHandler;
 
@@ -18,6 +19,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Component
 @Slf4j
 public class MaintenanceClient {
+
   private final WebClient webClient;
 
   private final WebClientErrorHandler errorHandler;
@@ -55,14 +57,18 @@ public class MaintenanceClient {
   }
 
   public GenericResponse<CustomerResponseDto> createCustomer(final CustomerRequestDto customerRequest) {
-    return webClient
-        .post()
-        .uri("/api/maintenance/customers")
-        .bodyValue(customerRequest)
-        .retrieve()
-        .bodyToMono(new ParameterizedTypeReference<GenericResponse<CustomerResponseDto>>() {
-        })
-        .block();
+    try {
+      return webClient
+          .post()
+          .uri("/api/maintenance/customers")
+          .bodyValue(customerRequest)
+          .retrieve()
+          .bodyToMono(new ParameterizedTypeReference<GenericResponse<CustomerResponseDto>>() {
+          })
+          .block();
+    } catch (final RuntimeException ex) {
+      throw errorHandler.handle(ex, AuthMessageEnum.AUTH_CUSTOMER_SERVICE_UNAVAILABLE);
+    }
   }
 
   public void deleteUserInternal(final Integer userId) {

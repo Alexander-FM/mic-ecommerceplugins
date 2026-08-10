@@ -1,9 +1,12 @@
 package com.codecorecix.ecommerce.services;
 
+import java.util.List;
+
 import com.codecorecix.ecommerce.api.dto.request.RegisterRequestDto;
 import com.codecorecix.ecommerce.client.MaintenanceClient;
 import com.codecorecix.ecommerce.event.models.CustomerRequestDto;
 import com.codecorecix.ecommerce.event.models.CustomerResponseDto;
+import com.codecorecix.ecommerce.event.models.RoleRequestDto;
 import com.codecorecix.ecommerce.event.models.RoleResponseDto;
 import com.codecorecix.ecommerce.event.models.UserRequestDto;
 import com.codecorecix.ecommerce.event.models.UserResponseDto;
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 public class RegistrationService {
+
   private final MaintenanceClient maintenanceClient;
 
   public CustomerResponseDto registerUserAndCustomer(final RegisterRequestDto request) {
@@ -31,7 +35,12 @@ public class RegistrationService {
 
       // 2. Crear usuario
       UserRequestDto userRequest = new UserRequestDto();
+      userRequest.setUsername(request.getUsername());
+      userRequest.setPassword(request.getPassword());
+      userRequest.setIsActive(true);
       // ... (setear username, password, etc. con el rol obtenido)
+      userRequest.setRoles(List.of(new RoleRequestDto(roleResponse.getBody().getId(), roleResponse.getBody().getDescription(),
+          roleResponse.getBody().getIsActive())));
 
       GenericResponse<UserResponseDto> userResponse = maintenanceClient.createUser(userRequest);
       if (userResponse.getRpta() != 1) {
@@ -52,14 +61,14 @@ public class RegistrationService {
       log.info("Cliente creado con éxito. Registro completado.");
       return customerResponse.getBody();
 
-    } catch (Exception ex) {
+    } catch (final Exception ex) {
       // --- LÓGICA DE COMPENSACIÓN ---
       log.error("Error durante el registro: {}. Iniciando compensación.", ex.getMessage());
       if (createdUser != null) {
         try {
           maintenanceClient.deleteUserInternal(createdUser.getId());
           log.warn("Usuario huérfano con ID: {} eliminado por compensación.", createdUser.getId());
-        } catch (Exception compEx) {
+        } catch (final Exception compEx) {
           log.error("¡FALLO CRÍTICO! La compensación falló. El usuario con ID {} debe ser eliminado manualmente.", createdUser.getId(),
               compEx);
         }

@@ -3,12 +3,13 @@ package com.codecorecix.ecommerce.maintenance.customer.controller;
 import java.util.List;
 import java.util.Objects;
 
-import com.codecorecix.ecommerce.exception.GenericUnprocessableEntityException;
+import com.codecorecix.ecommerce.exceptions.MaintenanceException;
 import com.codecorecix.ecommerce.maintenance.customer.api.dto.request.CustomerRequestDto;
 import com.codecorecix.ecommerce.maintenance.customer.api.dto.response.CustomerResponseDto;
 import com.codecorecix.ecommerce.maintenance.customer.service.CustomerService;
 import com.codecorecix.ecommerce.utils.GenericResponse;
 import com.codecorecix.ecommerce.utils.GenericResponseConstants;
+import com.codecorecix.ecommerce.utils.MaintenanceErrorMessage;
 import com.codecorecix.ecommerce.utils.MaintenanceUtils;
 
 import lombok.extern.slf4j.Slf4j;
@@ -67,7 +68,7 @@ public class CustomerController {
   @PostMapping
   public ResponseEntity<GenericResponse<CustomerResponseDto>> saveCustomer(@RequestBody final CustomerRequestDto customerRequestDto) {
     if (ObjectUtils.isNotEmpty(customerRequestDto.getId())) {
-      throw new GenericUnprocessableEntityException(GenericResponseConstants.UNPROCESSABLE_ENTITY_EXCEPTION);
+      throw new MaintenanceException(MaintenanceErrorMessage.ERROR_UNPROCESABLE_ENTITY);
     } else {
       MaintenanceUtils.validRequestDto(customerRequestDto);
       GenericResponse<CustomerResponseDto> response = this.service.save(customerRequestDto, false);

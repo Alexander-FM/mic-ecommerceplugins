@@ -70,16 +70,16 @@ public class SecurityConfig {
     http
         .authorizeHttpRequests(authorizeRequests -> authorizeRequests
             //1. Rutas públicas
-            .requestMatchers("/api/maintenance/users/authorized", "/api/maintenance/users/login",
+            .requestMatchers("/api/maintenance/users/login",
                 "/api/maintenance/customers/username/{username}", "/api/maintenance/employees/username/{username}",
                 "/api/maintenance/products/active", "/api/maintenance/products/{id}",
-                "/api/maintenance/brands/active", "/api/maintenance/categories/active").permitAll()
-            .requestMatchers(HttpMethod.GET, "/api/maintenance/roles").permitAll()
-            .requestMatchers(HttpMethod.POST, "/api/maintenance/customers").permitAll()
-            .requestMatchers(HttpMethod.POST, "/api/maintenance/users").permitAll()
+                "/api/maintenance/brands/active", "/api/maintenance/categories/active")
+            .permitAll()
             // 2. Operaciones internas (Deben ir ANTES de las generales)
             .requestMatchers(HttpMethod.GET, "/api/maintenance/roles/internal/**").hasAuthority(INTERNAL_WRITE)
             .requestMatchers(HttpMethod.DELETE, "/api/maintenance/users/internal/**").hasAuthority(INTERNAL_WRITE)
+            .requestMatchers(HttpMethod.POST, "/api/maintenance/customers").hasAuthority(INTERNAL_WRITE)
+            .requestMatchers(HttpMethod.POST, "/api/maintenance/users").hasAuthority(INTERNAL_WRITE)
             // 3. Operaciones permitidas para ADMIN y USER
             .requestMatchers(HttpMethod.GET, allMaintenancePaths).hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
             .requestMatchers(HttpMethod.POST, allMaintenancePaths).hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
