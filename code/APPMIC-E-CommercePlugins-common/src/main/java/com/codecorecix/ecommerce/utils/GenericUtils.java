@@ -28,7 +28,7 @@ public class GenericUtils {
    */
   public static <T> GenericResponse<T> buildGenericResponseError(final String message, final T object) {
     return new GenericResponse<>(GenericResponseConstants.RPTA_ERROR,
-        StringUtils.joinWith(GenericResponseConstants.DASH, GenericResponseConstants.INCORRECT_OPERATION, message), object);
+        StringUtils.joinWith(GenericResponseConstants.DASH, GenericResponseConstants.WRONG_OPERATION, message), object);
   }
 
   /**
@@ -38,7 +38,7 @@ public class GenericUtils {
    */
   public static <T> GenericResponse<T> buildGenericResponseWarning(final String message, final T object) {
     return new GenericResponse<>(GenericResponseConstants.RPTA_WARNING,
-        StringUtils.joinWith(GenericResponseConstants.DASH, GenericResponseConstants.WRONG_OPERATION, message), object);
+        StringUtils.joinWith(GenericResponseConstants.DASH, GenericResponseConstants.INCORRECT_OPERATION, message), object);
   }
 
   /**

@@ -8,6 +8,7 @@ import java.util.Set;
 import com.codecorecix.ecommerce.exceptions.MaintenanceException;
 import com.codecorecix.ecommerce.utils.GenericResponse;
 import com.codecorecix.ecommerce.utils.GenericResponseConstants;
+import com.codecorecix.ecommerce.utils.GenericUtils;
 import com.codecorecix.ecommerce.utils.MaintenanceErrorMessage;
 
 import jakarta.validation.ConstraintViolation;
@@ -38,7 +39,8 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(DataIntegrityViolationException.class)
   @ResponseStatus(code = HttpStatus.CONFLICT)
   public GenericResponse<Object> dataIntegrityViolationException(final DataIntegrityViolationException ex) {
-    return new GenericResponse<>(GenericResponseConstants.RPTA_ERROR, GenericResponseConstants.WRONG_OPERATION, GenericResponseConstants.CONFLICT);
+    String originalMessage = (ex.getRootCause() != null) ? ex.getRootCause().getMessage() : ex.getMessage();
+    return new GenericResponse<>(GenericResponseConstants.RPTA_ERROR, GenericResponseConstants.WRONG_OPERATION, new ErrorResponse(429, originalMessage));
   }
 
   @ExceptionHandler(MaintenanceException.class)
@@ -48,8 +50,9 @@ public class GlobalExceptionHandler {
       case ERROR_NOT_FOUND_IMAGE -> HttpStatus.BAD_REQUEST;
       case ERROR_SAVING_IMAGE, ERROR_UPDATE_IMAGE, ERROR_DELETE_IMAGE, ERROR_SECURITY_GOOGLE_DRIVE, ERROR_RESOURCE_NOT_FOUND,
            ERROR_INTERNAL -> HttpStatus.INTERNAL_SERVER_ERROR;
+      case ERROR_UNPROCESABLE_ENTITY ->  HttpStatus.UNPROCESSABLE_ENTITY;
     };
-    return new ResponseEntity<>(new GenericResponse<>(GenericResponseConstants.RPTA_ERROR, GenericResponseConstants.WRONG_OPERATION,
+    return new ResponseEntity<>(GenericUtils.buildGenericResponseError("try again.",
         new ErrorResponse(ex.getErrorCode(), errorMessage.getErrorMessage())), status);
   }
 

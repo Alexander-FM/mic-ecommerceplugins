@@ -23,7 +23,6 @@
               [icon]="getOrderStatusIcon(order.orderStatusName)"></p-tag>
           </td>
           <td class="font-bold">{{ order.totalAmount | currency:'PEN':'symbol' }}</td>
-          <td>{{ order.orderNotes }}</td>
           <td style="text-align: center;">
             <p-button icon="pi pi-eye" [rounded]="true" [text]="true" severity="info" (onClick)="viewDetail(order.id)"
               pTooltip="Ver detalle" tooltipPosition="top"></p-button>

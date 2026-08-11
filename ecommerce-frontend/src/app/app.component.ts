@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { MenubarModule } from 'primeng/menubar';
@@ -33,11 +33,13 @@ import { Category } from './models/ecommerce.models';
 export class AppComponent implements OnInit {
   title = 'ecommerce-frontend';
   showMenu = true;
+  isAuthenticated = false;
   username = 'Usuario';
   isAdmin = false;
   cartItemCount = 0;
   ordersCount = 0;
   menuItems: MenuItem[] = [];
+  isUserMenuOpen = false;
 
   constructor(
     private categoryService: CategoryService,
@@ -45,31 +47,59 @@ export class AppComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private messageService: MessageService,
-    private orderService: OrderService
+    private orderService: OrderService,
+    private elementRef: ElementRef
   ) { }
 
   ngOnInit(): void {
+    this.loadCategories();
+    this.loadCartCount();
+
     // Escuchar cambios en el estado de autenticación
     this.authService.authState$.subscribe((authState) => {
+      this.isAuthenticated = authState.isAuthenticated;
+      this.showMenu = true; // Mostrar siempre la barra de navegación principal
+
       if (authState.isAuthenticated) {
-        console.log('✅ Usuario autenticado, cargando menú...');
-        this.showMenu = true;
-        this.username = authState.user?.displayName || 'Usuario';
+        console.log('✅ Usuario autenticado, cargando datos de usuario...');
+        this.username = authState.user?.displayName || authState.user?.sub || 'Usuario';
         const roles = authState.user?.roles || [];
         this.isAdmin = roles.includes('ROLE_ADMIN');
         console.log('🔐 isAdmin:', this.isAdmin);
-        this.loadCategories();
-        this.loadCartCount();
         this.loadOrdersCount();
       } else {
-        console.log('❌ Usuario no autenticado, ocultando menú...');
-        this.showMenu = false;
-        this.menuItems = [];
-        this.cartItemCount = 0;
+        console.log('ℹ️ Usuario no autenticado');
+        this.username = '';
+        this.cartItemCount = this.cartService.getCartItemCount();
         this.ordersCount = 0;
         this.isAdmin = false;
       }
+      this.loadCategories();
     });
+  }
+
+  toggleUserMenu(event: Event): void {
+    event.stopPropagation();
+    this.isUserMenuOpen = !this.isUserMenuOpen;
+  }
+
+  navigateTo(path: string): void {
+    this.isUserMenuOpen = false;
+    if (path === '/my-orders' && !this.isAuthenticated) {
+      this.router.navigate(['/login']);
+    } else {
+      this.router.navigate([path]);
+    }
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event): void {
+    if (this.isUserMenuOpen) {
+      const clickedInside = this.elementRef.nativeElement.querySelector('.auth-dropdown-wrapper')?.contains(event.target as Node);
+      if (!clickedInside) {
+        this.isUserMenuOpen = false;
+      }
+    }
   }
 
   loadOrdersCount(): void {
@@ -214,8 +244,6 @@ export class AppComponent implements OnInit {
   }
 
   logout(): void {
-    this.authService.logout();
-    // El navbar se ocultará automáticamente gracias a authState$ subscription
     this.messageService.add({
       severity: 'info',
       summary: 'Sesión cerrada',
@@ -223,8 +251,8 @@ export class AppComponent implements OnInit {
       life: 2000
     });
     setTimeout(() => {
-      this.router.navigate(['/login']);
-    }, 2000);
+      this.authService.logout(true);
+    }, 1500);
   }
 }
 

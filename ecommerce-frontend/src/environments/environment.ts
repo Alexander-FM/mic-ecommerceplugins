@@ -1,10 +1,12 @@
+const BASE_URL = 'http://localhost:8080';
 export const environment = {
   production: false,
-  apiUrl: 'http://127.0.0.1:80',
+  apiUrl: BASE_URL,
   oauth: {
-    authorizationEndpoint: 'http://127.0.0.1:9001/oauth2/authorize',
-    tokenUrl: 'http://127.0.0.1:9001/oauth2/token',
+    authorizationEndpoint: `http://localhost:9000/oauth2/authorize`,
+    tokenUrl: `${BASE_URL}/oauth2/token`,
+    logoutEndpoint: `http://localhost:9000/connect/logout`,
     redirectUri: 'http://localhost:4200/auth/callback',
-    clientId: 'maintenance-spa'
+    clientId: 'ecommerce-spa'
   }
 };

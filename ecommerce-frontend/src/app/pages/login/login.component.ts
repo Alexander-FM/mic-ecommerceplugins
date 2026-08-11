@@ -25,19 +25,23 @@ export class LoginComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private messageService: MessageService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     // Verificar si hay un código en los query parameters
     this.route.queryParams.subscribe(params => {
       const code = params['code'];
       const state = params['state'];
+      const isLogoutParam = params['logout'] !== undefined || params['post_logout'] !== undefined;
 
       // Debug: log todos los parámetros recibidos
       console.log('🔍 Query params recibidos:', { code, state, allParams: params });
 
       if (code) {
         this.handleOAuthCallback(code, state);
+      } else if (isLogoutParam || this.router.url.includes('/auth/callback')) {
+        // Retorno de post-logout (sin código OAuth): redirigir a la página principal de productos
+        this.router.navigate(['/products']);
       }
     });
   }
@@ -107,7 +111,7 @@ export class LoginComponent implements OnInit {
         } else if (error.status === 401) {
           errorMsg = 'No autorizado. Verifique sus credenciales.';
         } else if (error.status === 0) {
-          errorMsg = 'Error de conexión. Verifique que el servidor OAuth esté disponible en http://127.0.0.1:9001';
+          errorMsg = 'Error de conexión. Verifique que el servidor OAuth esté disponible en http://127.0.0.1:9000';
         } else if (error.error?.error) {
           errorMsg = `${error.error.error}: ${error.error.error_description || ''}`;
         }

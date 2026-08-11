@@ -46,4 +46,12 @@ public interface RoleService {
    * @return List of RoleResponseDto.
    */
   GenericResponse<RoleResponseDto> findById(final Integer id);
+
+  /**
+   * Method used to find the role by name.
+   *
+   * @param roleName the role name
+   * @return RoleResponseDto
+   */
+  GenericResponse<RoleResponseDto> findByName(final String roleName);
 }

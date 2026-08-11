@@ -7,62 +7,173 @@ data:
   init-schemas.sql: |
     CREATE DATABASE IF NOT EXISTS maintenance_service;
     CREATE DATABASE IF NOT EXISTS orders_service;
-  
+    
     
     -- Crear la tabla de estados de orden
-    CREATE TABLE IF NOT EXISTS orders_service.order_status (
-    id INT NOT NULL,
-    is_active BOOLEAN NOT NULL DEFAULT true,
-    status_name VARCHAR(100) NOT NULL,
-    CONSTRAINT pk_order_status PRIMARY KEY (id)
+    CREATE TABLE IF NOT EXISTS orders_service.order_status
+    (
+        id          INT          NOT NULL,
+        is_active   BOOLEAN      NOT NULL DEFAULT true,
+        status_name VARCHAR(100) NOT NULL,
+        CONSTRAINT pk_order_status PRIMARY KEY (id)
+    );
+    
+    -- Crear la tabla de categorías
+    CREATE TABLE IF NOT EXISTS maintenance_service.categories
+    (
+        id              INT          NOT NULL,
+        description     VARCHAR(100) NOT NULL,
+        is_active       BOOLEAN      NOT NULL DEFAULT true,
+        parent_category INT,
+        CONSTRAINT pk_category PRIMARY KEY (id)
+    );
+    
+    -- Crear la tabla de marcas
+    CREATE TABLE IF NOT EXISTS maintenance_service.brands
+    (
+        id          INT          NOT NULL,
+        description VARCHAR(100) NOT NULL,
+        is_active   BOOLEAN      NOT NULL DEFAULT true,
+        CONSTRAINT pk_brand PRIMARY KEY (id)
     );
     
     -- Crear la tabla de roles
-    CREATE TABLE IF NOT EXISTS maintenance_service.roles (
-    id INT NOT NULL,
-    description VARCHAR(100) NOT NULL,
-    is_active BOOLEAN NOT NULL DEFAULT true,
-    CONSTRAINT pk_roles PRIMARY KEY (id)
+    CREATE TABLE IF NOT EXISTS maintenance_service.roles
+    (
+        id          INT          NOT NULL,
+        description VARCHAR(100) NOT NULL,
+        is_active   BOOLEAN      NOT NULL DEFAULT true,
+        CONSTRAINT pk_roles PRIMARY KEY (id)
     );
     
-  
-    INSERT INTO orders_service.order_status (id, is_active, status_name)
-      VALUES (1, true, 'Pendiente'),
-             (2, true, 'Recepcionado'),
-             (3, true, 'Preparando pedido'),
-             (4, true, 'En camino'),
-             (5, true, 'Entregado'),
-             (6, true, 'Cancelado');
+    -- Crear tablas atributos
+    CREATE TABLE IF NOT EXISTS maintenance_service.attributes
+    (
+        id   INT          NOT NULL,
+        name VARCHAR(255) NOT NULL,
+        CONSTRAINT pk_attributes PRIMARY KEY (id)
+    );
     
-    INSERT INTO maintenance_service.roles (id, description, is_active) VALUES
-    (1, 'ADMIN', true),
-    (2, 'USER', true);
+    -- Crear la tabla de productos
+    CREATE TABLE IF NOT EXISTS maintenance_service.products
+    (
+        id             INT NOT NULL AUTO_INCREMENT,
+        bar_code       VARCHAR(255),
+        description    VARCHAR(9999),
+        is_active      BOOLEAN,
+        is_recommended BOOLEAN,
+        main_image_url VARCHAR(255),
+        name           VARCHAR(255),
+        price          DOUBLE,
+        stock          INT,
+        brand_id       INT,
+        category_id    INT,
+        CONSTRAINT pk_products PRIMARY KEY (id),
+        CONSTRAINT FK_Products_Brands FOREIGN KEY (brand_id) REFERENCES maintenance_service.brands (id),
+        CONSTRAINT FK_Products_Categories FOREIGN KEY (category_id) REFERENCES maintenance_service.categories (id)
+    );
+    
+    -- Crear la tabla de valores de atributos de productos
+    CREATE TABLE IF NOT EXISTS maintenance_service.product_attributes
+    (
+        id           INT          NOT NULL,
+        value        VARCHAR(100) NOT NULL,
+        attribute_id INT          NOT NULL,
+        product_id   INT          NOT NULL,
+        CONSTRAINT pk_product_attribute PRIMARY KEY (id),
+        CONSTRAINT FK_ProductsAttribute_Products FOREIGN KEY (product_id) REFERENCES maintenance_service.products (id)
+    );
+    
+    -- Crear la tabla de imágenes de productos
+    CREATE TABLE IF NOT EXISTS maintenance_service.product_images
+    (
+        id         INT          NOT NULL,
+        image_url  VARCHAR(255) NOT NULL,
+        product_id INT          NOT NULL,
+        CONSTRAINT pk_product_images PRIMARY KEY (id),
+        CONSTRAINT FK_ProductsImages_Products FOREIGN KEY (product_id) REFERENCES maintenance_service.products (id)
+    );
+    
+    INSERT INTO orders_service.order_status (id, is_active, status_name)
+    VALUES (1, true, 'Pendiente'),
+           (2, true, 'Recepcionado'),
+           (3, true, 'Preparando pedido'),
+           (4, true, 'En camino'),
+           (5, true, 'Entregado'),
+           (6, true, 'Cancelado');
+    
+    INSERT INTO maintenance_service.categories (id, description, is_active, parent_category)
+    VALUES (1, 'Alimentos y Bebidas', true, NULL),
+           (2, 'Bebidas y Licores', true, 1),
+           (3, 'Vinos', true, 2),
+           (4, 'Vino Tinto', true, 3),
+           (5, 'Licores', true, 2),
+           (6, 'Ron', true, 5);
+    
+    INSERT INTO maintenance_service.brands (id, description, is_active)
+    VALUES (1, 'La Mascota', true),
+           (2, 'Ricadonna', true),
+           (3, 'Catena Zapata', true),
+           (4, 'Flor de caña', true);
+    
+    INSERT INTO maintenance_service.roles (id, description, is_active)
+    VALUES (1, 'ADMIN', true),
+           (2, 'USER', true);
     
     INSERT INTO maintenance_service.attributes (id, name)
-    VALUES
-        -- Categoría: Tecnología (iPhones, Celulares, Tablets)
-        (1, 'Almacenamiento Interno'),
-        (2, 'Memoria RAM'),
-        (3, 'Color'),
-        (4, 'Tamaño de Pantalla'),
-        (5, 'Capacidad de la Batería'),
-        (6, 'Sistema Operativo'),
-        (7, 'Resolución de Cámara Principal'),
-        (8, 'Conectividad (5G/4G/Wi-Fi)'),
-        
-        -- Categoría: Vinos
-        (9, 'Tipo de Vino (Tinto/Blanco/Rosado)'),
-        (10, 'Bodega'),
-        (11, 'Variedad de Uva (Malbec/Cabernet/etc)'),
-        (12, 'Año de Cosecha / Añada'),
-        (13, 'Región de Origen'),
-        (14, 'Graduación Alcohólica'),
-        (15, 'Volumen (750ml/1L)'),
-        
-        -- Categoría: Bazar
-        (16, 'Material (Vidrio/Cerámica/Plástico)'),
-        (17, 'Dimensiones'),
-        (18, 'Apto para Microondas (Sí/No)'),
-        (19, 'Apto para Lavavajillas (Sí/No)'),
-        (20, 'Marca / Fabricante'),
-        (21, 'Piezas por Set');
+    VALUES (1, 'Almacenamiento Interno'),
+           (2, 'Memoria RAM'),
+           (3, 'Color'),
+           (4, 'Tamaño de Pantalla'),
+           (5, 'Capacidad de la Batería'),
+           (6, 'Sistema Operativo'),
+           (7, 'Resolución de Cámara Principal'),
+           (8, 'Conectividad (5G/4G/Wi-Fi)'),
+           
+           -- Categoría: Vinos
+           (9, 'Tipo de Vino (Tinto/Blanco/Rosado)'),
+           (10, 'Bodega'),
+           (11, 'Variedad de Uva (Malbec/Cabernet/etc)'),
+           (12, 'Año de Cosecha / Añada'),
+           (13, 'Región de Origen'),
+           (14, 'Graduación Alcohólica'),
+           (15, 'Volumen (750ml/1L)');
+    
+    -- Insertar los registros agrupados
+    INSERT INTO maintenance_service.products (id, bar_code, description, is_active, is_recommended, main_image_url,
+                                              name, price, stock, brand_id, category_id)
+    VALUES (1, '113371165', 'Vino La Mascota Malbec Botella 750 mL', true, false,
+            'https://drive.google.com/file/d/1CpeJFOe9mv9W8VkNTtFicsB2BDDRJEiu/view',
+            'Vino La Mascota Malbec Botella 750 mL', 94.9, 100, 1, 4),
+           (2, '119459446', 'Los vinos de ésta línea, 100% varietales, se elaboran con uvas provenientes de diferentes lotes de los viñedos de la familia Catena, elaborados por Laura Catena, cuarta generación de viticultores y Alejandro Vigil, enólogo Jefe de Catena Zapata. Cada viñedo se divide en lotes, que se cosechan y preparan por separado, para luego integrar el corte o blend final de cada Catena varietal. Lo cual, le da un carácter único de excelente tipicidad, balance y concentración.
+    Añejamiento: 12 meses en barrica de roble francés
+    Cepa: 90% Cabernet Sauvignon, 7% Cabernet Franc, 3% Petit Verdot
+    Alcohol: 13.5%
+    Acidez total: 5 gramos/litros
+    Enólogo: Alejandro Vigil', true, false, 'https://drive.google.com/file/d/1lOnVvTjupJJ3mMotWrP_ITWJzXOylEjY/view',
+            'Vino Catena Cabernet Sauvignon 750ml', 89.9, 100, 3, 4),
+           (3, '147229624',
+            'Disfruta la sofisticación y profundidad del Ron Flor de Caña 12 Años 750 ml, un ron nicaragüense premium que ofrece un sabor complejo y equilibrado para los paladares más exigentes. Descubre qué lo hace diferente Notas aromáticas a caramelo, vainilla, frutos secos y madera tostada. Sabor suave y rico con un final largo y aterciopelado. Ideal para disfrutar solo, con hielo o en cócteles exclusivos. Presentación de 750 ml que refleja tradición y calidad excepcional.',
+            true, false, 'https://drive.google.com/file/d/10SpzMeEKLefDwBtRxH879fKI2SL7UJFm/view',
+            'RON FLOR DE CAÑA 12 AÑOS 750 ML', 79.8, 100, 4, 6),
+           (4, '147229450', 'RICCADONNA RUBY 750 ML
+    Disfruta el sabor frutal y refrescante del Riccadonna Ruby 750 ml, un vino espumante italiano con burbujas finas y aromas intensos a frutos rojos, ideal para celebraciones y momentos especiales. Descubre qué lo hace diferente Aromas intensos a frutos rojos que aportan frescura y dulzura. Burbujas finas y persistentes que elevan la experiencia sensorial. Sabor equilibrado entre dulzura y acidez. Perfecto para brindar en ocasiones especiales o acompañar postres. Presentación de 750 ml que refleja calidad y tradición italiana.',
+            true, false, 'https://drive.google.com/file/d/1EfHlKJ0Gac-0sWbjjHSjAOB7Xt5q6bAt/view',
+            'RICCADONNA RUBY 750ML', 54.5, 100, 2, 4);
+    
+    INSERT INTO maintenance_service.product_attributes (id, value, attribute_id, product_id)
+    VALUES (1, '750', 15, 1),
+           (2, 'Tinto', 9, 1),
+           (3, '750 ml', 15, 2),
+           (4, 'Cabernet', 11, 2),
+           (5, '750 ml', 15, 3),
+           (6, '750 ML', 15, 4),
+           (7, 'Tinto', 9, 4),
+           (8, 'Cabernet', 11, 4),
+           (9, '2004', 12, 4);
+    
+    INSERT INTO maintenance_service.product_images (id, image_url, product_id)
+    VALUES (1, 'https://drive.google.com/file/d/1gHzfliT-Zdpbc5yNpvbidawexqXOuUwk/view', 1),
+           (2, 'https://drive.google.com/file/d/19H02fOZfjX_f2BcsNYZOdLXuN8N23XFS/view', 1),
+           (3, 'https://drive.google.com/file/d/12uDLGw_HUnB0qnWQYNRIi2PEeFvHxxeD/view', 2),
+           (4, 'https://drive.google.com/file/d/10SpzMeEKLefDwBtRxH879fKI2SL7UJFm/view', 3);

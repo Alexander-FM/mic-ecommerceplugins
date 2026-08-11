@@ -72,4 +72,11 @@ public class RoleServiceImpl implements RoleService {
     return rol.map(value -> RoleUtils.buildGenericResponseSuccess(this.mapper.destinationToSource(value)))
         .orElseGet(RoleUtils::buildGenericResponseError);
   }
+
+  @Override
+  public GenericResponse<RoleResponseDto> findByName(final String roleName) {
+    final Optional<Role> rol = this.repository.findRoleByDescription(roleName);
+    return rol.map(value -> RoleUtils.buildGenericResponseSuccess(this.mapper.destinationToSource(value)))
+        .orElseGet(RoleUtils::buildGenericResponseError);
+  }
 }

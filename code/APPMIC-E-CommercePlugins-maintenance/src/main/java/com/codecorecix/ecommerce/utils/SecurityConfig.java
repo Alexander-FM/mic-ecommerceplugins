@@ -47,12 +47,14 @@ public class SecurityConfig {
 
   private static final String ROLE_USER = "ROLE_USER";
 
+  private static final String INTERNAL_WRITE = "internal.write";
+
   private final CustomAccessDeniedHandler accessDeniedHandler;
 
   private final CustomAuthenticationEntryPoint authenticationEntryPoint;
 
   public SecurityConfig(CustomAccessDeniedHandler accessDeniedHandler,
-                        CustomAuthenticationEntryPoint authenticationEntryPoint) {
+      CustomAuthenticationEntryPoint authenticationEntryPoint) {
     this.accessDeniedHandler = accessDeniedHandler;
     this.authenticationEntryPoint = authenticationEntryPoint;
   }
@@ -67,30 +69,24 @@ public class SecurityConfig {
     };
     http
         .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-            //1. Rutas públicas (sin autenticación) para login y consultas de datos activos
-            .requestMatchers("/api/maintenance/users/authorized", "/api/maintenance/users/login",
+            //1. Rutas públicas
+            .requestMatchers("/api/maintenance/users/login",
                 "/api/maintenance/customers/username/{username}", "/api/maintenance/employees/username/{username}",
-                "/api/maintenance/products/active",
+                "/api/maintenance/products/active", "/api/maintenance/products/{id}",
                 "/api/maintenance/brands/active", "/api/maintenance/categories/active")
             .permitAll()
-            .requestMatchers(HttpMethod.GET, "/api/maintenance/roles")
-            .permitAll()
-            .requestMatchers(HttpMethod.POST, "/api/maintenance/customers")
-            .permitAll()
-            .requestMatchers(HttpMethod.POST, "/api/maintenance/users")
-            .permitAll()
-            // 2. Operaciones permitidas para ADMIN y USER (GET y POST)
-            .requestMatchers(HttpMethod.GET, allMaintenancePaths)
-            .hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
-            .requestMatchers(HttpMethod.POST, allMaintenancePaths)
-            .hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
-            // 3. Operaciones exclusivas para ADMIN (PUT, PATCH, DELETE)
-            .requestMatchers(HttpMethod.PUT, allMaintenancePaths)
-            .hasAuthority(ROLE_ADMIN)
-            .requestMatchers(HttpMethod.PATCH, allMaintenancePaths)
-            .hasAuthority(ROLE_ADMIN)
-            .requestMatchers(HttpMethod.DELETE, allMaintenancePaths)
-            .hasAuthority(ROLE_ADMIN)
+            // 2. Operaciones internas (Deben ir ANTES de las generales)
+            .requestMatchers(HttpMethod.GET, "/api/maintenance/roles/internal/**").hasAuthority(INTERNAL_WRITE)
+            .requestMatchers(HttpMethod.DELETE, "/api/maintenance/users/internal/**").hasAuthority(INTERNAL_WRITE)
+            .requestMatchers(HttpMethod.POST, "/api/maintenance/customers").hasAuthority(INTERNAL_WRITE)
+            .requestMatchers(HttpMethod.POST, "/api/maintenance/users").hasAuthority(INTERNAL_WRITE)
+            // 3. Operaciones permitidas para ADMIN y USER
+            .requestMatchers(HttpMethod.GET, allMaintenancePaths).hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
+            .requestMatchers(HttpMethod.POST, allMaintenancePaths).hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
+            // 4. Operaciones exclusivas para ADMIN
+            .requestMatchers(HttpMethod.PUT, allMaintenancePaths).hasAuthority(ROLE_ADMIN)
+            .requestMatchers(HttpMethod.PATCH, allMaintenancePaths).hasAuthority(ROLE_ADMIN)
+            .requestMatchers(HttpMethod.DELETE, allMaintenancePaths).hasAuthority(ROLE_ADMIN)
             .anyRequest()
             .authenticated()
         )
@@ -101,8 +97,6 @@ public class SecurityConfig {
         .csrf(AbstractHttpConfigurer::disable)
         .cors(Customizer.withDefaults())
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        //.oauth2Login(oauth2 -> oauth2.loginPage("/oauth2/authorization/maintenance-client"))
-        //.oauth2Client(Customizer.withDefaults())
         .oauth2ResourceServer(resourceServer -> resourceServer.jwt(Customizer.withDefaults()));
     return http.build();
   }
@@ -112,7 +106,8 @@ public class SecurityConfig {
     JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
     // Le decimos que busque los permisos en la claim "roles"
     grantedAuthoritiesConverter.setAuthoritiesClaimName("roles");
-    // Eliminamos el prefijo SCOPE_ que pone por defecto para que use ROLE_
+    // Eliminamos el prefijo por defecto (SCOPE_) para tener control total.
+    // Ahora, las autoridades serán exactamente las que vengan en el claim "roles".
     grantedAuthoritiesConverter.setAuthorityPrefix("");
 
     JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();

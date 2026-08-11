@@ -16,3 +16,107 @@ body {
   pointer-events: none;
   opacity: 0.6;
 }
+
+/* Global PrimeNG Component Styling Overrides */
+.p-inputtext,
+.p-select,
+.p-calendar .p-inputtext {
+  width: 100% !important;
+  max-width: 100% !important;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  color: #ffffff;
+  padding: 0.8rem 0.95rem;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  height: 48px;
+  min-height: 46px;
+  font-size: 0.95rem;
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.25);
+    background: rgba(0, 0, 0, 0.3);
+  }
+
+  &:focus,
+  &.p-focus,
+  &:focus-within {
+    background: rgba(0, 0, 0, 0.4);
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+  }
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.35);
+  }
+}
+
+input[type="date"].p-inputtext {
+  color-scheme: dark;
+  &::-webkit-calendar-picker-indicator {
+    filter: invert(0.8);
+    cursor: pointer;
+  }
+}
+
+.p-select {
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+.p-select-label {
+  padding: 0 !important;
+  display: flex;
+  align-items: center;
+  color: #ffffff !important;
+
+  &.p-placeholder {
+    color: rgba(255, 255, 255, 0.35) !important;
+  }
+}
+
+.p-select-dropdown {
+  color: #64748b !important;
+}
+
+.p-select-panel,
+.p-popover {
+  background: #0d1e42 !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.5) !important;
+  z-index: 1200 !important;
+  max-width: min(calc(100vw - 2rem), 400px) !important;
+
+  .p-select-option {
+    color: #ffffff !important;
+    background: transparent !important;
+    padding: 0.75rem 1rem !important;
+    min-height: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+
+    &:not(.p-select-option-selected):not(.p-disabled):hover {
+      background: rgba(255, 255, 255, 0.08) !important;
+    }
+
+    &.p-select-option-selected {
+      background: #2563eb !important;
+    }
+  }
+}
+
+.p-button {
+  padding: 0.8rem 1.5rem;
+  font-weight: 600;
+  border-radius: 12px;
+  border: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.925rem;
+  min-height: 46px;
+}
+

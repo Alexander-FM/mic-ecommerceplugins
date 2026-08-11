@@ -5,7 +5,8 @@
 
   <div class="cart-content" *ngIf="cartItems.length > 0">
     <div class="cart-items">
-      <p-card>
+      <!-- Vista Tabla para Desktop / Tablet -->
+      <p-card class="desktop-cart-table">
         <ng-template pTemplate="header">
           <div class="cart-header">
             <h3>Productos</h3>
@@ -14,7 +15,7 @@
           </div>
         </ng-template>
 
-        <p-table [value]="cartItems" [tableStyle]="{ 'min-width': '50rem', 'table-layout': 'fixed' }">
+        <p-table [value]="cartItems" [tableStyle]="{ 'min-width': '100%', 'table-layout': 'fixed' }">
           <ng-template pTemplate="header">
             <tr>
               <th>Producto</th>
@@ -59,6 +60,56 @@
           </ng-template>
         </p-table>
       </p-card>
+
+      <!-- Vista Tarjetas (p-card) para Celular -->
+      <div class="mobile-cart-list">
+        <div class="cart-header-mobile">
+          <h3>Productos</h3>
+          <p-button label="Vaciar" icon="pi pi-trash" severity="danger" [outlined]="true" size="small"
+            (onClick)="clearCart()"></p-button>
+        </div>
+
+        <div class="mobile-cards-container">
+          <p-card *ngFor="let item of cartItems" class="mobile-cart-card">
+            <div class="mobile-card-header">
+              <h4 class="mobile-product-name">{{ item.product.name }}</h4>
+              <p-button icon="pi pi-trash" severity="danger" [text]="true" [rounded]="true"
+                (onClick)="removeItem(item.product.id)"></p-button>
+            </div>
+
+            <div class="mobile-card-body">
+              <div class="mobile-product-meta" *ngIf="item.product.brandName || item.product.categoryName">
+                <span *ngIf="item.product.brandName" class="meta-item">
+                  <strong>Marca:</strong> {{ item.product.brandName }}
+                </span>
+                <span *ngIf="item.product.categoryName" class="meta-item">
+                  <strong>Categoría:</strong> {{ item.product.categoryName }}
+                </span>
+              </div>
+
+              <div class="mobile-card-row">
+                <span class="row-label">Precio Unitario:</span>
+                <span class="price">${{ item.product.price | number:'1.2-2' }}</span>
+              </div>
+
+              <div class="mobile-card-row">
+                <span class="row-label">Cantidad:</span>
+                <div class="quantity-cell">
+                  <p-inputNumber styleClass="cart-qty-input" inputStyleClass="cart-qty-input-field"
+                    [(ngModel)]="item.quantity" [showButtons]="true" buttonLayout="horizontal" [min]="1"
+                    [max]="item.product.stock" (onInput)="updateQuantity(item.product.id, item.quantity)"
+                    incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"></p-inputNumber>
+                </div>
+              </div>
+
+              <div class="mobile-card-row total-row">
+                <span class="row-label">Total:</span>
+                <span class="item-total">${{ getItemTotal(item) | number:'1.2-2' }}</span>
+              </div>
+            </div>
+          </p-card>
+        </div>
+      </div>
     </div>
 
     <div class="cart-summary">

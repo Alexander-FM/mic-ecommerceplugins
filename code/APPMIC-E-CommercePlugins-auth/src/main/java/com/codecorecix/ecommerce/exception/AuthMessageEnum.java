@@ -13,9 +13,13 @@ public enum AuthMessageEnum implements IErrorCode {
       HttpStatus.NOT_FOUND,
       AuthConstants.NOT_FOUND_MESSAGE),
   AUTH_EMPLOYEE_SERVICE_UNAVAILABLE(
-      makeCode(20, HttpStatus.SERVICE_UNAVAILABLE, 1),
+      makeCode(20, HttpStatus.SERVICE_UNAVAILABLE, 2),
       HttpStatus.SERVICE_UNAVAILABLE,
-      AuthConstants.EMPLOYEE_SERVICE_UNAVAILABLE_MESSAGE);
+      AuthConstants.EMPLOYEE_SERVICE_UNAVAILABLE_MESSAGE),
+  AUTH_CUSTOMER_SERVICE_UNAVAILABLE(
+      makeCode(20, HttpStatus.SERVICE_UNAVAILABLE, 3),
+      HttpStatus.SERVICE_UNAVAILABLE,
+      AuthConstants.CUSTOMER_SERVICE_MESSAGE);
 
   private final int code;
 
@@ -42,8 +46,8 @@ public enum AuthMessageEnum implements IErrorCode {
    * Method to create error codes.
    *
    * @param moduleId Module identifier (2 digits).
-   * @param status   HTTP status.
-   * @param seq      Sequence number (3 digits).
+   * @param status HTTP status.
+   * @param seq Sequence number (3 digits).
    * @return Generated error code.
    */
   public static int makeCode(final int moduleId, final HttpStatus status, final int seq) {

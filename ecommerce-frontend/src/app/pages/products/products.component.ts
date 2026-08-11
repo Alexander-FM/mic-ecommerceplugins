@@ -9,6 +9,7 @@ import { SelectModule } from 'primeng/select';
 import { DataViewModule } from 'primeng/dataview';
 import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
+import { DrawerModule } from 'primeng/drawer';
 import { MessageService } from 'primeng/api';
 import { ProductService } from '../../services/product.service';
 import { BrandService } from '../../services/brand.service';
@@ -27,7 +28,8 @@ import { Product, Brand } from '../../models/ecommerce.models';
     SelectModule,
     DataViewModule,
     TagModule,
-    ToastModule
+    ToastModule,
+    DrawerModule
   ],
   providers: [MessageService],
   templateUrl: './products.component.html',
@@ -42,6 +44,7 @@ export class ProductsComponent implements OnInit {
   minPrice: number = 0;
   maxPrice: number = 10000;
   loading: boolean = false;
+  filterDrawerVisible: boolean = false;
 
   constructor(
     private productService: ProductService,

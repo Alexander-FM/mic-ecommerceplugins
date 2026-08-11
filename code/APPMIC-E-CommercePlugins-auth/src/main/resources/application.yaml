@@ -6,6 +6,21 @@ server:
 spring:
   application:
     name: appmic-e-commerceplugins-auth
+  security:
+    oauth2:
+      client:
+        registration:
+          # Este nombre debe ser único y lo usaremos en la configuración del WebClient
+          maintenance-client-credentials:
+            provider: spring # El nombre del provider que definiremos a continuación
+            client-id: maintenance-client
+            client-secret: 12345
+            authorization-grant-type: client_credentials
+            scope: internal.write # El permiso que vamos a solicitar
+        provider:
+          spring:
+            # La URL base de tu propio servidor de autorización
+            token-uri: ${LB_AUTH_SERVICE:http://127.0.0.1:9000}/oauth2/token
   # La clave para que funcione en local y en Kubernetes
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:dev}
@@ -22,6 +37,8 @@ app:
   frontend:
     # Toma la variable FRONTEND_URL, si no existe, usa localhost
     url: ${FRONTEND_URL:http://localhost:4200}
+  endpoints:
+    auth: "/api/auth"
 
 # ===============================================
 # SEPARADOR DE PERFIL
