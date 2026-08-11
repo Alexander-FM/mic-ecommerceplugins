@@ -36,24 +36,32 @@ public class MaintenanceClient {
   }
 
   public GenericResponse<RoleResponseDto> findRoleByName(final String roleName) {
-    return webClient
-        .get()
-        .uri("/api/maintenance/roles/internal/roleName/{roleName}", roleName)
-        .retrieve()
-        .bodyToMono(new ParameterizedTypeReference<GenericResponse<RoleResponseDto>>() {
-        })
-        .block();
+    try {
+      return webClient
+          .get()
+          .uri("/api/maintenance/roles/internal/roleName/{roleName}", roleName)
+          .retrieve()
+          .bodyToMono(new ParameterizedTypeReference<GenericResponse<RoleResponseDto>>() {
+          })
+          .block();
+    } catch (final RuntimeException ex) {
+      throw errorHandler.handle(ex, AuthMessageEnum.AUTH_ROLE_SERVICE_UNAVAILABLE);
+    }
   }
 
   public GenericResponse<UserResponseDto> createUser(final UserRequestDto userRequest) {
-    return webClient
-        .post()
-        .uri("/api/maintenance/users")
-        .bodyValue(userRequest)
-        .retrieve()
-        .bodyToMono(new ParameterizedTypeReference<GenericResponse<UserResponseDto>>() {
-        })
-        .block();
+    try {
+      return webClient
+          .post()
+          .uri("/api/maintenance/users")
+          .bodyValue(userRequest)
+          .retrieve()
+          .bodyToMono(new ParameterizedTypeReference<GenericResponse<UserResponseDto>>() {
+          })
+          .block();
+    } catch (final RuntimeException ex) {
+      throw errorHandler.handle(ex, AuthMessageEnum.AUTH_USER_SERVICE_UNAVAILABLE);
+    }
   }
 
   public GenericResponse<CustomerResponseDto> createCustomer(final CustomerRequestDto customerRequest) {

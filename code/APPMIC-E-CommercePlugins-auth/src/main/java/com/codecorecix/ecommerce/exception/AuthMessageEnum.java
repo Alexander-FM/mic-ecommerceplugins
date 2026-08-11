@@ -8,10 +8,6 @@ import org.springframework.http.HttpStatus;
 
 @RequiredArgsConstructor
 public enum AuthMessageEnum implements IErrorCode {
-  USER_NOT_FOUND(
-      makeCode(20, HttpStatus.NOT_FOUND, 1),
-      HttpStatus.NOT_FOUND,
-      AuthConstants.NOT_FOUND_MESSAGE),
   AUTH_EMPLOYEE_SERVICE_UNAVAILABLE(
       makeCode(20, HttpStatus.SERVICE_UNAVAILABLE, 2),
       HttpStatus.SERVICE_UNAVAILABLE,
@@ -19,7 +15,15 @@ public enum AuthMessageEnum implements IErrorCode {
   AUTH_CUSTOMER_SERVICE_UNAVAILABLE(
       makeCode(20, HttpStatus.SERVICE_UNAVAILABLE, 3),
       HttpStatus.SERVICE_UNAVAILABLE,
-      AuthConstants.CUSTOMER_SERVICE_MESSAGE);
+      AuthConstants.CUSTOMER_SERVICE_UNAVAILABLE_MESSAGE),
+  AUTH_USER_SERVICE_UNAVAILABLE(
+      makeCode(20, HttpStatus.SERVICE_UNAVAILABLE, 4),
+      HttpStatus.SERVICE_UNAVAILABLE,
+      AuthConstants.USER_SERVICE_UNAVAILABLE_MESSAGE),
+  AUTH_ROLE_SERVICE_UNAVAILABLE(
+      makeCode(20, HttpStatus.SERVICE_UNAVAILABLE, 4),
+  HttpStatus.SERVICE_UNAVAILABLE,
+  AuthConstants.ROLE_SERVICE_UNAVAILABLE_MESSAGE);
 
   private final int code;
 
