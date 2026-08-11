@@ -48,6 +48,14 @@ export interface UserResponse {
   id: number;
 }
 
+export interface UserResponseDto {
+  id: number;
+  username: string;
+  password: string;
+  isActive: boolean;
+  roles: Role[];
+}
+
 export interface AddressRequest {
   type: string | null;
   addressName: string | null;
@@ -70,7 +78,32 @@ export interface CustomerRequest {
   phoneNumberThree: string | null;
   address: AddressRequest;
   isActive: boolean;
-  userId: number;
+  userId?: number;
+}
+
+export interface RegisterRequestDto {
+  username: string;
+  password: string;
+  customer: CustomerRequest;
+}
+
+export interface CustomerResponseDto {
+  id: number;
+  name: string;
+  lastName: string;
+  gender: string;
+  birthdate: string | null;
+  email: string;
+  phoneNumberOne: string | null;
+  phoneNumberTwo: string | null;
+  phoneNumberThree: string | null;
+  addressName: string | null;
+  isActive: boolean;
+  userRegistration: string | null;
+  registrationDate: string | null;
+  userModification: string | null;
+  modificationDate: string | null;
+  userResponseDto: UserResponseDto;
 }
 
 export interface Category {
