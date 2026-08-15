@@ -11,69 +11,38 @@
       <div class="filter-field">
         <label for="searchOrderId" class="filter-label">Buscar pedido</label>
         <span class="p-input-icon-left w-full">
-          <input
-            id="searchOrderId"
-            type="text"
-            pInputText
-            [(ngModel)]="searchTerm"
-            (ngModelChange)="applyFilters()"
-            placeholder="N° de pedido (ej: 1)"
-            class="w-full"
-          />
+          <input id="searchOrderId" type="text" pInputText [(ngModel)]="searchTerm" (ngModelChange)="applyFilters()"
+            placeholder="N° de pedido (ej: 1)" class="w-full" />
         </span>
       </div>
 
       <div class="filter-field">
         <label for="statusSelect" class="filter-label">Estado</label>
-        <p-dropdown
-          id="statusSelect"
-          [options]="statusOptions"
-          [(ngModel)]="selectedStatus"
-          (onChange)="applyFilters()"
-          optionLabel="label"
-          optionValue="value"
-          placeholder="Todos los estados"
-          styleClass="w-full"
-        ></p-dropdown>
+        <p-select id="statusSelect" [options]="statusOptions" [(ngModel)]="selectedStatus" (onChange)="applyFilters()"
+          optionLabel="label" optionValue="value" placeholder="Todos los estados" styleClass="w-full"
+          appendTo="body"></p-select>
       </div>
 
       <div class="filter-field">
         <label for="startDateInput" class="filter-label">Fecha desde</label>
-        <input
-          id="startDateInput"
-          type="date"
-          pInputText
-          [(ngModel)]="startDate"
-          (change)="applyFilters()"
-          class="w-full"
-        />
+        <input id="startDateInput" type="date" pInputText [(ngModel)]="startDate" (change)="applyFilters()"
+          class="w-full" />
       </div>
 
       <div class="filter-field">
         <label for="endDateInput" class="filter-label">Fecha hasta</label>
-        <input
-          id="endDateInput"
-          type="date"
-          pInputText
-          [(ngModel)]="endDate"
-          (change)="applyFilters()"
-          class="w-full"
-        />
+        <input id="endDateInput" type="date" pInputText [(ngModel)]="endDate" (change)="applyFilters()"
+          class="w-full" />
       </div>
 
       <div class="filter-action-btn">
-        <p-button
-          label="Limpiar filtros"
-          icon="pi pi-filter-slash"
-          [outlined]="true"
-          severity="secondary"
-          (onClick)="clearFilters()"
-          styleClass="w-full"
-        ></p-button>
+        <p-button label="Limpiar filtros" icon="pi pi-filter-slash" [outlined]="true" severity="secondary"
+          (onClick)="clearFilters()" styleClass="w-full"></p-button>
       </div>
     </div>
   </p-card>
 
+  <br>
   <!-- Tabla de Ordenes -->
   <p-card *ngIf="!isLoading && filteredOrders.length > 0">
     <p-table [value]="filteredOrders" [tableStyle]="{'min-width': '60rem'}" responsiveLayout="stack">
@@ -95,24 +64,14 @@
           <td>{{ order.orderDate | date:'dd/MM/yyyy hh:mm a' }}</td>
           <td>Cliente #{{ order.customerId }}</td>
           <td>
-            <p-tag
-              [value]="order.orderStatusName"
-              [severity]="getOrderStatusSeverity(order.orderStatusName)"
-              [icon]="getOrderStatusIcon(order.orderStatusName)"
-            ></p-tag>
+            <p-tag [value]="order.orderStatusName" [severity]="getOrderStatusSeverity(order.orderStatusName)"
+              [icon]="getOrderStatusIcon(order.orderStatusName)"></p-tag>
           </td>
           <td class="font-bold">{{ order.totalAmount | currency:'PEN':'S/ ' }}</td>
           <td>{{ order.orderNotes || '-' }}</td>
           <td style="text-align: center;">
-            <p-button
-              icon="pi pi-sync"
-              [rounded]="true"
-              [text]="true"
-              severity="primary"
-              (onClick)="openChangeStatusDialog(order)"
-              pTooltip="Cambiar estado"
-              tooltipPosition="top"
-            ></p-button>
+            <p-button icon="pi pi-sync" [rounded]="true" [text]="true" severity="primary"
+              (onClick)="openChangeStatusDialog(order)" pTooltip="Cambiar estado" tooltipPosition="top"></p-button>
           </td>
         </tr>
       </ng-template>
@@ -152,16 +111,9 @@
 </div>
 
 <!-- Modal Dialog para Cambiar Estado del Pedido -->
-<p-dialog
-  [header]="'Cambiar estado del pedido #' + selectedOrder?.id"
-  [(visible)]="showStatusDialog"
-  [modal]="true"
-  [style]="{ width: '500px', 'max-width': '92vw' }"
-  [dismissableMask]="true"
-  [draggable]="false"
-  [resizable]="false"
-  styleClass="change-status-dialog-custom"
->
+<p-dialog [header]="'Cambiar estado del pedido #' + selectedOrder?.id" [(visible)]="showStatusDialog" [modal]="true"
+  [style]="{ width: '500px', 'max-width': '92vw' }" [dismissableMask]="true" [draggable]="false" [resizable]="false"
+  styleClass="change-status-dialog-custom">
   <div class="dialog-body-content" *ngIf="selectedOrder">
     <div class="info-row">
       <span class="info-label">Pedido:</span>
@@ -170,57 +122,32 @@
 
     <div class="info-row mt-2">
       <span class="info-label">Estado actual:</span>
-      <p-tag
-        [value]="selectedOrder.orderStatusName"
-        [severity]="getOrderStatusSeverity(selectedOrder.orderStatusName)"
-        [icon]="getOrderStatusIcon(selectedOrder.orderStatusName)"
-      ></p-tag>
+      <p-tag [value]="selectedOrder.orderStatusName" [severity]="getOrderStatusSeverity(selectedOrder.orderStatusName)"
+        [icon]="getOrderStatusIcon(selectedOrder.orderStatusName)"></p-tag>
     </div>
 
     <hr class="dialog-divider" />
 
     <div class="form-group">
       <label for="newStatusSelect" class="form-label">Nuevo estado <span class="required-star">*</span></label>
-      <p-dropdown
-        id="newStatusSelect"
-        [options]="dialogStatusOptions"
-        [(ngModel)]="newStatusId"
-        optionLabel="label"
-        optionValue="value"
-        placeholder="Seleccionar nuevo estado"
-        styleClass="w-full"
-      ></p-dropdown>
+      <p-select id="newStatusSelect" [options]="dialogStatusOptions" [(ngModel)]="newStatusId" optionLabel="label"
+        optionValue="value" placeholder="Seleccionar nuevo estado" styleClass="w-full" appendTo="body"></p-select>
     </div>
-
+    <br>
     <div class="form-group mt-3">
       <label for="observationInput" class="form-label">Observación <span class="required-star">*</span></label>
-      <textarea
-        id="observationInput"
-        pInputText
-        [(ngModel)]="observation"
-        rows="3"
-        placeholder="Ej: Tu pedido fue preparado y enviado..."
-        class="w-full observation-textarea"
-      ></textarea>
+      <textarea id="observationInput" pInputText [(ngModel)]="observation" rows="3"
+        placeholder="Ej: Tu pedido fue preparado y enviado..." class="w-full observation-textarea"></textarea>
     </div>
   </div>
 
   <ng-template pTemplate="footer">
     <div class="dialog-footer-actions">
-      <p-button
-        label="Cancelar"
-        severity="secondary"
-        [outlined]="true"
-        (onClick)="showStatusDialog = false"
-        [disabled]="isSavingStatus"
-      ></p-button>
+      <p-button label="Cancelar" severity="secondary" [outlined]="true" (onClick)="showStatusDialog = false"
+        [disabled]="isSavingStatus"></p-button>
 
-      <p-button
-        label="Guardar cambios"
-        severity="primary"
-        (onClick)="saveStatusChange()"
-        [disabled]="isSavingStatus || !newStatusId || !observation.trim()"
-      >
+      <p-button label="Guardar cambios" severity="primary" (onClick)="saveStatusChange()"
+        [disabled]="isSavingStatus || !newStatusId || !observation.trim()">
         <i *ngIf="isSavingStatus" class="pi pi-spin pi-spinner mr-2"></i>
       </p-button>
     </div>

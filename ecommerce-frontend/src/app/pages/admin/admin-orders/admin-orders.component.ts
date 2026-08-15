@@ -8,7 +8,7 @@ import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TooltipModule } from 'primeng/tooltip';
 import { MessageService } from 'primeng/api';
@@ -39,7 +39,7 @@ interface DialogStatusOption {
     ToastModule,
     DialogModule,
     InputTextModule,
-    DropdownModule,
+    SelectModule,
     ProgressSpinnerModule,
     TooltipModule
   ],
@@ -133,6 +133,18 @@ export class AdminOrdersComponent implements OnInit {
     });
   }
 
+  private parseLocalDate(dateStr: string | null): Date | null {
+    if (!dateStr) return null;
+    const parts = dateStr.split('-');
+    if (parts.length === 3) {
+      const year = parseInt(parts[0], 10);
+      const month = parseInt(parts[1], 10) - 1;
+      const day = parseInt(parts[2], 10);
+      return new Date(year, month, day);
+    }
+    return new Date(dateStr);
+  }
+
   applyFilters(): void {
     let result = [...this.orders];
 
@@ -152,17 +164,21 @@ export class AdminOrdersComponent implements OnInit {
       result = result.filter(o => o.orderStatusName === this.selectedStatus);
     }
 
-    // 3. Filtro por Rango de Fechas (Desde - Hasta)
+    // 3. Filtro por Rango de Fechas (Desde - Hasta inclusivo en hora local)
     if (this.startDate) {
-      const start = new Date(this.startDate);
-      start.setHours(0, 0, 0, 0);
-      result = result.filter(o => new Date(o.orderDate) >= start);
+      const start = this.parseLocalDate(this.startDate);
+      if (start) {
+        start.setHours(0, 0, 0, 0);
+        result = result.filter(o => new Date(o.orderDate) >= start);
+      }
     }
 
     if (this.endDate) {
-      const end = new Date(this.endDate);
-      end.setHours(23, 59, 59, 999);
-      result = result.filter(o => new Date(o.orderDate) <= end);
+      const end = this.parseLocalDate(this.endDate);
+      if (end) {
+        end.setHours(23, 59, 59, 999);
+        result = result.filter(o => new Date(o.orderDate) <= end);
+      }
     }
 
     // Mantener orden descendente por fecha

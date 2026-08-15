@@ -192,3 +192,93 @@
     border-radius: 8px;
   }
 }
+
+/* Estilos de alto contraste para p-dropdown y p-select en Filtros y Modal */
+::ng-deep {
+
+  .admin-orders-container,
+  .change-status-dialog-custom {
+
+    .p-dropdown,
+    .p-select {
+      background: #ffffff !important;
+      border: 1px solid #cbd5e1 !important;
+      border-radius: 8px !important;
+      height: 42px !important;
+      min-height: 42px !important;
+      display: flex !important;
+      align-items: center !important;
+
+      .p-dropdown-label,
+      .p-select-label {
+        color: #0f172a !important;
+        font-weight: 500 !important;
+        font-size: 0.9375rem !important;
+
+        &.p-placeholder,
+        &.p-dropdown-label-empty {
+          color: #94a3b8 !important;
+        }
+      }
+
+      .p-dropdown-trigger,
+      .p-select-dropdown {
+        color: #64748b !important;
+      }
+
+      &:hover {
+        border-color: #3b82f6 !important;
+        background: #ffffff !important;
+
+        .p-dropdown-label,
+        .p-select-label {
+          color: #0f172a !important;
+        }
+      }
+
+      &:focus,
+      &.p-focus,
+      &.p-inputwrapper-focus {
+        border-color: #2563eb !important;
+        box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2) !important;
+        background: #ffffff !important;
+      }
+    }
+  }
+
+  .p-dropdown-panel,
+  .p-select-panel {
+    z-index: 11000 !important;
+    min-width: var(--p-select-overlay-width, 100%) !important;
+    max-width: none !important;
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1) !important;
+
+    .p-dropdown-items,
+    .p-select-list {
+      padding: 0.4rem 0 !important;
+    }
+
+    .p-dropdown-item,
+    .p-select-option {
+      color: #334155 !important;
+      background: transparent !important;
+      padding: 0.6rem 1rem !important;
+      font-size: 0.9rem !important;
+
+      &:hover {
+        background: #f1f5f9 !important;
+        color: #1d4ed8 !important;
+      }
+
+      &.p-highlight,
+      &.p-select-option-selected {
+        background: #eff6ff !important;
+        color: #1d4ed8 !important;
+        font-weight: 600 !important;
+      }
+    }
+  }
+}
