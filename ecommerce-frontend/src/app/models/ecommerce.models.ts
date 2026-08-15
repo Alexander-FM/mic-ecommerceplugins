@@ -184,3 +184,15 @@ export interface OrderStatusHistory {
   changedBy: string;
   observation: string;
 }
+
+export interface OrderStatus {
+  id: number;
+  statusName: string;
+  isActive: boolean;
+}
+
+export interface OrderStatusUpdateRequest {
+  newStatusId: number;
+  changedBy: string;
+  observation: string;
+}

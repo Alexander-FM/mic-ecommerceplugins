@@ -11,6 +11,7 @@ import { AddProductComponent } from './pages/admin/add-product/add-product.compo
 import { ProductsMaintenanceComponent } from './pages/admin/products-maintenance/products-maintenance.component';
 import { CategoriesMaintenanceComponent } from './pages/admin/categories-maintenance/categories-maintenance.component';
 import { BrandsMaintenanceComponent } from './pages/admin/brands-maintenance/brands-maintenance.component';
+import { AdminOrdersComponent } from './pages/admin/admin-orders/admin-orders.component';
 import { AuthGuard } from './guards/auth.guard';
 import { AdminGuard } from './guards/admin.guard';
 
@@ -24,6 +25,7 @@ export const routes: Routes = [
   { path: 'cart', component: CartComponent },
   { path: 'my-orders', component: MyOrdersComponent, canActivate: [AuthGuard] },
   { path: 'orders/:id', component: OrderDetailComponent, canActivate: [AuthGuard] },
+  { path: 'admin/orders', component: AdminOrdersComponent, canActivate: [AuthGuard, AdminGuard] },
   { path: 'admin/maintenance/products', component: ProductsMaintenanceComponent, canActivate: [AuthGuard, AdminGuard] },
   { path: 'admin/maintenance/categories', component: CategoriesMaintenanceComponent, canActivate: [AuthGuard, AdminGuard] },
   { path: 'admin/maintenance/brands', component: BrandsMaintenanceComponent, canActivate: [AuthGuard, AdminGuard] },
