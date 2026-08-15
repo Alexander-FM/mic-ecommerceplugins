@@ -3,6 +3,7 @@ import { ProductsComponent } from './pages/products/products.component';
 import { ProductDetailComponent } from './pages/product-detail/product-detail.component';
 import { CartComponent } from './pages/cart/cart.component';
 import { MyOrdersComponent } from './pages/my-orders/my-orders.component';
+import { OrderDetailComponent } from './pages/order-detail/order-detail.component';
 import { LoginComponent } from './pages/login/login.component';
 import { AuthCallbackComponent } from './pages/auth-callback/auth-callback.component';
 import { RegisterComponent } from './pages/register/register.component';
@@ -22,6 +23,7 @@ export const routes: Routes = [
   { path: 'products/:id', component: ProductDetailComponent },
   { path: 'cart', component: CartComponent },
   { path: 'my-orders', component: MyOrdersComponent, canActivate: [AuthGuard] },
+  { path: 'orders/:id', component: OrderDetailComponent, canActivate: [AuthGuard] },
   { path: 'admin/maintenance/products', component: ProductsMaintenanceComponent, canActivate: [AuthGuard, AdminGuard] },
   { path: 'admin/maintenance/categories', component: CategoriesMaintenanceComponent, canActivate: [AuthGuard, AdminGuard] },
   { path: 'admin/maintenance/brands', component: BrandsMaintenanceComponent, canActivate: [AuthGuard, AdminGuard] },

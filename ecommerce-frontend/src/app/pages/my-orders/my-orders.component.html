@@ -76,7 +76,7 @@
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-order>
-        <tr>
+        <tr (click)="navigateToDetail(order.id)" class="clickable-row">
           <td><strong>#{{ order.id }}</strong></td>
           <td>{{ order.orderDate | date:'dd/MM/yyyy hh:mm a' }}</td>
           <td>
@@ -84,9 +84,9 @@
               [icon]="getOrderStatusIcon(order.orderStatusName)"></p-tag>
           </td>
           <td class="font-bold">{{ order.totalAmount | currency:'PEN ':'symbol' }}</td>
-          <td style="text-align: center;">
-            <p-button icon="pi pi-eye" [rounded]="true" [text]="true" severity="info" (onClick)="viewDetail(order.id)"
-              pTooltip="Ver detalle" tooltipPosition="top"></p-button>
+          <td style="text-align: center;" (click)="$event.stopPropagation()">
+            <p-button icon="pi pi-eye" [rounded]="true" [text]="true" severity="info" (onClick)="viewDetail(order.id); $event.stopPropagation()"
+              pTooltip="Ver detalle rápido" tooltipPosition="top"></p-button>
           </td>
         </tr>
       </ng-template>

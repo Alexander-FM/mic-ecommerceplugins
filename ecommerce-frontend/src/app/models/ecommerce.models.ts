@@ -174,3 +174,13 @@ export interface OrderResponse {
   totalAmount: number;
   orderNotes: string;
 }
+
+export interface OrderStatusHistory {
+  id: number;
+  orderId: number;
+  orderStatusId: number;
+  orderStatusName: string;
+  changedAt: string;
+  changedBy: string;
+  observation: string;
+}

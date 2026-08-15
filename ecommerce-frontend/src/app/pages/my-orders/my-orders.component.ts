@@ -246,6 +246,10 @@ export class MyOrdersComponent implements OnInit {
     });
   }
 
+  navigateToDetail(orderId: number): void {
+    this.router.navigate(['/orders', orderId]);
+  }
+
   continueShopping(): void {
     this.router.navigate(['/products']);
   }
