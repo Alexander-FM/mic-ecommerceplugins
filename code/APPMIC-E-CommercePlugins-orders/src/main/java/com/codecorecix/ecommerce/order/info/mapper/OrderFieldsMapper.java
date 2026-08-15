@@ -18,6 +18,7 @@ import org.mapstruct.MappingTarget;
 public interface OrderFieldsMapper {
 
   @Mapping(target = "orderDate", ignore = true)
+  @Mapping(target = "orderStatus", ignore = true)
   Order sourceToDestination(final OrderRequestDto source);
 
   @Mapping(target = "orderStatusName", ignore = true)

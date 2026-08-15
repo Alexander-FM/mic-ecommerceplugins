@@ -51,7 +51,7 @@ public class OrderController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<GenericResponse<OrderResponseDto>> getOrderById(@PathVariable(value = "id") final Long id) {
+  public ResponseEntity<GenericResponse<OrderResponseDto>> getOrderById(@PathVariable final Long id) {
     final GenericResponse<OrderResponseDto> response = this.service.getOrderById(id);
     if (Objects.nonNull(response.getBody())) {
       return ResponseEntity

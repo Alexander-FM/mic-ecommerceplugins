@@ -1,19 +1,26 @@
-package com.codecorecix.ecommerce.order.status.mapper;
+package com.codecorecix.ecommerce.order.history.mapper;
 
 import java.util.List;
 
-import com.codecorecix.ecommerce.event.entities.OrderStatus;
-import com.codecorecix.ecommerce.order.status.api.dto.request.OrderStatusRequestDto;
-import com.codecorecix.ecommerce.order.status.api.dto.response.OrderStatusResponseDto;
+import com.codecorecix.ecommerce.event.entities.OrderStatusHistory;
+import com.codecorecix.ecommerce.order.history.api.dto.request.OrderStatusHistoryRequestDto;
+import com.codecorecix.ecommerce.order.history.api.dto.response.OrderStatusHistoryResponseDto;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
-public interface OrderStatusFieldsMapper {
+public interface OrderStatusHistoryFieldsMapper {
 
-  OrderStatus sourceToDestination(final OrderStatusRequestDto source);
+  @Mapping(target = "order.id", source = "order.id")
+  @Mapping(target = "order.orderDate", ignore = true)
+  @Mapping(target = "order.orderStatus", source = "orderStatus")
+  OrderStatusHistory sourceToDestination(final OrderStatusHistoryRequestDto source);
 
-  OrderStatusResponseDto destinationToSource(final OrderStatus destination);
+  @Mapping(target = "orderId", source = "order.id")
+  @Mapping(target = "orderStatusId", source = "orderStatus.id")
+  @Mapping(target = "orderStatusName", source = "orderStatus.statusName")
+  OrderStatusHistoryResponseDto destinationToSource(final OrderStatusHistory destination);
 
-  List<OrderStatusResponseDto> toDto(final List<OrderStatus> entityList);
+  List<OrderStatusHistoryResponseDto> toDto(final List<OrderStatusHistory> entityList);
 }

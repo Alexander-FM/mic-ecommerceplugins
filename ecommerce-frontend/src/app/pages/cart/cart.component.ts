@@ -132,7 +132,6 @@ export class CartComponent implements OnInit {
     const orderRequest: OrderRequest = {
       customerId: customerId,
       employeeId: null,
-      orderStatus: { id: 1 },
       totalAmount: this.cartService.getTotal(),
       orderNotes: "Pedido generado desde el carrito de compras",
       orderDetails: orderDetails

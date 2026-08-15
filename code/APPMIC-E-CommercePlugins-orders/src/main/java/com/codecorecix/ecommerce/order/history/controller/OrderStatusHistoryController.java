@@ -1,10 +1,11 @@
-package com.codecorecix.ecommerce.order.info.controller;
+package com.codecorecix.ecommerce.order.history.controller;
 
 import java.util.List;
 
-import com.codecorecix.ecommerce.order.info.api.dto.response.OrderDetailResponseDto;
-import com.codecorecix.ecommerce.order.info.service.OrderDetailService;
+import com.codecorecix.ecommerce.order.history.api.dto.response.OrderStatusHistoryResponseDto;
+import com.codecorecix.ecommerce.order.history.service.OrderStatusHistoryService;
 import com.codecorecix.ecommerce.utils.GenericResponse;
+import com.codecorecix.ecommerce.utils.GenericUtils;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
@@ -16,24 +17,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("${app.endpoints.order-info}/details")
+@RequestMapping("${app.endpoints.order-history}")
 @RequiredArgsConstructor
-public class OrderDetailController {
+public class OrderStatusHistoryController {
 
-  private final OrderDetailService service;
+  private final OrderStatusHistoryService service;
 
-  @GetMapping("/{orderId}")
-  public ResponseEntity<GenericResponse<List<OrderDetailResponseDto>>> getDetailsByOrderId(
-      @PathVariable(value = "orderId") final Integer orderId) {
-    final GenericResponse<List<OrderDetailResponseDto>> response = this.service.getDetailsByOrderId(orderId);
-    if (ObjectUtils.isNotEmpty(response.getBody())) {
+  @GetMapping("/searchByOrderId/{orderId}")
+  public ResponseEntity<GenericResponse<List<OrderStatusHistoryResponseDto>>> retrieveHistoryByOrderId(
+      @PathVariable final Integer orderId) {
+    final List<OrderStatusHistoryResponseDto> response = this.service.retrieveHistoryByOrderId(orderId);
+    if (ObjectUtils.isNotEmpty(response)) {
       return ResponseEntity
           .status(HttpStatus.OK)
-          .body(response);
+          .body(GenericUtils.buildGenericResponseSuccess("Historial de estados de la orden", response));
     } else {
       return ResponseEntity
           .status(HttpStatus.NOT_FOUND)
-          .body(response);
+          .body(GenericUtils.buildGenericResponseError("Historial de estados de la orden no encontrado", null));
     }
   }
 }

@@ -154,9 +154,6 @@ export interface GenericResponse<T> {
 export interface OrderRequest {
   customerId: number;
   employeeId: number | null;
-  orderStatus: {
-    id: number;
-  };
   totalAmount: number;
   orderNotes: string;
   orderDetails: OrderDetailRequest[];

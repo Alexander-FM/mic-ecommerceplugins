@@ -10,7 +10,6 @@
           <th>Fecha</th>
           <th>Estado</th>
           <th>Total</th>
-          <th>Observaciones</th>
           <th style="width: 120px; text-align: center;">Acciones</th>
         </tr>
       </ng-template>
@@ -22,7 +21,7 @@
             <p-tag [value]="order.orderStatusName" [severity]="getOrderStatusSeverity(order.orderStatusName)"
               [icon]="getOrderStatusIcon(order.orderStatusName)"></p-tag>
           </td>
-          <td class="font-bold">{{ order.totalAmount | currency:'PEN':'symbol' }}</td>
+          <td class="font-bold">{{ order.totalAmount | currency:'PEN ':'symbol' }}</td>
           <td style="text-align: center;">
             <p-button icon="pi pi-eye" [rounded]="true" [text]="true" severity="info" (onClick)="viewDetail(order.id)"
               pTooltip="Ver detalle" tooltipPosition="top"></p-button>

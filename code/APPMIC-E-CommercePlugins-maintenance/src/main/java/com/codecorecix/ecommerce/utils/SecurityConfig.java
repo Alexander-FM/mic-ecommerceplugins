@@ -54,7 +54,7 @@ public class SecurityConfig {
   private final CustomAuthenticationEntryPoint authenticationEntryPoint;
 
   public SecurityConfig(CustomAccessDeniedHandler accessDeniedHandler,
-      CustomAuthenticationEntryPoint authenticationEntryPoint) {
+                        CustomAuthenticationEntryPoint authenticationEntryPoint) {
     this.accessDeniedHandler = accessDeniedHandler;
     this.authenticationEntryPoint = authenticationEntryPoint;
   }
@@ -76,17 +76,26 @@ public class SecurityConfig {
                 "/api/maintenance/brands/active", "/api/maintenance/categories/active")
             .permitAll()
             // 2. Operaciones internas (Deben ir ANTES de las generales)
-            .requestMatchers(HttpMethod.GET, "/api/maintenance/roles/internal/**").hasAuthority(INTERNAL_WRITE)
-            .requestMatchers(HttpMethod.DELETE, "/api/maintenance/users/internal/**").hasAuthority(INTERNAL_WRITE)
-            .requestMatchers(HttpMethod.POST, "/api/maintenance/customers").hasAuthority(INTERNAL_WRITE)
-            .requestMatchers(HttpMethod.POST, "/api/maintenance/users").hasAuthority(INTERNAL_WRITE)
+            .requestMatchers(HttpMethod.GET, "/api/maintenance/roles/internal/**")
+            .hasAuthority(INTERNAL_WRITE)
+            .requestMatchers(HttpMethod.DELETE, "/api/maintenance/users/internal/**")
+            .hasAuthority(INTERNAL_WRITE)
+            .requestMatchers(HttpMethod.POST, "/api/maintenance/customers")
+            .hasAuthority(INTERNAL_WRITE)
+            .requestMatchers(HttpMethod.POST, "/api/maintenance/users")
+            .hasAuthority(INTERNAL_WRITE)
             // 3. Operaciones permitidas para ADMIN y USER
-            .requestMatchers(HttpMethod.GET, allMaintenancePaths).hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
-            .requestMatchers(HttpMethod.POST, allMaintenancePaths).hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
+            .requestMatchers(HttpMethod.GET, allMaintenancePaths)
+            .hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
+            .requestMatchers(HttpMethod.POST, allMaintenancePaths)
+            .hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
             // 4. Operaciones exclusivas para ADMIN
-            .requestMatchers(HttpMethod.PUT, allMaintenancePaths).hasAuthority(ROLE_ADMIN)
-            .requestMatchers(HttpMethod.PATCH, allMaintenancePaths).hasAuthority(ROLE_ADMIN)
-            .requestMatchers(HttpMethod.DELETE, allMaintenancePaths).hasAuthority(ROLE_ADMIN)
+            .requestMatchers(HttpMethod.PUT, allMaintenancePaths)
+            .hasAuthority(ROLE_ADMIN)
+            .requestMatchers(HttpMethod.PATCH, allMaintenancePaths)
+            .hasAuthority(ROLE_ADMIN)
+            .requestMatchers(HttpMethod.DELETE, allMaintenancePaths)
+            .hasAuthority(ROLE_ADMIN)
             .anyRequest()
             .authenticated()
         )
@@ -97,7 +106,10 @@ public class SecurityConfig {
         .csrf(AbstractHttpConfigurer::disable)
         .cors(Customizer.withDefaults())
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .oauth2ResourceServer(resourceServer -> resourceServer.jwt(Customizer.withDefaults()));
+        .oauth2ResourceServer(resourceServer -> resourceServer
+            .jwt(Customizer.withDefaults())
+            .authenticationEntryPoint(authenticationEntryPoint)
+            .accessDeniedHandler(accessDeniedHandler));
     return http.build();
   }
 
