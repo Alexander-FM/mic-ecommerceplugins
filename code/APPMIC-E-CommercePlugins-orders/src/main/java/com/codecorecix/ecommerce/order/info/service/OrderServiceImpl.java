@@ -122,7 +122,7 @@ public class OrderServiceImpl implements OrderService {
         });
 
     final Order orderInfo = this.orderFieldsMapper.sourceToDestination(orderRequestDto);
-    orderInfo.setOrderDate(LocalDateTime.now(ZoneId.systemDefault()));
+    orderInfo.setOrderDate(LocalDateTime.now(ZoneId.of("America/Lima")));
 
     final GenericResponse<OrderStatusResponseDto> findStatusById = this.orderStatusService.findById(1);
 

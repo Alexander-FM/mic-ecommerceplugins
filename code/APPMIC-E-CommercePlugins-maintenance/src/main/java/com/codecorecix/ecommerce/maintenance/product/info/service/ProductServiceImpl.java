@@ -1,8 +1,5 @@
 package com.codecorecix.ecommerce.maintenance.product.info.service;
 
-import java.util.List;
-import java.util.Optional;
-
 import com.codecorecix.ecommerce.event.entities.Product;
 import com.codecorecix.ecommerce.event.models.ProductInfo;
 import com.codecorecix.ecommerce.maintenance.drive.service.GoogleDriveService;
@@ -14,12 +11,14 @@ import com.codecorecix.ecommerce.maintenance.product.info.utils.ProductConstants
 import com.codecorecix.ecommerce.utils.GenericResponse;
 import com.codecorecix.ecommerce.utils.GenericResponseConstants;
 import com.codecorecix.ecommerce.utils.GenericUtils;
-
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -47,10 +46,34 @@ public class ProductServiceImpl implements ProductService {
   @Override
   @Transactional
   public GenericResponse<ProductResponseDto> save(final ProductRequestDto productRequestDto) {
+    // --- LÓGICA DE ACTUALIZACIÓN ---
+    if (productRequestDto.getId() != null) {
+      // 1. Es una actualización, cargamos el producto existente para obtener las imágenes antiguas.
+      productRepository.findById(productRequestDto.getId()).ifPresent(existingProduct -> {
+        log.info("Iniciando actualización del producto ID: {}. Limpiando imágenes antiguas.", productRequestDto.getId());
+        // 2. Limpiamos las imágenes antiguas de Google Drive.
+        deleteProductImagesFromDrive(existingProduct);
+      });
+    }
+    
     final Product productInfo = this.mapper.sourceToDestination(productRequestDto);
-    final Product product = this.productRepository.save(productInfo);
-    return new GenericResponse<>(GenericResponseConstants.RPTA_OK, GenericResponseConstants.CORRECT_OPERATION,
-      this.mapper.destinationToSource(product));
+    
+    try {
+      // 3. Guardamos el producto (JPA se encarga de actualizar o insertar)
+      final Product product = this.productRepository.save(productInfo);
+      return new GenericResponse<>(GenericResponseConstants.RPTA_OK, GenericResponseConstants.CORRECT_OPERATION,
+        this.mapper.destinationToSource(product));
+    } catch (Exception e) {
+      // --- LÓGICA DE COMPENSACIÓN ---
+      log.error("Error al guardar el producto en la base de datos: {}. Iniciando compensación.", e.getMessage());
+      if (StringUtils.isNotBlank(productRequestDto.getMainImageUrl())) {
+        deleteImageFromDriveByUrl(productRequestDto.getMainImageUrl(), "principal");
+      }
+      if (productRequestDto.getImages() != null && !productRequestDto.getImages().isEmpty()) {
+        productRequestDto.getImages().forEach(imageDto -> deleteImageFromDriveByUrl(imageDto.getImageUrl(), "secundaria"));
+      }
+      throw e;
+    }
   }
 
   @Override
@@ -78,21 +101,28 @@ public class ProductServiceImpl implements ProductService {
   }
 
   private void deleteProductImagesFromDrive(final Product productEntity) {
+    // Limpia la imagen principal
+    if (StringUtils.isNotBlank(productEntity.getMainImageUrl())) {
+        deleteImageFromDriveByUrl(productEntity.getMainImageUrl(), "principal");
+    }
+    // Limpia la lista de imágenes secundarias
     if (productEntity.getImages() == null || productEntity.getImages().isEmpty()) {
       return;
     }
-
-    productEntity.getImages().forEach(image -> {
+    productEntity.getImages().forEach(image -> deleteImageFromDriveByUrl(image.getImageUrl(), "secundaria"));
+  }
+  
+  private void deleteImageFromDriveByUrl(final String imageUrl, final String imageType) {
       try {
-        final String fileId = extractFileIdFromGoogleDriveUrl(image.getImageUrl());
+        final String fileId = extractFileIdFromGoogleDriveUrl(imageUrl);
         if (StringUtils.isNotBlank(fileId)) {
           this.googleDriveService.deleteFile(fileId);
-          log.info("Imagen eliminada de Google Drive: {}", fileId);
+          log.warn("COMPENSACIÓN o LIMPIEZA: Imagen {} ({}) eliminada de Google Drive: {}", imageType, fileId, imageUrl);
         }
       } catch (Exception e) {
-        log.warn("Error eliminando imagen de Google Drive: {}", e.getMessage());
+        log.error("¡FALLO CRÍTICO EN LIMPIEZA/COMPENSACIÓN! No se pudo eliminar la imagen {} {}. Causa: {}", 
+                  imageType, imageUrl, e.getMessage());
       }
-    });
   }
 
   private String extractFileIdFromGoogleDriveUrl(final String imageUrl) {
@@ -140,5 +170,11 @@ public class ProductServiceImpl implements ProductService {
   public GenericResponse<List<ProductInfo>> findByIds(final List<Integer> ids) {
     return new GenericResponse<>(GenericResponseConstants.RPTA_OK, GenericResponseConstants.CORRECT_OPERATION,
       this.mapper.toListDtoList(this.productRepository.findAllById(ids)));
+  }
+
+  @Override
+  public GenericResponse<List<ProductInfo>> findByCategoryId(final Integer categoryId) {
+    return new GenericResponse<>(GenericResponseConstants.RPTA_OK, GenericResponseConstants.CORRECT_OPERATION,
+      this.mapper.toListDtoList(this.productRepository.findByCategoryId(categoryId)));
   }
 }

@@ -1,15 +1,14 @@
 package com.codecorecix.ecommerce.maintenance.product.info.repository;
 
-import java.util.List;
-import java.util.Optional;
-
 import com.codecorecix.ecommerce.event.entities.Product;
-
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer> {
@@ -29,4 +28,6 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
   @EntityGraph(attributePaths = {"attributes", "images"})
   @Query("SELECT p FROM Product p WHERE p.id = :id")
   Optional<Product> findByIdFull(final Integer id);
+
+  List<Product> findByCategoryId(final Integer categoryId);
 }
