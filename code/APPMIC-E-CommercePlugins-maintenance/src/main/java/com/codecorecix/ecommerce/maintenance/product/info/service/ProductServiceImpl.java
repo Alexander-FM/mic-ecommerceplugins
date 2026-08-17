@@ -21,6 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -77,7 +78,7 @@ public class ProductServiceImpl implements ProductService {
             .collect(Collectors.toSet());
 
         // Imágenes a eliminar son las que estaban en la lista vieja pero ya no en la nueva
-        Set<String> imagesToDelete = (Set<String>) CollectionUtils.subtract(oldImageUrls, newImageUrls);
+        Set<String> imagesToDelete = new HashSet<>(CollectionUtils.subtract(oldImageUrls, newImageUrls));
         
         if (!imagesToDelete.isEmpty()) {
           log.info("Se eliminarán {} imágenes secundarias: {}", imagesToDelete.size(), imagesToDelete);
