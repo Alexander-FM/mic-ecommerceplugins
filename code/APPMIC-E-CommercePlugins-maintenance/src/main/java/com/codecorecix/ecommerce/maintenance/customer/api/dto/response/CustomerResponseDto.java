@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+import com.codecorecix.ecommerce.event.entities.Address;
 import com.codecorecix.ecommerce.maintenance.user.api.dto.response.UserResponseDto;
 
 import lombok.AllArgsConstructor;
@@ -34,6 +35,8 @@ public class CustomerResponseDto implements Serializable {
   private String phoneNumberTwo;
 
   private String phoneNumberThree;
+
+  private Address address;
 
   private String addressName;
 
