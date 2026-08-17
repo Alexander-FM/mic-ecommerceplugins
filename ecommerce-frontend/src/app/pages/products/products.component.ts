@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -45,17 +45,27 @@ export class ProductsComponent implements OnInit {
   maxPrice: number = 10000;
   loading: boolean = false;
   filterDrawerVisible: boolean = false;
+  currentCategoryId: number | null = null;
 
   constructor(
     private productService: ProductService,
     private brandService: BrandService,
     private cartService: CartService,
     private messageService: MessageService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
-    this.loadProducts();
+    this.route.queryParams.subscribe((params) => {
+      const categoryId = params['categoryId'] ? Number(params['categoryId']) : null;
+      this.currentCategoryId = categoryId;
+      if (categoryId) {
+        this.loadProductsByCategory(categoryId);
+      } else {
+        this.loadProducts();
+      }
+    });
     this.loadBrands();
   }
 
@@ -98,6 +108,31 @@ export class ProductsComponent implements OnInit {
         console.log('📝 Status:', error.status);
         console.log('📝 Error completo:', error.error);
 
+        this.loading = false;
+      }
+    });
+  }
+
+  loadProductsByCategory(categoryId: number): void {
+    this.loading = true;
+    this.productService.getProductsByCategoryId(categoryId).subscribe({
+      next: (response) => {
+        if (response.body) {
+          this.products = response.body.map((product) => ({
+            ...product,
+            mainImageUrl: this.processImageUrl(product.mainImageUrl)
+          }));
+          this.filteredProducts = this.products;
+          this.loading = false;
+        }
+      },
+      error: (error) => {
+        console.error('❌ Error loading products by category:', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'No se pudieron cargar los productos de la categoría'
+        });
         this.loading = false;
       }
     });

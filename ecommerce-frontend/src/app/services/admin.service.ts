@@ -31,6 +31,15 @@ export class AdminService {
   }
 
   /**
+   * Obtener productos por ID de categoría (admin)
+   */
+  getProductsByCategoryId(categoryId: number): Observable<GenericResponse<Product[]>> {
+    return this.http.get<GenericResponse<Product[]>>(
+      `${this.API_BASE}/products/category/${categoryId}`
+    );
+  }
+
+  /**
    * Obtener detalle de producto por id
    */
   getProductById(id: number): Observable<GenericResponse<Product>> {

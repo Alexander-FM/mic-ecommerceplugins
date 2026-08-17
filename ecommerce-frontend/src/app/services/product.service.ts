@@ -19,6 +19,10 @@ export class ProductService {
     return this.apiService.get<Product[]>(`${this.baseEndpoint}/active`);
   }
 
+  getProductsByCategoryId(categoryId: number): Observable<GenericResponse<Product[]>> {
+    return this.apiService.get<Product[]>(`${this.baseEndpoint}/category/${categoryId}`);
+  }
+
   getProductById(id: number): Observable<GenericResponse<Product>> {
     return this.apiService.get<Product>(`${this.baseEndpoint}/${id}`);
   }

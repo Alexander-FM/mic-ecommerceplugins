@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
@@ -11,6 +11,7 @@ import { ToastModule } from 'primeng/toast';
 import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { map, distinctUntilChanged } from 'rxjs/operators';
 import { AdminService } from '../../../services/admin.service';
 import { GenericResponse, Product } from '../../../models/ecommerce.models';
 
@@ -38,6 +39,8 @@ export class ProductsMaintenanceComponent implements OnInit {
   isLoading = false;
   searchText = '';
   statusFilter: 'all' | 'active' | 'inactive' = 'all';
+  currentCategoryId: number | null = null;
+  private loadedCategoryId: number | null | 'ALL' = null;
   readonly statusOptions = [
     { label: 'Todos', value: 'all' },
     { label: 'Activos', value: 'active' },
@@ -68,13 +71,22 @@ export class ProductsMaintenanceComponent implements OnInit {
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private adminService: AdminService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService
   ) {}
 
   ngOnInit(): void {
-    this.loadProducts();
+    this.route.queryParams
+      .pipe(
+        map((params) => (params['categoryId'] ? Number(params['categoryId']) : null)),
+        distinctUntilChanged()
+      )
+      .subscribe((categoryId) => {
+        this.currentCategoryId = categoryId;
+        this.reloadProducts(true);
+      });
   }
 
   goToAddProduct(): void {
@@ -84,6 +96,12 @@ export class ProductsMaintenanceComponent implements OnInit {
   clearFilters(): void {
     this.searchText = '';
     this.statusFilter = 'all';
+    this.currentCategoryId = null;
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { categoryId: null },
+      queryParamsHandling: 'merge'
+    });
   }
 
   onEdit(product: Product): void {
@@ -102,7 +120,7 @@ export class ProductsMaintenanceComponent implements OnInit {
     this.adminService.updateProductStatus(product.id, newStatus).subscribe({
       next: () => {
         this.showSuccess(`Producto ${newStatus ? 'activado' : 'desactivado'} correctamente`);
-        this.loadProducts();
+        this.reloadProducts(false);
       },
       error: (error: any) => {
         console.error('Error updating product status:', error);
@@ -126,7 +144,7 @@ export class ProductsMaintenanceComponent implements OnInit {
         this.adminService.deleteProduct(product.id!).subscribe({
           next: () => {
             this.showSuccess('Producto eliminado correctamente');
-            this.loadProducts();
+            this.reloadProducts(false);
           },
           error: (error: any) => {
             console.error('Error deleting product:', error);
@@ -137,17 +155,52 @@ export class ProductsMaintenanceComponent implements OnInit {
     });
   }
 
-  private loadProducts(): void {
+  private reloadProducts(checkCache: boolean = true): void {
+    if (this.currentCategoryId) {
+      this.loadProductsByCategory(this.currentCategoryId, checkCache);
+    } else {
+      this.loadAllProducts(checkCache);
+    }
+  }
+
+  private loadAllProducts(checkCache: boolean = true): void {
+    if (checkCache && this.loadedCategoryId === 'ALL') {
+      return;
+    }
+
     this.isLoading = true;
     this.adminService.getAllProducts().subscribe({
       next: (response: GenericResponse<Product[]>) => {
         this.products = response.body || [];
         this.isLoading = false;
+        this.loadedCategoryId = 'ALL';
       },
       error: (error: any) => {
         console.error('Error loading products:', error);
         this.showError('No se pudieron cargar los productos');
         this.isLoading = false;
+        this.loadedCategoryId = null;
+      }
+    });
+  }
+
+  private loadProductsByCategory(categoryId: number, checkCache: boolean = true): void {
+    if (checkCache && this.loadedCategoryId === categoryId) {
+      return;
+    }
+
+    this.isLoading = true;
+    this.adminService.getProductsByCategoryId(categoryId).subscribe({
+      next: (response: GenericResponse<Product[]>) => {
+        this.products = response.body || [];
+        this.isLoading = false;
+        this.loadedCategoryId = categoryId;
+      },
+      error: (error: any) => {
+        console.error('Error loading products by category:', error);
+        this.showError('No se pudieron cargar los productos de la categoría');
+        this.isLoading = false;
+        this.loadedCategoryId = null;
       }
     });
   }

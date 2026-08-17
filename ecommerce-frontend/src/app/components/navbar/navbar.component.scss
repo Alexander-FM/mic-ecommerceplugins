@@ -41,6 +41,18 @@
       gap: 1rem;
     }
   }
+
+  .navbar-category-btn {
+    color: white !important;
+    background: rgba(255, 255, 255, 0.15) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 6px !important;
+    padding: 0.5rem 1rem !important;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.3) !important;
+    }
+  }
 }
 
 @media (max-width: 600px) {

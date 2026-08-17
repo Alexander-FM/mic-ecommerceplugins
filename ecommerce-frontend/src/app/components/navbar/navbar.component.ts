@@ -1,9 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
 import { MenuModule } from 'primeng/menu';
+import { TieredMenuModule } from 'primeng/tieredmenu';
 import { MenuItem, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { BadgeModule } from 'primeng/badge';
@@ -11,11 +13,22 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { AuthService } from '../../services/auth.service';
 import { OrderService } from '../../services/order.service';
+import { CategoryService } from '../../services/category.service';
+import { Category } from '../../models/ecommerce.models';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, ToolbarModule, ButtonModule, MenuModule, ToastModule, BadgeModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ToolbarModule,
+    ButtonModule,
+    MenuModule,
+    TieredMenuModule,
+    ToastModule,
+    BadgeModule
+  ],
   providers: [MessageService],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss']
@@ -25,13 +38,15 @@ export class NavbarComponent implements OnInit, OnDestroy {
   items: MenuItem[] = [];
   isAdmin = false;
   ordersCount = 0;
+  categoryMenuItems: MenuItem[] = [];
   private destroy$ = new Subject<void>();
 
   constructor(
     private authService: AuthService,
     private router: Router,
     private messageService: MessageService,
-    private orderService: OrderService
+    private orderService: OrderService,
+    private categoryService: CategoryService
   ) {}
 
   ngOnInit(): void {
@@ -68,6 +83,91 @@ export class NavbarComponent implements OnInit, OnDestroy {
       });
 
     this.setupMenu();
+    this.loadCategories();
+  }
+
+  private loadCategories(): void {
+    this.categoryService.getActiveCategories().subscribe({
+      next: (response) => {
+        if (response.body) {
+          const categoryTree = this.buildCategoryTree(response.body);
+          const menuTree = this.buildCategoryMenu(categoryTree);
+          this.categoryMenuItems = [
+            {
+              label: 'Todas las categorías',
+              icon: 'pi pi-list',
+              command: () => this.onCategorySelect(null)
+            },
+            { separator: true },
+            ...menuTree
+          ];
+        }
+      },
+      error: (err) => console.error('Error cargando categorías en navbar:', err)
+    });
+  }
+
+  private buildCategoryTree(categories: Category[]): Category[] {
+    if (!categories || categories.length === 0) return [];
+
+    const isAlreadyNested = categories.some(
+      (cat) => cat.subCategories && cat.subCategories.length > 0
+    );
+    if (isAlreadyNested) {
+      return categories;
+    }
+
+    const map = new Map<number, Category>();
+    const roots: Category[] = [];
+
+    categories.forEach((cat) => {
+      if (cat.id !== undefined) {
+        map.set(cat.id, { ...cat, subCategories: [] });
+      }
+    });
+
+    categories.forEach((cat) => {
+      if (cat.id !== undefined) {
+        const node = map.get(cat.id)!;
+        const parentId = (cat as any).parentCategory || (cat as any).parentId;
+        if (parentId && map.has(parentId)) {
+          map.get(parentId)!.subCategories!.push(node);
+        } else {
+          roots.push(node);
+        }
+      }
+    });
+
+    return roots.length > 0 ? roots : categories;
+  }
+
+  private buildCategoryMenu(categories: Category[]): MenuItem[] {
+    return categories.map((cat) => {
+      const hasSubcategories = cat.subCategories && cat.subCategories.length > 0;
+      const item: MenuItem = {
+        label: cat.description
+      };
+
+      if (hasSubcategories) {
+        item.items = this.buildCategoryMenu(cat.subCategories!);
+      } else {
+        // Solo las categorías finales (sin subcategorías) ejecutan la consulta al hacer clic
+        item.command = () => this.onCategorySelect(cat.id ?? null);
+      }
+
+      return item;
+    });
+  }
+
+  onCategorySelect(categoryId: number | null): void {
+    const isMaintenancePage = this.router.url.includes('/admin/maintenance');
+    const targetPath = isMaintenancePage ? '/admin/maintenance/products' : '/products';
+
+    if (categoryId) {
+      this.router.navigate([targetPath], { queryParams: { categoryId } });
+    } else {
+      this.router.navigate([targetPath]);
+    }
   }
 
   private loadOrdersCount(user: any): void {
