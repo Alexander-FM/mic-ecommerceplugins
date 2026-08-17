@@ -14,57 +14,35 @@
       </ng-template>
 
       <ng-template pTemplate="item" let-item let-root="root">
-        <a
-          class="flex align-items-center p-menubar-item-link"
-          [routerLink]="item.routerLink || null"
-          [queryParams]="item.queryParams || null"
-          [fragment]="item.fragment || null"
-          [class.disabled]="item.disabled"
-          [attr.aria-disabled]="item.disabled"
-          (click)="item.command ? item.command() : null"
-        >
+        <a class="flex align-items-center p-menubar-item-link" [routerLink]="item.routerLink || null"
+          [queryParams]="item.queryParams || null" [fragment]="item.fragment || null" [class.disabled]="item.disabled"
+          [attr.aria-disabled]="item.disabled" (click)="item.command ? item.command() : null">
           <i *ngIf="item.icon" class="pi" [ngClass]="item.icon"></i>
           <span class="ml-2">{{ item.label }}</span>
-          <p-badge
-            *ngIf="item.badge"
-            [ngClass]="{ 'ml-auto': !root, 'ml-2': root }"
-            [value]="item.badge"
-          />
+          <p-badge *ngIf="item.badge" [ngClass]="{ 'ml-auto': !root, 'ml-2': root }" [value]="item.badge" />
           <i *ngIf="item.items" [ngClass]="['ml-auto pi', root ? 'pi-angle-down' : 'pi-angle-right']"></i>
         </a>
       </ng-template>
 
       <ng-template pTemplate="end">
         <div class="flex align-items-center gap-3">
-          <!-- Botón Mis Compras: solo si está autenticado -->
-          <p-button
-            *ngIf="isAuthenticated"
-            label="Mis Compras"
-            icon="pi pi-shopping-bag"
-            [text]="true"
-            routerLink="/my-orders"
-            severity="secondary"
-            [badge]="ordersCount > 0 ? ordersCount.toString() : undefined"
-            badgeClass="p-badge-info"
-          ></p-button>
+          <!-- Auth Dropdown Container -->
+          <div class="auth-dropdown-wrapper">
+            <!-- Trigger cuando usuario está autenticado -->
+            <div *ngIf="isAuthenticated" class="auth-user-trigger" (click)="toggleUserMenu($event)">
+              <div class="user-avatar-circle">
+                <i class="pi pi-user"></i>
+              </div>
+              <div class="user-text-container">
+                <span class="greeting-line">Hola,</span>
+                <span class="action-line">
+                  {{ username }} <i class="pi pi-angle-down chevron-icon"></i>
+                </span>
+              </div>
+            </div>
 
-          <!-- Si el usuario ESTÁ autenticado -->
-          <div *ngIf="isAuthenticated" class="flex align-items-center gap-2">
-            <span class="text-sm font-semibold text-color-secondary mx-2">{{ username }}</span>
-            <p-button
-              icon="pi pi-sign-out"
-              [rounded]="true"
-              [text]="true"
-              severity="danger"
-              (onClick)="logout()"
-              pTooltip="Cerrar Sesión"
-              tooltipPosition="bottom"
-            ></p-button>
-          </div>
-
-          <!-- Si el usuario NO ESTÁ autenticado: "Hola, Inicia sesión ∨" -->
-          <div *ngIf="!isAuthenticated" class="auth-dropdown-wrapper">
-            <div class="auth-user-trigger" (click)="toggleUserMenu($event)">
+            <!-- Trigger cuando usuario NO está autenticado -->
+            <div *ngIf="!isAuthenticated" class="auth-user-trigger" (click)="toggleUserMenu($event)">
               <div class="user-avatar-circle">
                 <i class="pi pi-user"></i>
               </div>
@@ -76,19 +54,35 @@
               </div>
             </div>
 
+            <!-- Menú Desplegable -->
             <div class="auth-custom-dropdown" *ngIf="isUserMenuOpen">
-              <div class="dropdown-option" (click)="navigateTo('/login')">
-                <i class="pi pi-sign-in"></i>
-                <span>Inicia sesión</span>
-              </div>
-              <div class="dropdown-option" (click)="navigateTo('/register')">
-                <i class="pi pi-user-plus"></i>
-                <span>Regístrate</span>
-              </div>
-              <div class="dropdown-option" (click)="navigateTo('/my-orders')">
-                <i class="pi pi-user"></i>
-                <span>Mi cuenta</span>
-              </div>
+              <!-- Opciones cuando ESTÁ Autenticado -->
+              <ng-container *ngIf="isAuthenticated">
+                <div class="dropdown-option" (click)="navigateTo('/my-orders')">
+                  <i class="pi pi-shopping-bag"></i>
+                  <span>Mis compras</span>
+                </div>
+                <div class="dropdown-option" (click)="navigateTo('/my-account')">
+                  <i class="pi pi-user"></i>
+                  <span>Mi cuenta</span>
+                </div>
+                <div class="dropdown-option logout-option" (click)="logout()">
+                  <i class="pi pi-sign-out"></i>
+                  <span>Cerrar sesión</span>
+                </div>
+              </ng-container>
+
+              <!-- Opciones cuando NO ESTÁ Autenticado -->
+              <ng-container *ngIf="!isAuthenticated">
+                <div class="dropdown-option" (click)="navigateTo('/login')">
+                  <i class="pi pi-sign-in"></i>
+                  <span>Inicia sesión</span>
+                </div>
+                <div class="dropdown-option" (click)="navigateTo('/register')">
+                  <i class="pi pi-user-plus"></i>
+                  <span>Registrarte</span>
+                </div>
+              </ng-container>
             </div>
           </div>
         </div>

@@ -39,6 +39,9 @@ public class Order implements Serializable {
   private Integer customerId;
 
   @Column
+  private String deliveryAddressName;
+
+  @Column
   private Integer employeeId;
 
   @ManyToOne

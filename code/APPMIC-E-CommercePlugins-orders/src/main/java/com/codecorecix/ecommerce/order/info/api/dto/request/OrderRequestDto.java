@@ -20,6 +20,8 @@ public class OrderRequestDto implements Serializable {
   @NotNull(message = "The customerId is null, please fill")
   private Integer customerId;
 
+  private String deliveryAddressName;
+
   private Integer employeeId;
 
   private Double totalAmount;

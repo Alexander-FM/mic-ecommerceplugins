@@ -193,11 +193,20 @@ export class NavbarComponent implements OnInit, OnDestroy {
   private setupMenu(): void {
     this.items = [
       {
+        label: 'Mi cuenta',
+        icon: 'pi pi-user',
+        command: () => this.navigateToMyAccount()
+      },
+      {
         label: 'Cerrar sesión',
         icon: 'pi pi-sign-out',
         command: () => this.logout()
       }
     ];
+  }
+
+  navigateToMyAccount(): void {
+    this.router.navigate(['/my-account']);
   }
 
   navigateToAddProduct(): void {

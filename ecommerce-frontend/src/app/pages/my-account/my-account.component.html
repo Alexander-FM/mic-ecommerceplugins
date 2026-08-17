@@ -1,0 +1,193 @@
+<div class="account-container">
+  <p-toast></p-toast>
+
+  <!-- Page Header -->
+  <div class="account-header">
+    <h1>Mi cuenta</h1>
+    <p>Administra tus datos personales y dirección de envío.</p>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-state">
+    <p-progressSpinner styleClass="w-4rem h-4rem" strokeWidth="4" animationDuration=".8s"></p-progressSpinner>
+    <p>Cargando información de tu cuenta...</p>
+  </div>
+
+  <!-- Main Content -->
+  <form *ngIf="!isLoading" [formGroup]="customerForm" (ngSubmit)="onSubmit()" class="account-form">
+
+    <!-- Username Banner -->
+    <div class="user-badge-bar" *ngIf="username">
+      <i class="pi pi-user"></i>
+      <span>Usuario: <strong>{{ username }}</strong></span>
+    </div>
+
+    <div class="account-grid">
+      <!-- Section 1: Personal Data -->
+      <p-card header="Datos personales" styleClass="account-card">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="name">Nombre <span class="required">*</span></label>
+            <input pInputText id="name" formControlName="name" placeholder="Ej. Luigui Alexander" />
+            <small class="p-error" *ngIf="customerForm.get('name')?.touched && customerForm.get('name')?.invalid">
+              El nombre es obligatorio.
+            </small>
+          </div>
+
+          <div class="form-group">
+            <label for="lastName">Apellidos <span class="required">*</span></label>
+            <input pInputText id="lastName" formControlName="lastName" placeholder="Ej. Fuentes Medina" />
+            <small class="p-error" *ngIf="customerForm.get('lastName')?.touched && customerForm.get('lastName')?.invalid">
+              Los apellidos son obligatorios.
+            </small>
+          </div>
+
+          <div class="form-group">
+            <label for="gender">Género <span class="required">*</span></label>
+            <p-select
+              id="gender"
+              [options]="genderOptions"
+              formControlName="gender"
+              optionLabel="label"
+              optionValue="value"
+              placeholder="Seleccionar género"
+              styleClass="w-100"
+            ></p-select>
+          </div>
+
+          <div class="form-group">
+            <label for="birthdate">Fecha de nacimiento <span class="required">*</span></label>
+            <p-datepicker
+              id="birthdate"
+              formControlName="birthdate"
+              dateFormat="dd/mm/yy"
+              [showIcon]="true"
+              placeholder="dd/mm/aaaa"
+              styleClass="w-100"
+            ></p-datepicker>
+            <small class="p-error" *ngIf="customerForm.get('birthdate')?.touched && customerForm.get('birthdate')?.invalid">
+              Ingresa una fecha de nacimiento válida.
+            </small>
+          </div>
+
+          <div class="form-group full-width">
+            <label for="email">Correo electrónico <span class="required">*</span></label>
+            <input pInputText id="email" formControlName="email" type="email" placeholder="ejemplo@correo.com" />
+            <small class="p-error" *ngIf="customerForm.get('email')?.touched && customerForm.get('email')?.invalid">
+              Ingresa un correo electrónico válido.
+            </small>
+          </div>
+
+          <div class="form-group">
+            <label for="phoneNumberOne">Teléfono principal <span class="required">*</span></label>
+            <input pInputText id="phoneNumberOne" formControlName="phoneNumberOne" placeholder="Ej. 917967148" />
+            <small class="p-error" *ngIf="customerForm.get('phoneNumberOne')?.touched && customerForm.get('phoneNumberOne')?.invalid">
+              El teléfono principal es obligatorio.
+            </small>
+          </div>
+
+          <div class="form-group">
+            <label for="phoneNumberTwo">Teléfono secundario</label>
+            <input pInputText id="phoneNumberTwo" formControlName="phoneNumberTwo" placeholder="Opcional" />
+          </div>
+
+          <div class="form-group full-width">
+            <label for="phoneNumberThree">Teléfono adicional</label>
+            <input pInputText id="phoneNumberThree" formControlName="phoneNumberThree" placeholder="Opcional" />
+          </div>
+        </div>
+      </p-card>
+
+      <!-- Section 2: Shipping Address -->
+      <p-card header="Dirección de envío" styleClass="account-card" formGroupName="address">
+        <div class="formatted-address-alert" *ngIf="formattedAddressName">
+          <i class="pi pi-map-marker"></i>
+          <div>
+            <span class="alert-title">Dirección de referencia configurada:</span>
+            <p>{{ formattedAddressName }}</p>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="type">Tipo de dirección <span class="required">*</span></label>
+            <p-select
+              id="type"
+              [options]="addressTypeOptions"
+              formControlName="type"
+              optionLabel="label"
+              optionValue="value"
+              placeholder="Seleccionar tipo"
+              styleClass="w-100"
+            ></p-select>
+          </div>
+
+          <div class="form-group">
+            <label for="addressName">Dirección / Calle <span class="required">*</span></label>
+            <input pInputText id="addressName" formControlName="addressName" placeholder="Ej. Prolongación Sucre" />
+            <small class="p-error" *ngIf="customerForm.get('address.addressName')?.touched && customerForm.get('address.addressName')?.invalid">
+              La dirección es obligatoria.
+            </small>
+          </div>
+
+          <div class="form-group">
+            <label for="residenceNumber">Número / Dpto <span class="required">*</span></label>
+            <input pInputText id="residenceNumber" formControlName="residenceNumber" placeholder="Ej. 903" />
+            <small class="p-error" *ngIf="customerForm.get('address.residenceNumber')?.touched && customerForm.get('address.residenceNumber')?.invalid">
+              El número de residencia es obligatorio.
+            </small>
+          </div>
+
+          <div class="form-group">
+            <label for="postalCode">Código postal <span class="required">*</span></label>
+            <input pInputText id="postalCode" formControlName="postalCode" placeholder="Ej. 14311" />
+            <small class="p-error" *ngIf="customerForm.get('address.postalCode')?.touched && customerForm.get('address.postalCode')?.invalid">
+              El código postal es obligatorio.
+            </small>
+          </div>
+
+          <div class="form-group">
+            <label for="department">Departamento <span class="required">*</span></label>
+            <input pInputText id="department" formControlName="department" placeholder="Ej. Lambayeque" />
+            <small class="p-error" *ngIf="customerForm.get('address.department')?.touched && customerForm.get('address.department')?.invalid">
+              El departamento es obligatorio.
+            </small>
+          </div>
+
+          <div class="form-group">
+            <label for="province">Provincia <span class="required">*</span></label>
+            <input pInputText id="province" formControlName="province" placeholder="Ej. Ferreñafe" />
+            <small class="p-error" *ngIf="customerForm.get('address.province')?.touched && customerForm.get('address.province')?.invalid">
+              La provincia es obligatoria.
+            </small>
+          </div>
+
+          <div class="form-group">
+            <label for="district">Distrito <span class="required">*</span></label>
+            <input pInputText id="district" formControlName="district" placeholder="Ej. Ferreñafe" />
+            <small class="p-error" *ngIf="customerForm.get('address.district')?.touched && customerForm.get('address.district')?.invalid">
+              El distrito es obligatorio.
+            </small>
+          </div>
+
+          <div class="form-group full-width">
+            <label for="placeReference">Referencia de ubicación</label>
+            <input pInputText id="placeReference" formControlName="placeReference" placeholder="Ej. Cerca de la avenida takahasi nuñez" />
+          </div>
+        </div>
+      </p-card>
+    </div>
+
+    <!-- Submit Action -->
+    <div class="form-actions">
+      <p-button
+        type="submit"
+        label="Guardar cambios"
+        icon="pi pi-save"
+        [loading]="isSubmitting"
+        [disabled]="isSubmitting"
+        styleClass="p-button-primary p-button-lg save-btn"
+      ></p-button>
+    </div>
+  </form>
+</div>

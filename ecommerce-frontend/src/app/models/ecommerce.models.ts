@@ -56,7 +56,8 @@ export interface UserResponseDto {
   roles: Role[];
 }
 
-export interface AddressRequest {
+export interface Address {
+  id?: number;
   type: string | null;
   addressName: string | null;
   residenceNumber: string | null;
@@ -67,7 +68,10 @@ export interface AddressRequest {
   postalCode: string | null;
 }
 
+export type AddressRequest = Address;
+
 export interface CustomerRequest {
+  id?: number;
   name: string;
   lastName: string;
   gender: string;
@@ -76,7 +80,7 @@ export interface CustomerRequest {
   phoneNumberOne: string | null;
   phoneNumberTwo: string | null;
   phoneNumberThree: string | null;
-  address: AddressRequest;
+  address: Address;
   isActive: boolean;
   userId?: number;
 }
@@ -97,13 +101,14 @@ export interface CustomerResponseDto {
   phoneNumberOne: string | null;
   phoneNumberTwo: string | null;
   phoneNumberThree: string | null;
+  address?: Address;
   addressName: string | null;
   isActive: boolean;
-  userRegistration: string | null;
-  registrationDate: string | null;
-  userModification: string | null;
-  modificationDate: string | null;
-  userResponseDto: UserResponseDto;
+  userRegistration?: string | null;
+  registrationDate?: string | null;
+  userModification?: string | null;
+  modificationDate?: string | null;
+  userResponseDto?: UserResponseDto;
 }
 
 export interface Category {
