@@ -350,6 +350,15 @@ export class AddProductComponent implements OnInit {
     });
   }
 
+  removeExistingProductImage(index: number): void {
+    this.existingProductImages.splice(index, 1);
+    this.messageService.add({
+      severity: 'info',
+      summary: 'Imagen actual removida',
+      life: 1500
+    });
+  }
+
   // ============= SUBMIT =============
 
   async onSubmit(): Promise<void> {
