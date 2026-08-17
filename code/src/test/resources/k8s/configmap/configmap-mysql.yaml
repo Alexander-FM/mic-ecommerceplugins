@@ -260,22 +260,22 @@ data:
     INSERT INTO maintenance_service.products (bar_code, description, is_active, is_recommended, main_image_url,
                                               name, price, stock, brand_id, category_id)
     VALUES ('113371165', 'Vino La Mascota Malbec Botella 750 mL', true, false,
-            'https://drive.google.com/file/d/1CpeJFOe9mv9W8VkNTtFicsB2BDDRJEiu/view',
+            'https://drive.google.com/file/d/1DRCVVcmL-2Id47TholEQ9gu--1guvcSq/view',
             'Vino La Mascota Malbec Botella 750 mL', 94.9, 100, 1, 4),
            ('119459446', 'Los vinos de ésta línea, 100% varietales, se elaboran con uvas provenientes de diferentes lotes de los viñedos de la familia Catena, elaborados por Laura Catena, cuarta generación de viticultores y Alejandro Vigil, enólogo Jefe de Catena Zapata. Cada viñedo se divide en lotes, que se cosechan y preparan por separado, para luego integrar el corte o blend final de cada Catena varietal. Lo cual, le da un carácter único de excelente tipicidad, balance y concentración.
       Añejamiento: 12 meses en barrica de roble francés
       Cepa: 90% Cabernet Sauvignon, 7% Cabernet Franc, 3% Petit Verdot
       Alcohol: 13.5%
       Acidez total: 5 gramos/litros
-      Enólogo: Alejandro Vigil', true, false, 'https://drive.google.com/file/d/1lOnVvTjupJJ3mMotWrP_ITWJzXOylEjY/view',
+      Enólogo: Alejandro Vigil', true, false, 'https://drive.google.com/file/d/1QP1YWL8lkZBtDip2SAr713q0sHGRZlCQ/view',
             'Vino Catena Cabernet Sauvignon 750ml', 89.9, 100, 3, 4),
            ('147229624',
             'Disfruta la sofisticación y profundidad del Ron Flor de Caña 12 Años 750 ml, un ron nicaragüense premium que ofrece un sabor complejo y equilibrado para los paladares más exigentes. Descubre qué lo hace diferente Notas aromáticas a caramelo, vainilla, frutos secos y madera tostada. Sabor suave y rico con un final largo y aterciopelado. Ideal para disfrutar solo, con hielo o en cócteles exclusivos. Presentación de 750 ml que refleja tradición y calidad excepcional.',
-            true, false, 'https://drive.google.com/file/d/10SpzMeEKLefDwBtRxH879fKI2SL7UJFm/view',
+            true, false, 'https://drive.google.com/file/d/1OSAI-fM1Yllni6964pHaLaH2yPLN7vSy/view',
             'RON FLOR DE CAÑA 12 AÑOS 750 ML', 79.1, 100, 4, 6),
            ('147229450', 'RICCADONNA RUBY 750 ML
     Disfruta el sabor frutal y refrescante del Riccadonna Ruby 750 ml, un vino espumante italiano con burbujas finas y aromas intensos a frutos rojos, ideal para celebraciones y momentos especiales. Descubre qué lo hace diferente Aromas intensos a frutos rojos que aportan frescura y dulzura. Burbujas finas y persistentes que elevan la experiencia sensorial. Sabor equilibrado entre dulzura y acidez. Perfecto para brindar en ocasiones especiales o acompañar postres. Presentación de 750 ml que refleja calidad y tradición italiana.',
-            true, false, 'https://drive.google.com/file/d/1EfHlKJ0Gac-0sWbjjHSjAOB7Xt5q6bAt/view',
+            true, false, 'https://drive.google.com/file/d/1E6hHKX1iFwIAdnIACyjnjkQZgqwCGBrb/view',
             'RICCADONNA RUBY 750ML', 54.5, 100, 2, 4);
 
     INSERT INTO maintenance_service.product_attributes (value, attribute_id, product_id)
@@ -291,7 +291,4 @@ data:
            ('2004', 4, 3);
 
     INSERT INTO maintenance_service.product_images (image_url, product_id)
-    VALUES ('https://drive.google.com/file/d/1gHzfliT-Zdpbc5yNpvbidawexqXOuUwk/view', 1),
-           ('https://drive.google.com/file/d/19H02fOZfjX_f2BcsNYZOdLXuN8N23XFS/view', 1),
-           ('https://drive.google.com/file/d/12uDLGw_HUnB0qnWQYNRIi2PEeFvHxxeD/view', 2),
-           ('https://drive.google.com/file/d/10SpzMeEKLefDwBtRxH879fKI2SL7UJFm/view', 3);
+    VALUES ('https://drive.google.com/file/d/1OsgL-J6wqfauPJPrr0Hfleyb7hawWDP8/view', 1);
