@@ -89,12 +89,12 @@
             <div class="delivered-details-grid">
               <div class="delivered-detail-item">
                 <span class="item-label">Dirección de entrega</span>
-                <span class="item-value placeholder-text">Dirección pendiente</span>
+                <span class="item-value placeholder-text">{{ deliveryAddressName ?? 'Dirección no disponible' }}</span>
               </div>
 
               <div class="delivered-detail-item">
                 <span class="item-label">Recibido por</span>
-                <span class="item-value placeholder-text">Pendiente de implementar</span>
+                <span class="item-value placeholder-text">{{ receivedBy ?? 'Pendiente de implementar' }}</span>
               </div>
 
               <div class="delivered-detail-item" *ngIf="deliveredStatus">

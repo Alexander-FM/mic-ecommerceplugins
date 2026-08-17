@@ -174,6 +174,8 @@ export interface OrderResponse {
   id: number;
   orderDate: string;
   customerId: number;
+  deliveryAddressName: string | null;
+  receivedBy: string | null;
   employeeId: number | null;
   orderStatusName: string;
   totalAmount: number;

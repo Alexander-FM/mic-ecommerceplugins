@@ -132,6 +132,17 @@ export class MyAccountComponent implements OnInit {
     });
   }
 
+  private normalizeAddressType(type?: string | null): string {
+    if (!type) return 'Casa';
+    const trimmed = type.trim();
+    const lower = trimmed.toLowerCase();
+    if (lower === 'casa' || lower === 'home') return 'Casa';
+    if (lower === 'departamento' || lower === 'depa' || lower === 'apartment') return 'Departamento';
+    if (lower === 'oficina' || lower === 'office') return 'Oficina';
+    const match = this.addressTypeOptions.find(o => o.value.toLowerCase() === lower);
+    return match ? match.value : 'Otro';
+  }
+
   private populateForm(customer: CustomerResponseDto): void {
     const addr = customer.address;
 
@@ -146,7 +157,7 @@ export class MyAccountComponent implements OnInit {
       phoneNumberThree: customer.phoneNumberThree || '',
       address: {
         id: addr?.id || null,
-        type: addr?.type || 'Casa',
+        type: this.normalizeAddressType(addr?.type),
         addressName: addr?.addressName || '',
         residenceNumber: addr?.residenceNumber || '',
         department: addr?.department || '',
@@ -171,24 +182,24 @@ export class MyAccountComponent implements OnInit {
 
     const payload: CustomerRequest = {
       id: this.customer?.id || this.customerId,
-      name: formVal.name,
-      lastName: formVal.lastName,
-      gender: formVal.gender,
+      name: formVal.name ? formVal.name.trim() : '',
+      lastName: formVal.lastName ? formVal.lastName.trim() : '',
+      gender: formVal.gender || 'M',
       birthdate: this.formatBirthdateToIso(formVal.birthdate),
-      email: formVal.email,
-      phoneNumberOne: this.toNull(formVal.phoneNumberOne),
-      phoneNumberTwo: this.toNull(formVal.phoneNumberTwo),
-      phoneNumberThree: this.toNull(formVal.phoneNumberThree),
+      email: formVal.email ? formVal.email.trim() : '',
+      phoneNumberOne: formVal.phoneNumberOne ? formVal.phoneNumberOne.trim() : '',
+      phoneNumberTwo: formVal.phoneNumberTwo ? formVal.phoneNumberTwo.trim() : '',
+      phoneNumberThree: formVal.phoneNumberThree ? formVal.phoneNumberThree.trim() : '',
       address: {
         id: addrVal.id || this.customer?.address?.id || 1,
-        type: this.toNull(addrVal.type),
-        addressName: this.toNull(addrVal.addressName),
-        residenceNumber: this.toNull(addrVal.residenceNumber),
-        department: this.toNull(addrVal.department),
-        province: this.toNull(addrVal.province),
-        district: this.toNull(addrVal.district),
-        placeReference: this.toNull(addrVal.placeReference),
-        postalCode: this.toNull(addrVal.postalCode)
+        type: addrVal.type || 'Casa',
+        addressName: addrVal.addressName ? addrVal.addressName.trim() : '',
+        residenceNumber: addrVal.residenceNumber ? addrVal.residenceNumber.trim() : '',
+        department: addrVal.department ? addrVal.department.trim() : '',
+        province: addrVal.province ? addrVal.province.trim() : '',
+        district: addrVal.district ? addrVal.district.trim() : '',
+        placeReference: addrVal.placeReference ? addrVal.placeReference.trim() : '',
+        postalCode: addrVal.postalCode ? addrVal.postalCode.trim() : ''
       },
       isActive: this.customer?.isActive ?? true,
       userId: this.userId
@@ -203,6 +214,7 @@ export class MyAccountComponent implements OnInit {
           if (res.body) {
             this.customer = res.body;
             this.formattedAddressName = res.body.addressName || this.formattedAddressName;
+            this.populateForm(res.body);
           }
         } else {
           this.showError(res.message || 'Ocurrió un error al actualizar los datos.');

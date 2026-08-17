@@ -51,7 +51,8 @@
               optionLabel="label"
               optionValue="value"
               placeholder="Seleccionar género"
-              styleClass="w-100"
+              styleClass="w-full"
+              appendTo="body"
             ></p-select>
           </div>
 
@@ -63,7 +64,8 @@
               dateFormat="dd/mm/yy"
               [showIcon]="true"
               placeholder="dd/mm/aaaa"
-              styleClass="w-100"
+              styleClass="w-full"
+              appendTo="body"
             ></p-datepicker>
             <small class="p-error" *ngIf="customerForm.get('birthdate')?.touched && customerForm.get('birthdate')?.invalid">
               Ingresa una fecha de nacimiento válida.
@@ -118,7 +120,8 @@
               optionLabel="label"
               optionValue="value"
               placeholder="Seleccionar tipo"
-              styleClass="w-100"
+              styleClass="w-full"
+              appendTo="body"
             ></p-select>
           </div>
 

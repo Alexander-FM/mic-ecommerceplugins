@@ -38,6 +38,8 @@ export class OrderDetailComponent implements OnInit {
   errorMessage: string | null = null;
 
   isDelivered = false;
+  deliveryAddressName: string | null = null;
+  receivedBy: string | null = null;
   deliveredStatus: OrderStatusHistory | null = null;
 
   totalUnits = 0;
@@ -50,7 +52,7 @@ export class OrderDetailComponent implements OnInit {
     private orderService: OrderService,
     private authService: AuthService,
     private messageService: MessageService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
@@ -81,10 +83,12 @@ export class OrderDetailComponent implements OnInit {
             if (found) {
               this.order = found;
               this.totalAmount = found.totalAmount;
+              this.deliveryAddressName = found.deliveryAddressName;
+              this.receivedBy = found.receivedBy;
             }
           }
         },
-        error: () => {}
+        error: () => { }
       });
     }
 

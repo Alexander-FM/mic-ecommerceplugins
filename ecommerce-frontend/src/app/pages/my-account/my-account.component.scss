@@ -156,6 +156,7 @@
   }
 }
 
+.w-full,
 .w-100 {
   width: 100% !important;
 
@@ -164,6 +165,30 @@
   ::ng-deep .p-calendar,
   ::ng-deep .p-datepicker {
     width: 100% !important;
+  }
+}
+
+::ng-deep .p-select {
+  width: 100% !important;
+
+  .p-select-label {
+    font-size: 0.95rem !important;
+    font-weight: 600 !important;
+    color: #0f172a !important;
+  }
+
+  &.p-select-clearable .p-select-label {
+    color: #0f172a !important;
+  }
+}
+
+::ng-deep .p-datepicker {
+  width: 100% !important;
+
+  input {
+    font-size: 0.95rem !important;
+    font-weight: 600 !important;
+    color: #0f172a !important;
   }
 }
 

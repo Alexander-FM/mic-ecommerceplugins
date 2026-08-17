@@ -22,6 +22,8 @@ public class OrderRequestDto implements Serializable {
 
   private String deliveryAddressName;
 
+  private String receivedBy;
+
   private Integer employeeId;
 
   private Double totalAmount;
