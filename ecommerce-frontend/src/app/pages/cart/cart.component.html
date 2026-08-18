@@ -158,3 +158,60 @@
     </p-card>
   </div>
 </div>
+
+<!-- Modal Dialog: ¿Quién recibirá el pedido? -->
+<p-dialog
+  header="¿Quién recibirá el pedido?"
+  [(visible)]="showReceiverDialog"
+  [modal]="true"
+  [style]="{ width: '500px', 'max-width': '92vw' }"
+  [dismissableMask]="false"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="receiver-dialog-custom"
+  appendTo="body"
+>
+  <div class="receiver-dialog-content">
+    <p class="dialog-instruction">
+      Ingresa el nombre completo y DNI de la persona encargada de recibir el pedido en la dirección de entrega.
+    </p>
+
+    <div class="form-group">
+      <label for="receivedByInput">
+        Recibido por (Nombre y DNI) <span class="required-star">*</span>
+      </label>
+      <input
+        id="receivedByInput"
+        type="text"
+        pInputText
+        [(ngModel)]="receivedByInput"
+        placeholder="Ej. Juan Pérez - DNI 12345678"
+        class="w-full"
+      />
+      <small class="p-error" *ngIf="showReceiverDialog && !receivedByInput.trim()">
+        Este campo es obligatorio para procesar la compra.
+      </small>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="dialog-footer-actions">
+      <p-button
+        label="Cancelar"
+        severity="secondary"
+        [outlined]="true"
+        (onClick)="showReceiverDialog = false"
+        [disabled]="isProcessing"
+      ></p-button>
+
+      <p-button
+        label="Confirmar pedido"
+        icon="pi pi-check"
+        severity="success"
+        (onClick)="confirmCheckout()"
+        [loading]="isProcessing"
+        [disabled]="isProcessing || !receivedByInput.trim()"
+      ></p-button>
+    </div>
+  </ng-template>
+</p-dialog>

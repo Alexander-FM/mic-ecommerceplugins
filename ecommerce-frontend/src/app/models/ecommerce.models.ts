@@ -158,6 +158,8 @@ export interface GenericResponse<T> {
 
 export interface OrderRequest {
   customerId: number;
+  deliveryAddressName?: string | null;
+  receivedBy?: string | null;
   employeeId: number | null;
   totalAmount: number;
   orderNotes: string;

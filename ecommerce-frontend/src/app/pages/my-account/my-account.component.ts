@@ -63,7 +63,7 @@ export class MyAccountComponent implements OnInit {
     private customerService: CustomerService,
     private messageService: MessageService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.initForm();
@@ -97,7 +97,7 @@ export class MyAccountComponent implements OnInit {
   private loadCustomerData(): void {
     const authState = this.authService.getAuthState();
     const userObj = authState.user;
-    
+
     this.customerId = Number(userObj?.['customerId'] || userObj?.['id'] || userObj?.['userId']) || 0;
 
     if (!this.customerId) {
@@ -153,8 +153,8 @@ export class MyAccountComponent implements OnInit {
       birthdate: this.parseBackendDate(customer.birthdate),
       email: customer.email || '',
       phoneNumberOne: customer.phoneNumberOne || '',
-      phoneNumberTwo: customer.phoneNumberTwo || '',
-      phoneNumberThree: customer.phoneNumberThree || '',
+      phoneNumberTwo: customer.phoneNumberTwo || null,
+      phoneNumberThree: customer.phoneNumberThree || null,
       address: {
         id: addr?.id || null,
         type: this.normalizeAddressType(addr?.type),
@@ -187,19 +187,19 @@ export class MyAccountComponent implements OnInit {
       gender: formVal.gender || 'M',
       birthdate: this.formatBirthdateToIso(formVal.birthdate),
       email: formVal.email ? formVal.email.trim() : '',
-      phoneNumberOne: formVal.phoneNumberOne ? formVal.phoneNumberOne.trim() : '',
-      phoneNumberTwo: formVal.phoneNumberTwo ? formVal.phoneNumberTwo.trim() : '',
-      phoneNumberThree: formVal.phoneNumberThree ? formVal.phoneNumberThree.trim() : '',
+      phoneNumberOne: this.toNullOrTrim(formVal.phoneNumberOne),
+      phoneNumberTwo: this.toNullOrTrim(formVal.phoneNumberTwo),
+      phoneNumberThree: this.toNullOrTrim(formVal.phoneNumberThree),
       address: {
         id: addrVal.id || this.customer?.address?.id || 1,
         type: addrVal.type || 'Casa',
-        addressName: addrVal.addressName ? addrVal.addressName.trim() : '',
-        residenceNumber: addrVal.residenceNumber ? addrVal.residenceNumber.trim() : '',
-        department: addrVal.department ? addrVal.department.trim() : '',
-        province: addrVal.province ? addrVal.province.trim() : '',
-        district: addrVal.district ? addrVal.district.trim() : '',
-        placeReference: addrVal.placeReference ? addrVal.placeReference.trim() : '',
-        postalCode: addrVal.postalCode ? addrVal.postalCode.trim() : ''
+        addressName: this.toNullOrTrim(addrVal.addressName),
+        residenceNumber: this.toNullOrTrim(addrVal.residenceNumber),
+        department: this.toNullOrTrim(addrVal.department),
+        province: this.toNullOrTrim(addrVal.province),
+        district: this.toNullOrTrim(addrVal.district),
+        placeReference: this.toNullOrTrim(addrVal.placeReference),
+        postalCode: this.toNullOrTrim(addrVal.postalCode)
       },
       isActive: this.customer?.isActive ?? true,
       userId: this.userId
@@ -209,7 +209,7 @@ export class MyAccountComponent implements OnInit {
       finalize(() => this.isSubmitting = false)
     ).subscribe({
       next: (res) => {
-        if (res.rpta === 1 || res.rpta === undefined) {
+        if (res.rpta === 1) {
           this.showSuccess(res.message || 'Operation completed successfully');
           if (res.body) {
             this.customer = res.body;
@@ -217,15 +217,43 @@ export class MyAccountComponent implements OnInit {
             this.populateForm(res.body);
           }
         } else {
-          this.showError(res.message || 'Ocurrió un error al actualizar los datos.');
+          const detailMsg = this.extractErrorMessage(res, 'Ocurrió un error al actualizar los datos.');
+          this.showError(detailMsg);
         }
       },
       error: (err) => {
         console.error('Error actualizando perfil:', err);
-        const errorMsg = err?.error?.message || err?.message || 'Error al actualizar el perfil.';
-        this.showError(errorMsg);
+        const detailMsg = this.extractErrorMessage(err, 'Error al actualizar el perfil.');
+        this.showError(detailMsg);
       }
     });
+  }
+
+  private extractErrorMessage(errOrRes: any, defaultMsg: string): string {
+    if (!errOrRes) return defaultMsg;
+
+    // 1. Extraer si el objeto body tiene una propiedad message ({ code: 429, message: '...' })
+    if (typeof errOrRes.body === 'object' && errOrRes.body?.message) {
+      return errOrRes.body.message;
+    }
+
+    // 2. Extraer desde la respuesta HTTP de error (err.error)
+    const errBody = errOrRes.error;
+    if (errBody) {
+      if (typeof errBody.body === 'object' && errBody.body?.message) {
+        return errBody.body.message;
+      }
+      if (typeof errBody.message === 'string' && errBody.message) {
+        return errBody.message;
+      }
+    }
+
+    // 3. Extraer desde la propiedad message raíz
+    if (typeof errOrRes.message === 'string' && errOrRes.message) {
+      return errOrRes.message;
+    }
+
+    return defaultMsg;
   }
 
   private parseBackendDate(dateStr?: string | null): Date | null {
@@ -243,6 +271,12 @@ export class MyAccountComponent implements OnInit {
     const month = String(d.getMonth() + 1).padStart(2, '0');
     const day = String(d.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}T12:00:00.000Z`;
+  }
+
+  private toNullOrTrim(val: string | null | undefined): string | null {
+    if (!val) return null;
+    const trimmed = val.trim();
+    return trimmed.length > 0 ? trimmed : null;
   }
 
   private toNull(val: string | null | undefined): string | null {
