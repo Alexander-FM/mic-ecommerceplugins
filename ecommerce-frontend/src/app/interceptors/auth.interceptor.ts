@@ -47,8 +47,8 @@ export class AuthInterceptor implements HttpInterceptor {
           error: error.error
         });
 
-        if (error.status === 401 || error.status === 403) {
-          console.warn('🚪 Token expirado o no autorizado. Logout y redirigir a login.');
+        if (error.status === 401) {
+          console.warn('🚪 Token expirado o no autorizado (401). Logout y redirigir a login.');
           this.authService.logout(false);
           this.router.navigate(['/login']);
         }

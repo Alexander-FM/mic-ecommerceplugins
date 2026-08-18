@@ -42,6 +42,7 @@ app:
   endpoints:
     order-info: "/api/orders"
     order-status: "/api/orders/status"
+    order-history: "/api/orders/history"
 
 # Configuration for dev profile
 ---

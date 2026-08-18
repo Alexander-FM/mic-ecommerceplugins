@@ -5,6 +5,8 @@ import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { InputTextModule } from 'primeng/inputtext';
+import { DialogModule } from 'primeng/dialog';
 import { FormsModule } from '@angular/forms';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
@@ -12,6 +14,7 @@ import { CartService } from '../../services/cart.service';
 import { CartItem, OrderRequest, OrderDetailRequest } from '../../models/ecommerce.models';
 import { AuthService } from '../../services/auth.service';
 import { OrderService } from '../../services/order.service';
+import { CustomerService } from '../../services/customer.service';
 
 @Component({
   selector: 'app-cart',
@@ -23,6 +26,8 @@ import { OrderService } from '../../services/order.service';
     ButtonModule,
     CardModule,
     InputNumberModule,
+    InputTextModule,
+    DialogModule,
     ToastModule
   ],
   providers: [MessageService],
@@ -35,12 +40,18 @@ export class CartComponent implements OnInit {
   total: number = 0;
   isProcessing: boolean = false;
 
+  showReceiverDialog: boolean = false;
+  receivedByInput: string = '';
+  deliveryAddressName: string | null = null;
+  currentCustomerId: number = 0;
+
   constructor(
     private cartService: CartService,
     private messageService: MessageService,
     private router: Router,
     private authService: AuthService,
-    private orderService: OrderService
+    private orderService: OrderService,
+    private customerService: CustomerService
   ) { }
 
   ngOnInit(): void {
@@ -119,9 +130,39 @@ export class CartComponent implements OnInit {
       return;
     }
 
-    this.isProcessing = true;
+    this.currentCustomerId = Number(authState.user['customerId'] || authState.user['id'] || authState.user['userId']) || 0;
 
-    const customerId = Number(authState.user['customerId']) || 0;
+    // Paso 1: Consultar los datos del cliente para obtener addressName (deliveryAddressName)
+    this.isProcessing = true;
+    this.customerService.getCustomerById(this.currentCustomerId).subscribe({
+      next: (res) => {
+        this.isProcessing = false;
+        if (res?.body) {
+          this.deliveryAddressName = res.body.addressName || null;
+        }
+        // Paso 2: Abrir modal p-dialog para solicitar el receptor (receivedBy)
+        this.showReceiverDialog = true;
+      },
+      error: (err) => {
+        this.isProcessing = false;
+        console.error('Error al obtener dirección del cliente:', err);
+        // Abrir el diálogo igualmente para que no se bloquee el flujo
+        this.showReceiverDialog = true;
+      }
+    });
+  }
+
+  confirmCheckout(): void {
+    if (!this.receivedByInput || !this.receivedByInput.trim()) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Campo incompleto',
+        detail: 'Por favor, ingresa los datos de la persona que recibirá el pedido'
+      });
+      return;
+    }
+
+    this.isProcessing = true;
 
     const orderDetails: OrderDetailRequest[] = this.cartItems.map(item => ({
       productId: item.product.id!,
@@ -130,9 +171,10 @@ export class CartComponent implements OnInit {
     }));
 
     const orderRequest: OrderRequest = {
-      customerId: customerId,
+      customerId: this.currentCustomerId,
+      deliveryAddressName: this.deliveryAddressName,
+      receivedBy: this.receivedByInput.trim(),
       employeeId: null,
-      orderStatus: { id: 1 },
       totalAmount: this.cartService.getTotal(),
       orderNotes: "Pedido generado desde el carrito de compras",
       orderDetails: orderDetails
@@ -142,6 +184,8 @@ export class CartComponent implements OnInit {
       next: (response) => {
         this.isProcessing = false;
         if (response.rpta === 1) {
+          this.showReceiverDialog = false;
+          this.receivedByInput = '';
           this.messageService.add({
             severity: 'success',
             summary: 'Compra exitosa',

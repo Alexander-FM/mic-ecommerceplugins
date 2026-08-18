@@ -217,6 +217,11 @@ export class AppComponent implements OnInit {
           label: 'Marcas',
           icon: 'pi pi-bookmark',
           routerLink: '/admin/maintenance/brands'
+        },
+        {
+          label: 'Gestionar órdenes',
+          icon: 'pi pi-shopping-bag',
+          routerLink: '/admin/orders'
         }
       ]
     });

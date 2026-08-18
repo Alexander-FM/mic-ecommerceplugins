@@ -1,6 +1,7 @@
 package com.codecorecix.ecommerce.maintenance.employee.service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -82,7 +83,7 @@ public class EmployeeServiceImpl implements EmployeeService {
           .findById(employeeRequestDto.getId())
           .orElseThrow();
       employeeMapped.setUserModification("UserModification");
-      employeeMapped.setModificationDate(LocalDateTime.now());
+      employeeMapped.setModificationDate(LocalDateTime.now(ZoneId.of("America/Lima")));
       employeeMapped.setUserRegistration(employeeBD.getUserRegistration());
       employeeMapped.setRegistrationDate(employeeBD.getRegistrationDate());
       employeeMapped

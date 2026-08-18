@@ -1,0 +1,497 @@
+.order-detail-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
+
+  .back-navigation {
+    margin-bottom: 1.25rem;
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: transparent;
+      border: none;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #475569;
+      cursor: pointer;
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+
+      &:hover {
+        color: #0f172a;
+        background-color: #f1f5f9;
+      }
+    }
+  }
+
+  .loading-state {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 350px;
+
+    .spinner-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      color: #64748b;
+    }
+  }
+
+  .empty-state {
+    .empty-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 3rem 1.5rem;
+      gap: 1rem;
+
+      h3 {
+        color: #334155;
+        font-size: 1.25rem;
+      }
+    }
+  }
+
+  .order-detail-content {
+    .page-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin: 0 0 1rem;
+    }
+
+    .section-divider {
+      border: none;
+      border-top: 1px solid #e2e8f0;
+      margin: 1.75rem 0;
+    }
+
+    .order-section {
+      .section-heading {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: #64748b;
+        letter-spacing: 0.6px;
+        text-transform: uppercase;
+        margin-bottom: 1.25rem;
+      }
+
+      /* 1. Grid de Productos */
+      .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 1.25rem;
+
+        @media (max-width: 480px) {
+          grid-template-columns: 1fr;
+        }
+
+        .product-card-wrapper {
+          ::ng-deep .product-card-custom {
+            height: 100%;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+            &:hover {
+              transform: translateY(-2px);
+              box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            }
+
+            .p-card-body {
+              padding: 1rem;
+              height: 100%;
+            }
+
+            .p-card-content {
+              padding: 0;
+              height: 100%;
+            }
+          }
+
+          .product-card-inner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            height: 100%;
+            gap: 0.75rem;
+
+            .product-img-box {
+              width: 100%;
+              height: 140px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              padding: 0.5rem;
+              background-color: #f8fafc;
+              border-radius: 8px;
+              border: 1px solid #f1f5f9;
+
+              .product-img {
+                max-width: 100%;
+                max-height: 100%;
+                object-fit: contain;
+              }
+            }
+
+            .product-card-info {
+              display: flex;
+              flex-direction: column;
+              gap: 0.3rem;
+              width: 100%;
+
+              .product-title {
+                font-size: 0.95rem;
+                font-weight: 600;
+                color: #1e293b;
+                margin: 0 0 0.2rem;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                line-height: 1.3;
+              }
+
+              .product-meta {
+                font-size: 0.85rem;
+                color: #64748b;
+                margin: 0;
+
+                .meta-value {
+                  color: #0f172a;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .no-products-msg, .no-history-msg {
+        color: #64748b;
+        font-style: italic;
+        padding: 1rem 0;
+      }
+
+      /* 2. Card de Entregado Especial */
+      .delivered-card-container {
+        ::ng-deep .delivered-card-custom {
+          border-radius: 16px;
+          border: 1px solid #bbf7d0;
+          background-color: #f0fdf4;
+          box-shadow: 0 2px 8px rgba(16, 185, 129, 0.08);
+
+          .p-card-body {
+            padding: 1.5rem;
+          }
+
+          .p-card-content {
+            padding: 0;
+          }
+        }
+
+        .delivered-card-body {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          gap: 0.75rem;
+
+          .delivered-icon-wrapper {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background-color: #dcfce7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.25rem;
+
+            .delivered-cart-icon {
+              font-size: 2rem;
+              color: #16a34a;
+            }
+          }
+
+          .delivered-main-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #15803d;
+            margin: 0;
+          }
+
+          .delivered-date-subtitle {
+            font-size: 0.9375rem;
+            color: #166534;
+            font-weight: 500;
+            margin: 0;
+          }
+
+          .delivered-details-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            width: 100%;
+            max-width: 420px;
+            margin: 1rem 0 0.5rem;
+            text-align: left;
+            background-color: #ffffff;
+            padding: 1rem 1.25rem;
+            border-radius: 10px;
+            border: 1px solid #dcfce7;
+
+            .delivered-detail-item {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              font-size: 0.875rem;
+
+              .item-label {
+                font-weight: 600;
+                color: #374151;
+              }
+
+              .item-value {
+                color: #111827;
+                font-weight: 500;
+              }
+
+              .placeholder-text {
+                color: #9ca3af;
+                font-style: italic;
+              }
+            }
+          }
+
+          .delivered-inner-hr {
+            width: 100%;
+            border: none;
+            border-top: 1px solid #dcfce7;
+            margin: 0.5rem 0;
+          }
+
+          .delivered-action-row {
+            .timeline-link-btn {
+              display: inline-flex;
+              align-items: center;
+              gap: 0.5rem;
+              background: transparent;
+              border: none;
+              color: #16a34a;
+              font-size: 1rem;
+              font-weight: 700;
+              cursor: pointer;
+              padding: 0.5rem 1rem;
+              border-radius: 8px;
+              transition: all 0.2s ease;
+
+              &:hover {
+                color: #15803d;
+                background-color: #dcfce7;
+              }
+            }
+          }
+        }
+      }
+
+      /* Timeline Directo */
+      .inline-timeline-container {
+        ::ng-deep .timeline-card-custom {
+          border-radius: 12px;
+          border: 1px solid #e2e8f0;
+
+          .p-card-body {
+            padding: 1.5rem;
+          }
+        }
+
+        ::ng-deep .custom-timeline {
+          &.p-timeline-left {
+            .p-timeline-event-opposite {
+              display: none !important;
+              flex: 0 !important;
+            }
+          }
+        }
+
+        .timeline-event-card {
+          padding: 0.25rem 0 1rem;
+
+          .event-status-name {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin: 0 0 0.25rem;
+          }
+
+          .event-observation {
+            font-size: 0.875rem;
+            color: #475569;
+            margin: 0 0 0.35rem;
+          }
+
+          .event-timestamp {
+            font-size: 0.8125rem;
+            color: #94a3b8;
+            font-weight: 500;
+          }
+        }
+      }
+
+      /* 3. Resumen de la Compra */
+      ::ng-deep .summary-card-custom {
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+
+        .p-card-body {
+          padding: 1.5rem;
+        }
+      }
+
+      .summary-card-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin: 0 0 1.25rem;
+      }
+
+      .summary-card-content {
+        display: flex;
+        flex-direction: column;
+
+        .summary-line-item {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          font-size: 0.95rem;
+          color: #334155;
+
+          @media (max-width: 480px) {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.4rem;
+          }
+
+          .summary-label {
+            font-weight: 500;
+          }
+
+          .summary-total-price {
+            font-size: 0.95rem;
+            color: #0f172a;
+
+            strong {
+              color: #334155;
+              font-size: 0.95rem;
+              font-weight: 600;
+              margin-left: 0.3rem;
+            }
+          }
+
+          &.total-pagado-item {
+            .summary-label {
+              font-weight: 700;
+              color: #0f172a;
+            }
+
+            .summary-total-price strong {
+              color: #2563eb;
+              font-size: 1.05rem;
+              font-weight: 700;
+            }
+          }
+
+          .summary-free-val {
+            font-weight: 600;
+            color: #16a34a;
+          }
+        }
+
+        .summary-card-hr {
+          border: none;
+          border-top: 1px solid #e2e8f0;
+          margin: 1.25rem 0 1rem;
+        }
+
+        .summary-payment-footer {
+          display: flex;
+          flex-direction: column;
+          gap: 0.2rem;
+
+          .payment-heading {
+            font-weight: 600;
+            color: #475569;
+            font-size: 0.9rem;
+          }
+
+          .payment-coming-soon {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            font-style: italic;
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Modal Dialog Timeline */
+::ng-deep .timeline-modal-dialog {
+  .p-dialog-header {
+    padding: 1.25rem 1.5rem 0.75rem;
+    border-bottom: 1px solid #f1f5f9;
+
+    .p-dialog-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #1e293b;
+    }
+  }
+
+  .p-dialog-content {
+    padding: 1.25rem 1.5rem;
+  }
+
+  .custom-timeline-dialog {
+    &.p-timeline-left {
+      .p-timeline-event-opposite {
+        display: none !important;
+        flex: 0 !important;
+      }
+    }
+  }
+
+  .dialog-timeline-event {
+    padding: 0.25rem 0 1rem;
+
+    .dialog-event-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin: 0 0 0.25rem;
+    }
+
+    .dialog-event-obs {
+      font-size: 0.85rem;
+      color: #475569;
+      margin: 0 0 0.3rem;
+    }
+
+    .dialog-event-date {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      font-weight: 500;
+    }
+  }
+}

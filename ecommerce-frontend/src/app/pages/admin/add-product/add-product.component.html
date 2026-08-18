@@ -303,8 +303,18 @@
         <div *ngIf="existingProductImages.length > 0" class="images-gallery">
           <h5>Imágenes actuales ({{ existingProductImages.length }})</h5>
           <div class="gallery-grid">
-            <div *ngFor="let img of existingProductImages" class="gallery-item">
+            <div *ngFor="let img of existingProductImages; let idx = index" class="gallery-item">
               <img [src]="img.previewUrl" [alt]="'Imagen ' + img.id" />
+              <div class="gallery-overlay">
+                <button
+                  pButton
+                  type="button"
+                  icon="pi pi-trash"
+                  class="p-button-rounded p-button-danger p-button-sm"
+                  (click)="removeExistingProductImage(idx)"
+                  title="Eliminar imagen actual"
+                ></button>
+              </div>
               <small>Actual #{{ img.id }}</small>
             </div>
           </div>

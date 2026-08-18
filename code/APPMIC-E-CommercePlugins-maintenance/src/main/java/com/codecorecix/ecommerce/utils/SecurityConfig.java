@@ -54,45 +54,65 @@ public class SecurityConfig {
   private final CustomAuthenticationEntryPoint authenticationEntryPoint;
 
   public SecurityConfig(CustomAccessDeniedHandler accessDeniedHandler,
-      CustomAuthenticationEntryPoint authenticationEntryPoint) {
+                        CustomAuthenticationEntryPoint authenticationEntryPoint) {
     this.accessDeniedHandler = accessDeniedHandler;
     this.authenticationEntryPoint = authenticationEntryPoint;
   }
 
   @Bean
   SecurityFilterChain securityFilterChain(final HttpSecurity http) throws Exception {
-    // Creamos un array con todas las rutas protegidas para no repetir código
     final String[] allMaintenancePaths = {
         customerPath + "/**", employeePath + "/**", rolePath + "/**",
         userPath + "/**", brandPath + "/**", categoryPath + "/**",
         productPath + "/**", productImagePath + "/**", googleDrivePath + "/**"
     };
+
     http
         .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-            //1. Rutas públicas
+            // 1. Rutas públicas (sin autenticación)
             .requestMatchers("/api/maintenance/users/login",
                 "/api/maintenance/customers/username/{username}", "/api/maintenance/employees/username/{username}",
                 "/api/maintenance/products/active", "/api/maintenance/products/{id}",
-                "/api/maintenance/brands/active", "/api/maintenance/categories/active")
+                "/api/maintenance/brands/active", "/api/maintenance/categories/active",
+                "/api/maintenance/products/category/{categoryId}")
             .permitAll()
-            // 2. Operaciones internas (Deben ir ANTES de las generales)
-            .requestMatchers(HttpMethod.GET, "/api/maintenance/roles/internal/**").hasAuthority(INTERNAL_WRITE)
-            .requestMatchers(HttpMethod.DELETE, "/api/maintenance/users/internal/**").hasAuthority(INTERNAL_WRITE)
-            .requestMatchers(HttpMethod.POST, "/api/maintenance/customers").hasAuthority(INTERNAL_WRITE)
-            .requestMatchers(HttpMethod.POST, "/api/maintenance/users").hasAuthority(INTERNAL_WRITE)
-            // 3. Operaciones permitidas para ADMIN y USER
-            .requestMatchers(HttpMethod.GET, allMaintenancePaths).hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
-            .requestMatchers(HttpMethod.POST, allMaintenancePaths).hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
-            // 4. Operaciones exclusivas para ADMIN
-            .requestMatchers(HttpMethod.PUT, allMaintenancePaths).hasAuthority(ROLE_ADMIN)
-            .requestMatchers(HttpMethod.PATCH, allMaintenancePaths).hasAuthority(ROLE_ADMIN)
-            .requestMatchers(HttpMethod.DELETE, allMaintenancePaths).hasAuthority(ROLE_ADMIN)
+
+            // 2. Operaciones internas para comunicación servicio-a-servicio
+            .requestMatchers(HttpMethod.GET, "/api/maintenance/roles/internal/**")
+            .hasAuthority(INTERNAL_WRITE)
+            .requestMatchers(HttpMethod.DELETE, "/api/maintenance/users/internal/**")
+            .hasAuthority(INTERNAL_WRITE)
+            .requestMatchers(HttpMethod.POST, "/api/maintenance/customers")
+            .hasAuthority(INTERNAL_WRITE)
+            .requestMatchers(HttpMethod.POST, "/api/maintenance/users")
+            .hasAuthority(INTERNAL_WRITE)
+
+            // 3. Reglas específicas para usuarios (DEBEN IR ANTES DE LAS REGLAS GENERALES DE ADMIN)
+            .requestMatchers(HttpMethod.PUT, customerPath + "/{id}")
+            .hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
+
+            // 4. Operaciones de lectura para ambos roles
+            .requestMatchers(HttpMethod.GET, allMaintenancePaths)
+            .hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
+
+            // 5. Operaciones de escritura generales (POST)
+            .requestMatchers(HttpMethod.POST, allMaintenancePaths)
+            .hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
+
+            // 6. Operaciones de modificación exclusivas para ADMIN (las más generales al final)
+            .requestMatchers(HttpMethod.PUT, allMaintenancePaths)
+            .hasAuthority(ROLE_ADMIN)
+            .requestMatchers(HttpMethod.PATCH, allMaintenancePaths)
+            .hasAuthority(ROLE_ADMIN)
+            .requestMatchers(HttpMethod.DELETE, allMaintenancePaths)
+            .hasAuthority(ROLE_ADMIN)
+
             .anyRequest()
             .authenticated()
         )
         .exceptionHandling(exceptions -> exceptions
-            .accessDeniedHandler(accessDeniedHandler)     // Para el 403
-            .authenticationEntryPoint(authenticationEntryPoint) // Para el 401
+            .accessDeniedHandler(accessDeniedHandler)
+            .authenticationEntryPoint(authenticationEntryPoint)
         )
         .csrf(AbstractHttpConfigurer::disable)
         .cors(Customizer.withDefaults())
@@ -104,12 +124,8 @@ public class SecurityConfig {
   @Bean
   public JwtAuthenticationConverter jwtAuthenticationConverter() {
     JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-    // Le decimos que busque los permisos en la claim "roles"
     grantedAuthoritiesConverter.setAuthoritiesClaimName("roles");
-    // Eliminamos el prefijo por defecto (SCOPE_) para tener control total.
-    // Ahora, las autoridades serán exactamente las que vengan en el claim "roles".
     grantedAuthoritiesConverter.setAuthorityPrefix("");
-
     JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
     jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
     return jwtAuthenticationConverter;

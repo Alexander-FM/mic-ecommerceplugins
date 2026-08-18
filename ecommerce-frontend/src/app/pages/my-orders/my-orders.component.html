@@ -1,37 +1,111 @@
 <p-toast></p-toast>
-<div class="my-orders-container">
-  <h2><i class="pi pi-shopping-bag"></i> Mis Compras</h2>
 
-  <p-card *ngIf="!isLoading && orders.length > 0">
-    <p-table [value]="orders" [tableStyle]="{'min-width': '60rem'}" responsiveLayout="stack">
+<div class="my-orders-container">
+  <div class="page-header">
+    <h2><i class="pi pi-shopping-bag"></i> Mis Compras</h2>
+  </div>
+
+  <!-- Toolbar con Búsqueda y Botón Filtrar -->
+  <div class="orders-toolbar" *ngIf="!isLoading && orders.length > 0">
+    <div class="search-box">
+      <label for="orderSearchInput" class="search-label">Buscar por N° de pedido</label>
+      <div class="search-input-wrapper">
+        <i class="pi pi-search search-icon"></i>
+        <input
+          id="orderSearchInput"
+          type="text"
+          pInputText
+          [(ngModel)]="searchTerm"
+          (ngModelChange)="applyFilters()"
+          placeholder="Buscar por N° de pedido..."
+          class="w-full search-input"
+        />
+        <button
+          *ngIf="searchTerm"
+          type="button"
+          class="clear-search-icon-btn"
+          (click)="clearSearch()"
+          title="Limpiar búsqueda"
+        >
+          <i class="pi pi-times"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="filter-action">
+      <p-button
+        label="Filtrar"
+        icon="pi pi-filter"
+        [outlined]="selectedDateFilter === 'ultimas'"
+        severity="primary"
+        (onClick)="openFilterModal()"
+        styleClass="w-full filter-btn"
+      >
+        <span *ngIf="selectedDateFilter !== 'ultimas'" class="active-filter-badge"></span>
+      </p-button>
+    </div>
+  </div>
+
+  <!-- Indicador visual de filtros activos -->
+  <div class="active-filters-bar" *ngIf="!isLoading && (selectedDateFilter !== 'ultimas' || searchTerm)">
+    <div class="active-chips">
+      <span class="filter-chip" *ngIf="selectedDateFilter !== 'ultimas'">
+        {{ getDateFilterLabel(selectedDateFilter) }}
+        <i class="pi pi-times chip-remove" (click)="selectedDateFilter = 'ultimas'; applyFilters()"></i>
+      </span>
+      <span class="filter-chip" *ngIf="searchTerm">
+        Pedido #{{ searchTerm }}
+        <i class="pi pi-times chip-remove" (click)="clearSearch()"></i>
+      </span>
+    </div>
+    <button type="button" class="clear-all-btn" (click)="clearFilters()">
+      Limpiar filtros
+    </button>
+  </div>
+
+  <!-- Tabla con filteredOrders -->
+  <p-card *ngIf="!isLoading && filteredOrders.length > 0">
+    <p-table [value]="filteredOrders" [tableStyle]="{'min-width': '60rem'}" responsiveLayout="stack">
       <ng-template pTemplate="header">
         <tr>
           <th>Pedido</th>
           <th>Fecha</th>
           <th>Estado</th>
           <th>Total</th>
-          <th>Observaciones</th>
           <th style="width: 120px; text-align: center;">Acciones</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-order>
-        <tr>
+        <tr (click)="navigateToDetail(order.id)" class="clickable-row">
           <td><strong>#{{ order.id }}</strong></td>
           <td>{{ order.orderDate | date:'dd/MM/yyyy hh:mm a' }}</td>
           <td>
             <p-tag [value]="order.orderStatusName" [severity]="getOrderStatusSeverity(order.orderStatusName)"
               [icon]="getOrderStatusIcon(order.orderStatusName)"></p-tag>
           </td>
-          <td class="font-bold">{{ order.totalAmount | currency:'PEN':'symbol' }}</td>
-          <td style="text-align: center;">
-            <p-button icon="pi pi-eye" [rounded]="true" [text]="true" severity="info" (onClick)="viewDetail(order.id)"
-              pTooltip="Ver detalle" tooltipPosition="top"></p-button>
+          <td class="font-bold">{{ order.totalAmount | currency:'PEN ':'symbol' }}</td>
+          <td style="text-align: center;" (click)="$event.stopPropagation()">
+            <p-button icon="pi pi-eye" [rounded]="true" [text]="true" severity="info" (onClick)="viewDetail(order.id); $event.stopPropagation()"
+              pTooltip="Ver detalle rápido" tooltipPosition="top"></p-button>
           </td>
         </tr>
       </ng-template>
     </p-table>
   </p-card>
 
+  <!-- Estado si se aplicó un filtro/búsqueda y no hay coincidencias -->
+  <div class="empty-state" *ngIf="!isLoading && orders.length > 0 && filteredOrders.length === 0">
+    <p-card>
+      <div class="empty-content">
+        <i class="pi pi-filter-slash" style="font-size: 4rem; color: #888;"></i>
+        <h3>No se encontraron pedidos</h3>
+        <p>No hay compras que coincidan con la búsqueda o el filtro de fecha aplicado.</p>
+        <p-button label="Limpiar filtros" icon="pi pi-refresh" (onClick)="clearFilters()"></p-button>
+      </div>
+    </p-card>
+  </div>
+
+  <!-- Estado totalmente vacío (sin compras cargadas desde el backend) -->
   <div class="empty-state" *ngIf="!isLoading && orders.length === 0">
     <p-card>
       <div class="empty-content">
@@ -43,6 +117,7 @@
     </p-card>
   </div>
 
+  <!-- Estado de carga -->
   <div class="loading-state" *ngIf="isLoading">
     <div class="spinner-container">
       <i class="pi pi-spin pi-spinner" style="font-size: 3rem"></i>
@@ -51,6 +126,107 @@
   </div>
 </div>
 
+<!-- Panel / Modal de Filtros de Fecha (PrimeNG p-dialog) -->
+<p-dialog
+  header="Filtrar"
+  [(visible)]="showFilterModal"
+  [modal]="true"
+  [style]="{ width: '420px', 'max-width': '92vw' }"
+  [dismissableMask]="true"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="filter-dialog-custom"
+>
+  <div class="filter-modal-content">
+    <div class="filter-section-header">
+      <span class="filter-section-label">Fecha de la compra</span>
+    </div>
+
+    <div class="filter-options-list">
+      <button
+        type="button"
+        class="filter-option-btn"
+        [class.active]="tempDateFilter === 'ultimas'"
+        (click)="selectTempFilter('ultimas')"
+      >
+        <span>Últimas compras</span>
+        <i *ngIf="tempDateFilter === 'ultimas'" class="pi pi-check check-icon"></i>
+      </button>
+
+      <button
+        type="button"
+        class="filter-option-btn"
+        [class.active]="tempDateFilter === '6months'"
+        (click)="selectTempFilter('6months')"
+      >
+        <span>Últimos 6 meses</span>
+        <i *ngIf="tempDateFilter === '6months'" class="pi pi-check check-icon"></i>
+      </button>
+
+      <button
+        type="button"
+        class="filter-option-btn"
+        [class.active]="tempDateFilter === '3months'"
+        (click)="selectTempFilter('3months')"
+      >
+        <span>Últimos 3 meses</span>
+        <i *ngIf="tempDateFilter === '3months'" class="pi pi-check check-icon"></i>
+      </button>
+
+      <button
+        type="button"
+        class="filter-option-btn"
+        [class.active]="tempDateFilter === '30days'"
+        (click)="selectTempFilter('30days')"
+      >
+        <span>Últimos 30 días</span>
+        <i *ngIf="tempDateFilter === '30days'" class="pi pi-check check-icon"></i>
+      </button>
+
+      <!-- Fila para años dinámicos -->
+      <div class="years-buttons-row">
+        <button
+          type="button"
+          class="filter-option-btn year-btn"
+          [class.active]="tempDateFilter === currentYear.toString()"
+          (click)="selectTempFilter(currentYear.toString())"
+        >
+          <span>{{ currentYear }}</span>
+          <i *ngIf="tempDateFilter === currentYear.toString()" class="pi pi-check check-icon"></i>
+        </button>
+
+        <button
+          type="button"
+          class="filter-option-btn year-btn"
+          [class.active]="tempDateFilter === previousYear.toString()"
+          (click)="selectTempFilter(previousYear.toString())"
+        >
+          <span>{{ previousYear }}</span>
+          <i *ngIf="tempDateFilter === previousYear.toString()" class="pi pi-check check-icon"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="filter-modal-actions">
+      <p-button
+        label="Aplicar"
+        severity="primary"
+        (onClick)="confirmFilter()"
+        styleClass="w-full apply-filter-btn"
+      ></p-button>
+
+      <button
+        type="button"
+        class="dialog-clear-link"
+        (click)="clearFilters()"
+      >
+        Limpiar filtros
+      </button>
+    </div>
+  </div>
+</p-dialog>
+
+<!-- Modal de detalle de pedido (existente) -->
 <p-dialog [header]="'Detalle del pedido #' + selectedOrderId" [(visible)]="showDetailModal" [modal]="true"
   [style]="{ width: '50vw' }" [breakpoints]="{ '960px': '75vw', '640px': '90vw' }" [dismissableMask]="true">
   <div *ngIf="isDetailLoading" class="flex justify-content-center align-items-center p-5 text-center">

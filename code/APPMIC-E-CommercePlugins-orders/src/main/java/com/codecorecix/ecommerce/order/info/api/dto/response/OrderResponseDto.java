@@ -14,6 +14,10 @@ public class OrderResponseDto implements Serializable {
 
   private Integer customerId;
 
+  private String deliveryAddressName;
+
+  private String receivedBy;
+
   private Integer employeeId;
 
   private String orderStatusName;

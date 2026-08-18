@@ -1,0 +1,196 @@
+<p-toast></p-toast>
+
+<div class="order-detail-container">
+  <!-- Botón Atrás -->
+  <div class="back-navigation">
+    <button type="button" class="back-btn" (click)="goBack()">
+      <i class="pi pi-arrow-left"></i>
+      <span>Atrás</span>
+    </button>
+  </div>
+
+  <!-- Estado de Carga -->
+  <div *ngIf="isLoading" class="loading-state">
+    <div class="spinner-container">
+      <i class="pi pi-spin pi-spinner" style="font-size: 3rem"></i>
+      <p>Cargando detalle del pedido...</p>
+    </div>
+  </div>
+
+  <!-- Estado de Error / Pedido no encontrado -->
+  <div *ngIf="!isLoading && errorMessage" class="empty-state">
+    <p-card>
+      <div class="empty-content">
+        <i class="pi pi-exclamation-triangle" style="font-size: 4rem; color: #eab308;"></i>
+        <h3>{{ errorMessage }}</h3>
+        <p-button label="Volver a Mis Compras" icon="pi pi-arrow-left" (onClick)="goBack()"></p-button>
+      </div>
+    </p-card>
+  </div>
+
+  <!-- Contenido principal cargado -->
+  <div *ngIf="!isLoading && !errorMessage" class="order-detail-content">
+    <h2 class="page-title">Detalle del pedido #{{ orderId }}</h2>
+
+    <hr class="section-divider" />
+
+    <!-- 1. PRODUCTOS DE LA ORDEN -->
+    <section class="order-section">
+      <h3 class="section-heading">PRODUCTOS DE LA ORDEN</h3>
+
+      <div class="products-grid" *ngIf="orderDetails.length > 0">
+        <div class="product-card-wrapper" *ngFor="let product of orderDetails">
+          <p-card styleClass="product-card-custom">
+            <div class="product-card-inner">
+              <div class="product-img-box">
+                <img [src]="product.productImageUrl || '/imagen_not_found_sorry.png'" [alt]="product.productName"
+                  class="product-img" />
+              </div>
+
+              <div class="product-card-info">
+                <h4 class="product-title">{{ product.productName }}</h4>
+                <p class="product-meta">
+                  Cantidad: <strong class="meta-value">{{ product.quantity }}</strong>
+                </p>
+                <p class="product-meta">
+                  Precio unitario: <strong class="meta-value">{{ product.unitPrice | currency:'PEN':'S/ ' }}</strong>
+                </p>
+              </div>
+            </div>
+          </p-card>
+        </div>
+      </div>
+
+      <div *ngIf="orderDetails.length === 0" class="no-products-msg">
+        <p>No se encontraron productos para este pedido.</p>
+      </div>
+    </section>
+
+    <hr class="section-divider" />
+
+    <!-- 2. SEGUIMIENTO DEL PEDIDO -->
+    <section class="order-section">
+      <h3 class="section-heading">SEGUIMIENTO DEL PEDIDO</h3>
+
+      <!-- CASO A: Pedido ENTREGADO -> Card Especial -->
+      <div *ngIf="isDelivered" class="delivered-card-container">
+        <p-card styleClass="delivered-card-custom">
+          <div class="delivered-card-body">
+            <div class="delivered-icon-wrapper">
+              <i class="pi pi-shopping-cart delivered-cart-icon"></i>
+            </div>
+
+            <h3 class="delivered-main-title">Entregado</h3>
+
+            <p class="delivered-date-subtitle" *ngIf="deliveredStatus">
+              Entregado el {{ deliveredStatus.changedAt | date:'dd/MM/yyyy' }}
+            </p>
+
+            <div class="delivered-details-grid">
+              <div class="delivered-detail-item">
+                <span class="item-label">Dirección de entrega</span>
+                <span class="item-value placeholder-text">{{ deliveryAddressName ?? 'Dirección no disponible' }}</span>
+              </div>
+
+              <div class="delivered-detail-item">
+                <span class="item-label">Recibido por</span>
+                <span class="item-value placeholder-text">{{ receivedBy ?? 'Pendiente de implementar' }}</span>
+              </div>
+
+              <div class="delivered-detail-item" *ngIf="deliveredStatus">
+                <span class="item-label">Hora</span>
+                <span class="item-value">{{ deliveredStatus.changedAt | date:'hh:mm a' }}</span>
+              </div>
+            </div>
+
+            <hr class="delivered-inner-hr" />
+
+            <div class="delivered-action-row">
+              <button type="button" class="timeline-link-btn" (click)="openTimelineModal()">
+                <span>Seguimiento del pedido</span>
+                <i class="pi pi-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+        </p-card>
+      </div>
+
+      <!-- CASO B: Pedido NO ENTREGADO -> Timeline Directo -->
+      <div *ngIf="!isDelivered" class="inline-timeline-container">
+        <p-card styleClass="timeline-card-custom">
+          <div *ngIf="orderStatusHistory.length > 0">
+            <p-timeline [value]="orderStatusHistory" align="left" layout="vertical" styleClass="custom-timeline">
+              <ng-template pTemplate="content" let-item>
+                <div class="timeline-event-card">
+                  <h4 class="event-status-name">{{ item.orderStatusName }}</h4>
+                  <p class="event-observation" *ngIf="item.observation">{{ item.observation }}</p>
+                  <span class="event-timestamp">{{ item.changedAt | date:'dd/MM/yyyy hh:mm a' }}</span>
+                </div>
+              </ng-template>
+            </p-timeline>
+          </div>
+
+          <div *ngIf="orderStatusHistory.length === 0" class="no-history-msg">
+            <p>El seguimiento del pedido se actualizará en breve.</p>
+          </div>
+        </p-card>
+      </div>
+    </section>
+
+    <hr class="section-divider" />
+
+    <!-- 3. RESUMEN DE LA COMPRA -->
+    <section class="order-section mb-5">
+      <p-card styleClass="summary-card-custom">
+        <h3 class="summary-card-title">Resumen de la compra</h3>
+
+        <div class="summary-card-content">
+          <div class="summary-line-item">
+            <span class="summary-label">Productos ({{ totalUnits }})</span>
+            <span class="summary-total-price">
+              <strong>{{ totalAmount | currency:'PEN':'S/ ' }}</strong>
+            </span>
+          </div>
+
+          <div class="summary-line-item mt-3">
+            <span class="summary-label">Envío</span>
+            <span class="summary-total-price">
+              <strong>{{ 0 | currency:'PEN':'S/ ' }}</strong>
+            </span>
+          </div>
+
+          <div class="summary-line-item total-pagado-item mt-3">
+            <span class="summary-label">Total pagado</span>
+            <span class="summary-total-price">
+              <strong>{{ totalAmount | currency:'PEN':'S/ ' }}</strong>
+            </span>
+          </div>
+
+          <hr class="summary-card-hr" />
+
+          <div class="summary-payment-footer">
+            <span class="payment-heading">Método de pago</span>
+            <span class="payment-coming-soon">Próximamente</span>
+          </div>
+        </div>
+      </p-card>
+    </section>
+  </div>
+</div>
+
+<!-- Modal Dialog con el Timeline para Pedidos Entregados -->
+<p-dialog [header]="'Seguimiento del pedido #' + orderId" [(visible)]="showTimelineModal" [modal]="true"
+  [style]="{ width: '480px', 'max-width': '92vw' }" [dismissableMask]="true" [draggable]="false" [resizable]="false"
+  styleClass="timeline-modal-dialog">
+  <div class="timeline-dialog-body">
+    <p-timeline [value]="orderStatusHistory" align="left" layout="vertical" styleClass="custom-timeline-dialog">
+      <ng-template pTemplate="content" let-item>
+        <div class="dialog-timeline-event">
+          <h4 class="dialog-event-title">{{ item.orderStatusName }}</h4>
+          <p class="dialog-event-obs" *ngIf="item.observation">{{ item.observation }}</p>
+          <span class="dialog-event-date">{{ item.changedAt | date:'dd/MM/yyyy hh:mm a' }}</span>
+        </div>
+      </ng-template>
+    </p-timeline>
+  </div>
+</p-dialog>

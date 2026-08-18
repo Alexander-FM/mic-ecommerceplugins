@@ -4,13 +4,15 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.codecorecix.ecommerce.order.status.api.dto.request.OrderStatusRequestDto;
-
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class OrderRequestDto implements Serializable {
 
   private Integer id;
@@ -18,10 +20,11 @@ public class OrderRequestDto implements Serializable {
   @NotNull(message = "The customerId is null, please fill")
   private Integer customerId;
 
-  private Integer employeeId;
+  private String deliveryAddressName;
 
-  @NotNull(message = "The orderStatus is null, please fill")
-  private OrderStatusRequestDto orderStatus;
+  private String receivedBy;
+
+  private Integer employeeId;
 
   private Double totalAmount;
 
@@ -29,4 +32,8 @@ public class OrderRequestDto implements Serializable {
 
   @NotEmpty(message = "The orderDetails is null, please fill")
   private List<OrderDetailRequestDto> orderDetails = new ArrayList<>();
+
+  public OrderRequestDto(Integer id) {
+    this.id = id;
+  }
 }

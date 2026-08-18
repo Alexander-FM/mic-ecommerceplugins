@@ -48,7 +48,16 @@ export interface UserResponse {
   id: number;
 }
 
-export interface AddressRequest {
+export interface UserResponseDto {
+  id: number;
+  username: string;
+  password: string;
+  isActive: boolean;
+  roles: Role[];
+}
+
+export interface Address {
+  id?: number;
   type: string | null;
   addressName: string | null;
   residenceNumber: string | null;
@@ -59,7 +68,10 @@ export interface AddressRequest {
   postalCode: string | null;
 }
 
+export type AddressRequest = Address;
+
 export interface CustomerRequest {
+  id?: number;
   name: string;
   lastName: string;
   gender: string;
@@ -68,9 +80,35 @@ export interface CustomerRequest {
   phoneNumberOne: string | null;
   phoneNumberTwo: string | null;
   phoneNumberThree: string | null;
-  address: AddressRequest;
+  address: Address;
   isActive: boolean;
-  userId: number;
+  userId?: number;
+}
+
+export interface RegisterRequestDto {
+  username: string;
+  password: string;
+  customer: CustomerRequest;
+}
+
+export interface CustomerResponseDto {
+  id: number;
+  name: string;
+  lastName: string;
+  gender: string;
+  birthdate: string | null;
+  email: string;
+  phoneNumberOne: string | null;
+  phoneNumberTwo: string | null;
+  phoneNumberThree: string | null;
+  address?: Address;
+  addressName: string | null;
+  isActive: boolean;
+  userRegistration?: string | null;
+  registrationDate?: string | null;
+  userModification?: string | null;
+  modificationDate?: string | null;
+  userResponseDto?: UserResponseDto;
 }
 
 export interface Category {
@@ -120,10 +158,9 @@ export interface GenericResponse<T> {
 
 export interface OrderRequest {
   customerId: number;
+  deliveryAddressName?: string | null;
+  receivedBy?: string | null;
   employeeId: number | null;
-  orderStatus: {
-    id: number;
-  };
   totalAmount: number;
   orderNotes: string;
   orderDetails: OrderDetailRequest[];
@@ -139,8 +176,32 @@ export interface OrderResponse {
   id: number;
   orderDate: string;
   customerId: number;
+  deliveryAddressName: string | null;
+  receivedBy: string | null;
   employeeId: number | null;
   orderStatusName: string;
   totalAmount: number;
   orderNotes: string;
+}
+
+export interface OrderStatusHistory {
+  id: number;
+  orderId: number;
+  orderStatusId: number;
+  orderStatusName: string;
+  changedAt: string;
+  changedBy: string;
+  observation: string;
+}
+
+export interface OrderStatus {
+  id: number;
+  statusName: string;
+  isActive: boolean;
+}
+
+export interface OrderStatusUpdateRequest {
+  newStatusId: number;
+  changedBy: string;
+  observation: string;
 }

@@ -9,6 +9,7 @@ import com.codecorecix.ecommerce.utils.GenericUtils;
 import com.codecorecix.ecommerce.utils.IErrorCode;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("${app.endpoints.auth}")
 @RequiredArgsConstructor
+@Slf4j
 public class AuthController {
 
   private final RegistrationService registrationService;
@@ -41,9 +43,10 @@ public class AuthController {
           .status(status)
           .body(GenericUtils.buildGenericResponseError(detalleMensaje, null));
     } catch (final Exception ex) {
+      log.error("Ocurrio un error en el registro: {}", ex.getMessage());
       return ResponseEntity
           .status(HttpStatus.BAD_REQUEST)
-          .body(GenericUtils.buildGenericResponseError("Error en el registro", null));
+          .body(GenericUtils.buildGenericResponseError("Error en el registro " + ex.getMessage(), null));
     }
   }
 }

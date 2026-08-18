@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -64,7 +65,7 @@ public class CustomerServiceImpl implements CustomerService {
     if (isUpdated) {
       final Customer customerBD = this.repository.findById(customerRequestDto.getId()).orElseThrow();
       customerMapped.setUserModification("UserModification");
-      customerMapped.setModificationDate(LocalDateTime.now());
+      customerMapped.setModificationDate(LocalDateTime.now(ZoneId.of("America/Lima")));
       customerMapped.setUserRegistration(customerBD.getUserRegistration());
       customerMapped.setRegistrationDate(customerBD.getRegistrationDate());
       customerMapped.getAddress().setId(customerBD.getAddress().getId());

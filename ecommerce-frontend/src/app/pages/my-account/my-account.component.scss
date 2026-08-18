@@ -1,0 +1,248 @@
+.account-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.account-header {
+  margin-bottom: 2rem;
+  text-align: left;
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 1rem;
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 0.5rem 0;
+  }
+
+  p {
+    font-size: 1rem;
+    color: #6b7280;
+    margin: 0;
+  }
+}
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 350px;
+  gap: 1.5rem;
+  color: #4b5563;
+  font-size: 1.05rem;
+  font-weight: 500;
+}
+
+.user-badge-bar {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1e40af;
+  padding: 0.6rem 1.25rem;
+  border-radius: 8px;
+  margin-bottom: 1.75rem;
+  font-size: 0.95rem;
+
+  i {
+    font-size: 1.1rem;
+  }
+}
+
+.account-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+::ng-deep .account-card {
+  border-radius: 12px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06) !important;
+  border: 1px solid #f3f4f6 !important;
+  background: #ffffff;
+
+  .p-card-title {
+    font-size: 1.3rem !important;
+    font-weight: 700 !important;
+    color: #1f2937 !important;
+    border-bottom: 1px solid #f3f4f6;
+    padding-bottom: 0.75rem;
+    margin-bottom: 1.5rem !important;
+  }
+
+  .p-card-content {
+    padding: 0 !important;
+  }
+}
+
+.formatted-address-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  background: #fdf4ff;
+  border: 1px solid #f5d0fe;
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  margin-bottom: 1.5rem;
+  color: #86198f;
+
+  i {
+    font-size: 1.2rem;
+    margin-top: 0.15rem;
+  }
+
+  .alert-title {
+    font-weight: 600;
+    font-size: 0.85rem;
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+
+  &.full-width {
+    grid-column: 1 / -1;
+  }
+
+  label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #374151;
+  }
+
+  .required {
+    color: #ef4444;
+  }
+
+  input {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    font-size: 0.95rem;
+
+    &:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+      outline: none;
+    }
+  }
+
+  .p-error {
+    color: #ef4444;
+    font-size: 0.8rem;
+    margin-top: 0.1rem;
+  }
+}
+
+.w-full,
+.w-100 {
+  width: 100% !important;
+
+  ::ng-deep .p-dropdown,
+  ::ng-deep .p-select,
+  ::ng-deep .p-calendar,
+  ::ng-deep .p-datepicker {
+    width: 100% !important;
+  }
+}
+
+::ng-deep .p-select {
+  width: 100% !important;
+
+  .p-select-label {
+    font-size: 0.95rem !important;
+    font-weight: 600 !important;
+    color: #0f172a !important;
+  }
+
+  &.p-select-clearable .p-select-label {
+    color: #0f172a !important;
+  }
+}
+
+::ng-deep .p-datepicker {
+  width: 100% !important;
+
+  input {
+    font-size: 0.95rem !important;
+    font-weight: 600 !important;
+    color: #0f172a !important;
+  }
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+
+  .save-btn {
+    min-width: 200px;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0.85rem 2rem;
+  }
+}
+
+/* ===================================
+   RESPONSIVE DESIGN BREAKPOINTS
+   =================================== */
+
+@media (max-width: 992px) {
+  .account-grid {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .account-container {
+    padding: 1.25rem 0.75rem;
+  }
+
+  .account-header {
+    h1 {
+      font-size: 1.6rem;
+    }
+
+    p {
+      font-size: 0.9rem;
+    }
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .form-actions {
+    justify-content: stretch;
+
+    .save-btn {
+      width: 100% !important;
+    }
+  }
+}

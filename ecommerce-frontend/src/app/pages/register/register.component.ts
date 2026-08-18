@@ -10,8 +10,9 @@ import { ToastModule } from 'primeng/toast';
 import { SelectModule } from 'primeng/select';
 import { StepperModule } from 'primeng/stepper';
 import { RegistrationService } from '../../services/registration.service';
-import { Role, UserRequest, CustomerRequest, GenericResponse } from '../../models/ecommerce.models';
-import { catchError, map, of, switchMap } from 'rxjs';
+import { GenericResponse, RegisterRequestDto, CustomerResponseDto, CustomerRequest } from '../../models/ecommerce.models';
+import { catchError, finalize, of } from 'rxjs';
+
 
 @Component({
   selector: 'app-register',
@@ -55,7 +56,7 @@ export class RegisterComponent {
     private registrationService: RegistrationService,
     private messageService: MessageService,
     private router: Router
-  ) {}
+  ) { }
 
   submit(): void {
     if (!this.form.username || !this.form.password || !this.form.name || !this.form.lastName || !this.form.email) {
@@ -69,97 +70,89 @@ export class RegisterComponent {
 
     this.isLoading = true;
 
-    this.registrationService.getRoles().pipe(
-      map(response => {
-        const validated = this.validateResponse(response, 'No se pudo obtener los roles');
-        return validated ? this.findUserRole(validated.body) : null;
-      }),
-      switchMap(role => {
-        if (!role) {
-          return of(null);
+    // Construimos el payload unificado tal cual lo armaste en Postman
+    const payload: RegisterRequestDto = {
+      username: this.form.username,
+      password: this.form.password,
+      customer: {
+        name: this.form.name,
+        lastName: this.form.lastName,
+        gender: this.form.gender,
+        birthdate: this.form.birthdate ? new Date(this.form.birthdate).toISOString() : null,
+        email: this.form.email,
+        phoneNumberOne: this.toNull(this.form.phoneNumberOne),
+        phoneNumberTwo: this.toNull(this.form.phoneNumberTwo),
+        phoneNumberThree: this.toNull(this.form.phoneNumberThree),
+        isActive: true,
+        // Nota: Omitimos "userId" porque el backend lo genera e inyecta dinámicamente
+        address: {
+          type: this.toNull(this.form.addressType),
+          addressName: this.toNull(this.form.addressName),
+          residenceNumber: this.toNull(this.form.residenceNumber),
+          department: this.toNull(this.form.department),
+          province: this.toNull(this.form.province),
+          district: this.toNull(this.form.district),
+          placeReference: this.toNull(this.form.placeReference),
+          postalCode: this.toNull(this.form.postalCode)
         }
+      }
+    };
 
-        if (!role) {
-          throw new Error('No se encontró el rol USER');
-        }
-
-        const userPayload: UserRequest = {
-          username: this.form.username,
-          password: this.form.password,
-          isActive: true,
-          roles: [role]
-        };
-
-        return this.registrationService.createUser(userPayload).pipe(
-          map(response => this.validateResponse(response, 'No se pudo crear el usuario'))
-        );
-      }),
-      switchMap(userResponse => {
-        if (!userResponse) {
-          return of(null);
-        }
-
-        if (!userResponse.body || !userResponse.body.id) {
-          throw new Error('No se pudo crear el usuario');
-        }
-
-        const phoneNumberOne = this.toNull(this.form.phoneNumberOne);
-        const phoneNumberTwo = this.toNull(this.form.phoneNumberTwo);
-        const phoneNumberThree = this.toNull(this.form.phoneNumberThree);
-
-        const customerPayload: CustomerRequest = {
-          name: this.form.name,
-          lastName: this.form.lastName,
-          gender: this.form.gender,
-          birthdate: this.form.birthdate ? new Date(this.form.birthdate).toISOString() : null,
-          email: this.form.email,
-          phoneNumberOne,
-          phoneNumberTwo,
-          phoneNumberThree,
-          address: {
-            type: this.toNull(this.form.addressType),
-            addressName: this.toNull(this.form.addressName),
-            residenceNumber: this.toNull(this.form.residenceNumber),
-            department: this.toNull(this.form.department),
-            province: this.toNull(this.form.province),
-            district: this.toNull(this.form.district),
-            placeReference: this.toNull(this.form.placeReference),
-            postalCode: this.toNull(this.form.postalCode)
-          },
-          isActive: true,
-          userId: userResponse.body.id
-        };
-
-        return this.registrationService.createCustomer(customerPayload).pipe(
-          map(response => this.validateResponse(response, 'No se pudo crear el cliente'))
-        );
-      }),
+    // Realizamos una sola llamada al backend
+    this.registrationService.register(payload).pipe(
+      // finalize se ejecuta al terminar, sin importar si hubo error o éxito
+      finalize(() => this.isLoading = false),
       catchError(error => {
-        this.isLoading = false;
-        const message = error?.error?.message || error?.message || 'No se pudo completar el registro';
+        // Atrapamos errores HTTP (ej: 400 Bad Request o 500)
+        // El backend envía un JSON con el error real en "error.message"
+        const errorMessage = error?.error?.message || error?.message || 'No se pudo completar el registro debido a un error del servidor.';
         this.messageService.add({
           severity: 'error',
-          summary: 'Error',
-          detail: message
+          summary: 'Error de Registro',
+          detail: errorMessage
         });
+
         return of(null);
       })
-    ).subscribe(result => {
-      if (!result) {
+    ).subscribe(response => {
+      // Si la respuesta es null, significa que catchError ya manejó el problema
+      if (!response) {
         return;
       }
 
       this.isLoading = false;
-      const message = result?.message || 'Registro exitoso';
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Éxito',
-        detail: message
-      });
+      const status = this.getResponseStatus(response);
 
-      setTimeout(() => {
-        this.router.navigate(['/login']);
-      }, 1500);
+      if (status === 1) {
+        // ¡ÉXITO! Tal como se ve en tu imagen "image_e5a2ff.png"
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Éxito',
+          detail: response.message || 'Registro completado con éxito'
+        });
+
+        console.log(response.body);
+
+        setTimeout(() => {
+          this.router.navigate(['/login']);
+        }, 2500);
+
+      } else if (status === 0) {
+        // ADVERTENCIA (rpta = 0)
+        this.messageService.add({
+          severity: 'warn',
+          summary: 'Advertencia',
+          detail: response?.message || 'La operación devolvió una advertencia'
+        });
+
+      } else {
+        // ERROR CONTROLADO (rpta = -1) pero que devolvió HTTP 200 (Ej: Duplicado)
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: response?.message || 'Ocurrió un error al procesar tu solicitud'
+        });
+      }
     });
   }
 
@@ -167,41 +160,12 @@ export class RegisterComponent {
     this.router.navigate(['/login']);
   }
 
-  private findUserRole(roles: Role[] | null | undefined): Role | null {
-    if (!roles) {
-      return null;
-    }
-
-    return roles.find(role => role.description === 'USER') || null;
-  }
-
-  private validateResponse<T>(
-    response: GenericResponse<T>,
-    fallbackMessage: string
-  ): GenericResponse<T> | null {
-    const status = this.getResponseStatus(response);
-
-    if (status === 1) {
-      return response;
-    }
-
-    if (status === 0) {
-      this.isLoading = false;
-      this.messageService.add({
-        severity: 'warn',
-        summary: 'Advertencia',
-        detail: response?.message || 'La operacion devolvio una advertencia'
-      });
-      return null;
-    }
-
-    throw new Error(response?.message || fallbackMessage);
-  }
-
+  // Método auxiliar para extraer el estado de forma segura
   private getResponseStatus<T>(response: GenericResponse<T>): number {
     return typeof response?.rpta === 'number' ? response.rpta : -1;
   }
 
+  // Método auxiliar para evitar strings vacíos ("") y enviarlos como null
   private toNull(value: string): string | null {
     const trimmed = value?.trim();
     return trimmed ? trimmed : null;

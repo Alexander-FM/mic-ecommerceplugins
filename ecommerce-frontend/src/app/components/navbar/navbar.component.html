@@ -2,7 +2,18 @@
   <p-toast></p-toast>
   <p-toolbar class="toolbar-container">
     <div class="p-toolbar-group-left">
-      <h2 class="app-title">E-Commerce</h2>
+      <h2 class="app-title" (click)="onCategorySelect(null)" style="cursor: pointer;">E-Commerce</h2>
+
+      <div class="category-selector" *ngIf="categoryMenuItems.length > 0">
+        <p-tieredMenu #categoryMenu [model]="categoryMenuItems" [popup]="true"></p-tieredMenu>
+        <p-button
+          label="Categorías"
+          icon="pi pi-th-large"
+          (onClick)="categoryMenu.toggle($event)"
+          [text]="true"
+          styleClass="navbar-category-btn"
+        ></p-button>
+      </div>
     </div>
 
     <div class="p-toolbar-group-right">
