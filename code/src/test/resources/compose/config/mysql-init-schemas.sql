@@ -1,0 +1,151 @@
+CREATE DATABASE IF NOT EXISTS maintenance_service;
+CREATE DATABASE IF NOT EXISTS orders_service;
+
+-- Crear la tabla de estados de orden
+CREATE TABLE IF NOT EXISTS orders_service.order_status (
+    id INT NOT NULL AUTO_INCREMENT,
+    is_active BOOLEAN NOT NULL DEFAULT true,
+    status_name VARCHAR(100) NOT NULL,
+    CONSTRAINT pk_order_status PRIMARY KEY (id)
+);
+
+-- Crear la tabla de categorías
+CREATE TABLE IF NOT EXISTS maintenance_service.categories (
+    id INT NOT NULL AUTO_INCREMENT,
+    description VARCHAR(100) NOT NULL,
+    is_active BOOLEAN NOT NULL DEFAULT true,
+    parent_category INT,
+    CONSTRAINT pk_category PRIMARY KEY (id)
+);
+
+-- Crear la tabla de marcas
+CREATE TABLE IF NOT EXISTS maintenance_service.brands (
+    id INT NOT NULL AUTO_INCREMENT,
+    description VARCHAR(100) NOT NULL,
+    is_active BOOLEAN NOT NULL DEFAULT true,
+    CONSTRAINT pk_brand PRIMARY KEY (id)
+);
+
+-- Crear la tabla de roles
+CREATE TABLE IF NOT EXISTS maintenance_service.roles (
+    id INT NOT NULL AUTO_INCREMENT,
+    description VARCHAR(100) NOT NULL,
+    is_active BOOLEAN NOT NULL DEFAULT true,
+    CONSTRAINT pk_roles PRIMARY KEY (id)
+);
+
+-- Crear tablas atributos
+CREATE TABLE IF NOT EXISTS maintenance_service.attributes (
+    id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    CONSTRAINT pk_attributes PRIMARY KEY (id)
+);
+
+-- Crear la tabla de productos
+CREATE TABLE IF NOT EXISTS maintenance_service.products (
+    id INT NOT NULL AUTO_INCREMENT,
+    bar_code VARCHAR(255),
+    description VARCHAR(15000),
+    is_active BOOLEAN,
+    is_recommended BOOLEAN,
+    main_image_url VARCHAR(255),
+    name VARCHAR(255),
+    price DOUBLE,
+    stock INT,
+    brand_id INT,
+    category_id INT,
+    CONSTRAINT pk_products PRIMARY KEY (id),
+    CONSTRAINT FK_Products_Brands FOREIGN KEY (brand_id) REFERENCES maintenance_service.brands(id),
+    CONSTRAINT FK_Products_Categories FOREIGN KEY (category_id) REFERENCES maintenance_service.categories(id)
+);
+
+-- Crear la tabla de valores de atributos de productos
+CREATE TABLE IF NOT EXISTS maintenance_service.product_attributes (
+    id INT NOT NULL AUTO_INCREMENT,
+    value VARCHAR(100) NOT NULL,
+    attribute_id INT NOT NULL,
+    product_id INT NOT NULL,
+    CONSTRAINT pk_product_attribute PRIMARY KEY (id),
+    CONSTRAINT FK_ProductsAttribute_Products FOREIGN KEY (product_id) REFERENCES maintenance_service.products(id)
+);
+
+-- Crear la tabla de imágenes de productos
+CREATE TABLE IF NOT EXISTS maintenance_service.product_images (
+    id INT NOT NULL AUTO_INCREMENT,
+    image_url VARCHAR(255) NOT NULL,
+    product_id INT NOT NULL,
+    CONSTRAINT pk_product_images PRIMARY KEY (id),
+    CONSTRAINT FK_ProductsImages_Products FOREIGN KEY (product_id) REFERENCES maintenance_service.products(id)
+);
+
+INSERT INTO orders_service.order_status (is_active, status_name)
+VALUES (true, 'Pendiente'),
+       (true, 'Recepcionado'),
+       (true, 'Preparando pedido'),
+       (true, 'En camino'),
+       (true, 'Entregado'),
+       (true, 'Cancelado');
+
+INSERT INTO maintenance_service.categories (description, is_active, parent_category)
+VALUES ('Alimentos y Bebidas', true, NULL),
+       ('Bebidas y Licores', true, 1),
+       ('Vinos', true, 2),
+       ('Vino Tinto', true, 3),
+       ('Licores', true, 2),
+       ('Ron', true, 5);
+
+INSERT INTO maintenance_service.brands (description, is_active)
+VALUES ('La Mascota', true),
+       ('Ricadonna', true),
+       ('Catena Zapata', true),
+       ('Flor de caña', true);
+
+INSERT INTO maintenance_service.roles (description, is_active)
+VALUES ('ADMIN', true),
+       ('USER', true);
+
+INSERT INTO maintenance_service.attributes (name)
+VALUES ('Tipo de Vino (Tinto/Blanco/Rosado)'),
+       ('Bodega'),
+       ('Variedad de Uva (Malbec/Cabernet/etc)'),
+       ('Año de Cosecha / Añada'),
+       ('Región de Origen'),
+       ('Graduación Alcohólica'),
+       ('Volumen (750ml/1L)');
+
+INSERT INTO maintenance_service.products (bar_code, description, is_active, is_recommended, main_image_url, name, price, stock, brand_id, category_id)
+VALUES ('113371165', 'Vino La Mascota Malbec Botella 750 mL', true, false,
+        'https://drive.google.com/file/d/1DRCVVcmL-2Id47TholEQ9gu--1guvcSq/view',
+        'Vino La Mascota Malbec Botella 750 mL', 94.9, 100, 1, 4),
+       ('119459446', 'Los vinos de ésta línea, 100% varietales, se elaboran con uvas provenientes de diferentes lotes de los viñedos de la familia Catena, elaborados por Laura Catena, cuarta generación de viticultores y Alejandro Vigil, enólogo Jefe de Catena Zapata. Cada viñedo se divide en lotes, que se cosechan y preparan por separado, para luego integrar el corte o blend final de cada Catena varietal. Lo cual, le da un carácter único de excelente tipicidad, balance y concentración.
+Añejamiento: 12 meses en barrica de roble francés
+Cepa: 90% Cabernet Sauvignon, 7% Cabernet Franc, 3% Petit Verdot
+Alcohol: 13.5%
+Acidez total: 5 gramos/litros
+Enólogo: Alejandro Vigil', true, false,
+        'https://drive.google.com/file/d/1QP1YWL8lkZBtDip2SAr713q0sHGRZlCQ/view',
+        'Vino Catena Cabernet Sauvignon 750ml', 89.9, 100, 3, 4),
+       ('147229624',
+        'Disfruta la sofisticación y profundidad del Ron Flor de Caña 12 Años 750 ml, un ron nicaragüense premium que ofrece un sabor complejo y equilibrado para los paladares más exigentes. Descubre qué lo hace diferente Notas aromáticas a caramelo, vainilla, frutos secos y madera tostada. Sabor suave y rico con un final largo y aterciopelado. Ideal para disfrutar solo, con hielo o en cócteles exclusivos. Presentación de 750 ml que refleja tradición y calidad excepcional.',
+        true, false, 'https://drive.google.com/file/d/1OSAI-fM1Yllni6964pHaLaH2yPLN7vSy/view',
+        'RON FLOR DE CAÑA 12 AÑOS 750 ML', 79.1, 100, 4, 6),
+       ('147229450', 'RICCADONNA RUBY 750 ML
+Disfruta el sabor frutal y refrescante del Riccadonna Ruby 750 ml, un vino espumante italiano con burbujas finas y aromas intensos a frutos rojos, ideal para celebraciones y momentos especiales. Descubre qué lo hace diferente Aromas intensos a frutos rojos que aportan frescura y dulzura. Burbujas finas y persistentes que elevan la experiencia sensorial. Sabor equilibrado entre dulzura y acidez. Perfecto para brindar en ocasiones especiales o acompañar postres. Presentación de 750 ml que refleja calidad y tradición italiana.',
+        true, false, 'https://drive.google.com/file/d/1E6hHKX1iFwIAdnIACyjnjkQZgqwCGBrb/view',
+        'RICCADONNA RUBY 750ML', 54.5, 100, 2, 4);
+
+INSERT INTO maintenance_service.product_attributes (value, attribute_id, product_id)
+VALUES ('750 ml', 7, 1),
+       ('750 ml', 7, 2),
+       ('750 ml', 7, 3),
+       ('750 ml', 7, 4),
+       ('Tinto', 1, 1),
+       ('Tinto', 1, 2),
+       ('Cabernet', 3, 2),
+       ('2004', 4, 1),
+       ('2002', 4, 2),
+       ('2004', 4, 3);
+
+INSERT INTO maintenance_service.product_images (image_url, product_id)
+VALUES ('https://drive.google.com/file/d/1OsgL-J6wqfauPJPrr0Hfleyb7hawWDP8/view', 1);
+

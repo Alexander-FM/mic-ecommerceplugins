@@ -34,3 +34,7 @@ build/
 .vscode/
 /kubectl
 /kubectl.sha256
+
+# Local Docker compose secrets (do not commit real Google credentials)
+src/test/resources/compose/secrets/*
+!src/test/resources/compose/secrets/.gitignore
