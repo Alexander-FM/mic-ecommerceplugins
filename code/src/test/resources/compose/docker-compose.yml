@@ -24,6 +24,7 @@ services:
 
   appmic-e-commerceplugins-auth:
     image: alexanderpe/appmic-e-commerceplugins-auth:latest
+    pull_policy: always
     container_name: appmic-e-commerceplugins-auth
     networks:
       - ecommerce-net
@@ -46,6 +47,7 @@ services:
 
   appmic-e-commerceplugins-maintenance:
     image: alexanderpe/appmic-e-commerceplugins-maintenance:latest
+    pull_policy: always
     container_name: appmic-e-commerceplugins-maintenance
     networks:
       - ecommerce-net
@@ -74,6 +76,7 @@ services:
 
   appmic-e-commerceplugins-orders:
     image: alexanderpe/appmic-e-commerceplugins-orders:latest
+    pull_policy: always
     container_name: appmic-e-commerceplugins-orders
     networks:
       - ecommerce-net
@@ -102,6 +105,7 @@ services:
 
   appmic-e-commerceplugins-gateway:
     image: alexanderpe/appmic-e-commerceplugins-gateway:latest
+    pull_policy: always
     container_name: appmic-e-commerceplugins-gateway
     networks:
       - ecommerce-net
