@@ -34,20 +34,111 @@
     color: #333;
     font-size: 1.25rem;
   }
+}
 
-  .p-field {
-    margin-bottom: 1.5rem;
+/* Estilos compartidos para campos de filtros (Desktop y Móvil/Tablet Drawer) */
+.p-field {
+  margin-bottom: 1.5rem;
 
-    label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: 500;
-      color: #666;
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #475569;
+    font-size: 0.95rem;
+  }
+
+  input[type="range"] {
+    width: 100%;
+    margin-top: 0.5rem;
+    accent-color: #2563eb;
+    cursor: pointer;
+  }
+
+  .p-input-icon-left,
+  input[pInputText],
+  p-select {
+    width: 100%;
+  }
+
+  ::ng-deep .p-select {
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 8px !important;
+    color: #1e293b !important;
+
+    &:hover {
+      border-color: #94a3b8 !important;
     }
 
-    input[type="range"] {
+    &.p-focus,
+    &:focus-within {
+      border-color: #2563eb !important;
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2) !important;
+    }
+
+    .p-select-label {
+      color: #1e293b !important;
+      font-size: 0.95rem;
+
+      &.p-placeholder {
+        color: #94a3b8 !important;
+      }
+    }
+
+    .p-select-dropdown {
+      color: #64748b !important;
+    }
+  }
+
+  ::ng-deep .p-inputtext {
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    color: #1e293b !important;
+    border-radius: 8px !important;
+
+    &::placeholder {
+      color: #94a3b8 !important;
+    }
+
+    &:focus {
+      border-color: #2563eb !important;
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2) !important;
+    }
+  }
+}
+
+.clear-filters-btn {
+  margin-top: 1.75rem;
+
+  p-button {
+    width: 100%;
+    display: block;
+
+    ::ng-deep button {
       width: 100%;
-      margin-top: 0.5rem;
+    }
+  }
+}
+
+/* Ajustes específicos para el Drawer de filtros */
+::ng-deep p-drawer {
+  .p-drawer-body,
+  .p-drawer-content {
+    padding: 1.5rem;
+  }
+
+  .drawer-filters {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    .p-field {
+      margin-bottom: 0;
     }
   }
 }

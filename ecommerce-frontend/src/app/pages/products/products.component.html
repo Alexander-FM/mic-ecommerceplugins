@@ -2,7 +2,7 @@
 
 <!-- Drawer para filtros en Móvil/Tablet -->
 <p-drawer [(visible)]="filterDrawerVisible" header="Filtros" position="left" [style]="{ width: '300px' }">
-  <div class="p-fluid">
+  <div class="p-fluid drawer-filters">
     <div class="p-field">
       <label for="search-mobile">Buscar</label>
       <span class="p-input-icon-left">
@@ -29,7 +29,9 @@
         step="100" />
     </div>
 
-    <p-button label="Limpiar filtros" icon="pi pi-filter-slash" [outlined]="true" (onClick)="resetFilters()"></p-button>
+    <div class="p-field clear-filters-btn">
+      <p-button label="Limpiar filtros" icon="pi pi-filter-slash" [outlined]="true" (onClick)="resetFilters()"></p-button>
+    </div>
   </div>
 </p-drawer>
 
@@ -65,8 +67,10 @@
           step="100" />
       </div>
 
-      <p-button label="Limpiar filtros" icon="pi pi-filter-slash" [outlined]="true"
-        (onClick)="resetFilters()"></p-button>
+      <div class="p-field clear-filters-btn">
+        <p-button label="Limpiar filtros" icon="pi pi-filter-slash" [outlined]="true"
+          (onClick)="resetFilters()"></p-button>
+      </div>
     </div>
   </div>
 
